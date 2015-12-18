@@ -15,6 +15,20 @@ class UsuarioSpec extends Specification {
     def cleanup() {
     }
 
-    void "test something"() {
+    void "No Debe ser el nombre nulo"() {
+        when: 'el nombre es nulo'
+        def usuario = new Usuario(nombre: null)
+
+        then: 'la validacion debe fallar'
+        usuario.validate()
     }
+
+    void "No debe ser el nombre blanco"() {
+        when: 'el nombre es blanco'
+        def usuario = new Usuario(nombre: '')
+
+        then: 'la validacion debe fallar'
+        usuario.validate()
+    }
+
 }
