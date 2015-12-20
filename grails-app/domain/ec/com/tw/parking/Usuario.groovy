@@ -21,8 +21,7 @@ class Usuario {
     }
 
     static constraints = {
-        nombre nullable: false
-//        nombre nullable: false, blank: false, minSize: 3, maxSize: 50
+        nombre nullable: false, blank: false, minSize: 3, maxSize: 50
 //        email nullable: false, blank: false, email: true, maxSize: 100
 //        password nullable: false, blank: false, password: true, maxSize: 512
     }
