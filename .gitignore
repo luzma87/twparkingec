@@ -1,0 +1,11 @@
+.asscache
+.classpath
+.idea/
+.project
+.slcache/
+grailsw
+grailsw.bat
+target/
+twparkingec-grailsPlugins.iml
+twparkingec.iml
+wrapper/

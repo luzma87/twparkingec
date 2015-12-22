@@ -12,7 +12,7 @@ class UsuarioSpec extends Specification {
     def usuario
 
     def setup() {
-        usuario = new Usuario([nombre: 'nombre', email: 'mail@test.com', password: '12346'])
+        usuario = new Usuario([nombre: 'nombre', email: 'mail@test.com', password: '12346', esAdmin: true])
     }
 
     def cleanup() {
@@ -134,5 +134,15 @@ class UsuarioSpec extends Specification {
         !usuario.validate()
         usuario.hasErrors()
         usuario.errors['password'].code == 'maxSize.exceeded'
+    }
+
+    void "No debe esAdmin ser nulo"() {
+        when: 'esAdmin es nulo'
+        usuario.esAdmin = null
+
+        then: 'la validacion debe fallar'
+        !usuario.validate()
+        usuario.hasErrors()
+        usuario.errors['esAdmin'].code == 'nullable'
     }
 }

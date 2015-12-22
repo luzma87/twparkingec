@@ -1,104 +1,91 @@
 package ec.com.tw.parking
 
+import org.springframework.dao.DataIntegrityViolationException
+import ec.com.tw.parking.commons.Shield
 
 
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
+class UsuarioController extends Shield {
 
-@Transactional(readOnly = true)
-class UsuarioController {
+    static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Usuario.list(params), model:[usuarioInstanceCount: Usuario.count()]
+    def index() {
+        redirect(action: 'list')
     }
 
-    def show(Usuario usuarioInstance) {
-        respond usuarioInstance
+    def list() {
+        return [usuarioInstanceList: Usuario.list(), usuarioInstanceCount: Usuario.count()]
     }
 
-    def create() {
-        respond new Usuario(params)
-    }
-
-    @Transactional
-    def save(Usuario usuarioInstance) {
-        if (usuarioInstance == null) {
-            notFound()
-            return
-        }
-
-        if (usuarioInstance.hasErrors()) {
-            respond usuarioInstance.errors, view:'create'
-            return
-        }
-
-        usuarioInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'usuario.label', default: 'Usuario'), usuarioInstance.id])
-                redirect usuarioInstance
+    def show_ajax() {
+        if(params.id) {
+            def usuarioInstance = Usuario.get(params.id)
+            if(!usuarioInstance) {
+                render mensajeError('default.not.found.message', params.id)
             }
-            '*' { respond usuarioInstance, [status: CREATED] }
+            return [usuarioInstance: usuarioInstance]
+        } else {
+            render mensajeError('default.not.found.message', params.id)
         }
     }
 
-    def edit(Usuario usuarioInstance) {
-        respond usuarioInstance
+    def form_ajax() {
+        def usuarioInstance = new Usuario()
+        if(params.id) {
+            usuarioInstance = Usuario.get(params.id)
+            if(!usuarioInstance) {
+                render mensajeError('default.not.found.message', params.id)
+                return
+            }
+        }
+        usuarioInstance.properties = params
+        return [usuarioInstance: usuarioInstance]
     }
 
-    @Transactional
-    def update(Usuario usuarioInstance) {
-        if (usuarioInstance == null) {
-            notFound()
+    def save_ajax() {
+        def usuarioInstance = new Usuario()
+        if(params.id) {
+            usuarioInstance = Usuario.get(params.id)
+            if(!usuarioInstance) {
+                render mensajeError('default.not.found.message', params.id)
+                return
+            }
+        }
+        usuarioInstance.properties = params
+        if(!usuarioInstance.save(flush: true)) {
+            render mensajeError('default.not.saved.message', params.id) + renderErrors(bean: usuarioInstance)
             return
         }
+        render mensajeExito('default.saved.message', params.id)
+    }
 
-        if (usuarioInstance.hasErrors()) {
-            respond usuarioInstance.errors, view:'edit'
-            return
-        }
-
-        usuarioInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Usuario.label', default: 'Usuario'), usuarioInstance.id])
-                redirect usuarioInstance
+    def delete_ajax() {
+        if(params.id) {
+            def usuarioInstance = Usuario.get(params.id)
+            if (!usuarioInstance) {
+                render mensajeError('default.not.found.message', params.id)
+                return
             }
-            '*'{ respond usuarioInstance, [status: OK] }
+            try {
+                usuarioInstance.delete(flush: true)
+                render mensajeExito('default.deleted.message', params.id)
+            } catch (DataIntegrityViolationException e) {
+                render mensajeError('default.delete.error.message', params.id)
+            }
+        } else {
+            render mensajeError('default.not.found.message', params.id)
         }
     }
 
-    @Transactional
-    def delete(Usuario usuarioInstance) {
-
-        if (usuarioInstance == null) {
-            notFound()
-            return
-        }
-
-        usuarioInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Usuario.label', default: 'Usuario'), usuarioInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+    private String mensajeConCodigo(tipo, codigo, id) {
+        def separador = "*"
+        return tipo + separador + message(code: codigo, args: [message(code: 'usuario.label', default: 'Usuario'), id])
     }
 
-    protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'usuario.label', default: 'Usuario'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+    private String mensajeError(codigo, id) {
+        mensajeConCodigo('ERROR', codigo, id)
+    }
+
+    private String mensajeExito(codigo, id) {
+        mensajeConCodigo('SUCCESS', codigo, id)
     }
 }
