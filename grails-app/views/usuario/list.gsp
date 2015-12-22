@@ -59,13 +59,11 @@
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" class="btnEditar btn btn-info"
-                                       title="${message(code:'default.button.edit.label')}"
-                                       data-id="${usuarioInstance.id}">
+                                       title="${message(code:'default.button.edit.label')}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                     <a href="#" class="btnEliminar btn btn-danger"
-                                       title="${message(code:'default.button.delete.label')}"
-                                       data-id="${usuarioInstance.id}">
+                                       title="${message(code:'default.button.delete.label')}">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
@@ -202,11 +200,11 @@
                     return false;
                 });
                 $(".btnEditar").click(function() {
-                    crearEditarUsuario($(this).data("id"));
+                    crearEditarUsuario($(this).parents("tr").data("id"));
                     return false;
                 });
                 $(".btnEliminar").click(function() {
-                    eliminarUsuario($(this).data("id"));
+                    eliminarUsuario($(this).parents("tr").data("id"));
                     return false;
                 });
             });

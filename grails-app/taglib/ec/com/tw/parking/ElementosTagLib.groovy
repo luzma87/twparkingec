@@ -17,6 +17,11 @@ class ElementosTagLib {
     def flashMessage = { attrs, body ->
         def contenido = body()
 
+        def closable =  true
+        if(attrs.closable == false || attrs.closable == "no") {
+            closable = false
+        }
+
         if (!contenido) {
             if (attrs.contenido) {
                 contenido = attrs.contenido
@@ -62,7 +67,9 @@ class ElementosTagLib {
                 }
             }
             def html = "<div class=\"alert alert-dismissable ${clase}\">"
-            html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
+            if (closable) {
+                html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
+            }
             html += "<p style='margin-bottom:15px;'>"
             html += "<i class=\"${icono} fa-2x pull-left text-shadow\"></i> "
             out << html << contenido << finHtml
@@ -70,7 +77,6 @@ class ElementosTagLib {
             out << ""
         }
     }
-
 
     /**
      * crea un datepicker

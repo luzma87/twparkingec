@@ -80,13 +80,11 @@
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" class="btnEditar btn btn-info"
-                                       title="\${message(code:'default.button.edit.label')}"
-                                       data-id="\${${propertyName}.id}">
+                                       title="\${message(code:'default.button.edit.label')}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                     <a href="#" class="btnEliminar btn btn-danger"
-                                       title="\${message(code:'default.button.delete.label')}"
-                                       data-id="\${${propertyName}.id}">
+                                       title="\${message(code:'default.button.delete.label')}">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
@@ -223,11 +221,11 @@
                     return false;
                 });
                 \$(".btnEditar").click(function() {
-                    crearEditar${domainClass.propertyName.capitalize()}(\$(this).data("id"));
+                    crearEditar${domainClass.propertyName.capitalize()}(\$(this).parents("tr").data("id"));
                     return false;
                 });
                 \$(".btnEliminar").click(function() {
-                    eliminar${domainClass.propertyName.capitalize()}(\$(this).data("id"));
+                    eliminar${domainClass.propertyName.capitalize()}(\$(this).parents("tr").data("id"));
                     return false;
                 });
             });
