@@ -16,28 +16,11 @@ class UsuarioController extends Shield {
         return [usuarioInstanceList: Usuario.list(), usuarioInstanceCount: Usuario.count()]
     }
 
-    def show_ajax() {
-        if (params.id) {
-            def usuarioInstance = Usuario.get(params.id)
-            if (!usuarioInstance) {
-                render msgBuilder.noEncontrado(entidad: 'usuario', id: params.id)
-            }
-            return [usuarioInstance: usuarioInstance]
-        } else {
-            render msgBuilder.noEncontrado(entidad: 'usuario', id: params.id)
-        }
-    }
-
     def form_ajax() {
         def usuarioInstance = new Usuario()
         if (params.id) {
             usuarioInstance = Usuario.get(params.id)
-            if (!usuarioInstance) {
-                render msgBuilder.noEncontrado(entidad: 'usuario', id: params.id)
-                return
-            }
         }
-        usuarioInstance.properties = params
         return [usuarioInstance: usuarioInstance]
     }
 

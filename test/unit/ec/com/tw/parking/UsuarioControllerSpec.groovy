@@ -4,7 +4,7 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(UsuarioController)
-@Mock(Usuario)
+@Mock([Usuario, MensajesTagLib])
 class UsuarioControllerSpec extends Specification {
 
     def populateValidParams() {
@@ -37,15 +37,24 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance = getValidUsuario()
     }
 
-    @Ignore
-    void "Test the index action returns the correct model"() {
+    void "Debe devolver una nueva instancia de usuario"() {
+        expect:
+        controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
 
-        when: "The index action is executed"
-        controller.index()
+        where:
+        usuarioInstance = new Usuario()
+    }
 
-        then: "The model is correct"
-        !model.usuarioInstanceList
-        model.usuarioInstanceCount == 0
+    void "Debe devolver una instancia de usuario cuando recibe id"() {
+        setup:
+        usuarioInstance.save()
+        controller.params.id = usuarioInstance.id
+
+        expect:
+        controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
+
+        where:
+        usuarioInstance = getValidUsuario()
     }
 
     @Ignore
