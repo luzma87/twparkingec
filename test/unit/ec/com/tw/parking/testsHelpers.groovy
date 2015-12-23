@@ -16,20 +16,12 @@ class TestsHelpers {
         return RandomStringUtils.randomAlphabetic(length)
     }
 
-    static def getRandomNombre() {
-        return getRandomString(3, 50, false)
-    }
-
-    static def getRandomNombreInvalido() {
-        return getRandomString(51, 150, false)
+    static def getRandomString(int numeroCaracteres) {
+        return RandomStringUtils.randomAlphabetic(numeroCaracteres)
     }
 
     static def getRandomMail() {
         return getRandomString(3, 90, false) + "@test.com"
-    }
-
-    static def getRandomPass() {
-        return getRandomString(3, 512, true)
     }
 
     static def getRandomAdmin() {
@@ -38,9 +30,9 @@ class TestsHelpers {
     }
 
     static def getValidUsuario() {
-        return new Usuario([nombre  : getRandomNombre(),
+        return new Usuario([nombre  : getRandomString(3, 50, false),
                             email   : getRandomMail(),
-                            password: getRandomPass(),
+                            password: getRandomString(3, 512, true),
                             esAdmin : getRandomAdmin()])
     }
 

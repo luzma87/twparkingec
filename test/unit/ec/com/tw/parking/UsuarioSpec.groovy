@@ -27,9 +27,6 @@ class UsuarioSpec extends Specification {
                                esAdmin : esAdmin])
     }
 
-    def cleanup() {
-    }
-
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
 
@@ -45,7 +42,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre'].code == 'nullable'
+        usuario.errors['nombre']?.code == 'nullable'
     }
 
     void "No debe ser el nombre blanco"() {
@@ -55,7 +52,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre'].code == 'blank'
+        usuario.errors['nombre']?.code == 'blank'
     }
 
     void "No debe el nombre tener menos de 3 caracteres"() {
@@ -65,7 +62,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre'].code == 'minSize.notmet'
+        usuario.errors['nombre']?.code == 'minSize.notmet'
     }
 
     void "No debe el nombre tener mas de 50 caracteres"() {
@@ -75,7 +72,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre'].code == 'maxSize.exceeded'
+        usuario.errors['nombre']?.code == 'maxSize.exceeded'
     }
 
     void "No debe ser el email nulo"() {
@@ -85,7 +82,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['email'].code == 'nullable'
+        usuario.errors['email']?.code == 'nullable'
     }
 
     void "No debe ser el email blanco"() {
@@ -95,7 +92,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['email'].code == 'blank'
+        usuario.errors['email']?.code == 'blank'
     }
 
     void "Debe el email tener el formato correcto"() {
@@ -105,7 +102,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['email'].code == 'email.invalid'
+        usuario.errors['email']?.code == 'email.invalid'
     }
 
     void "No debe el email tener mas de 100 caracteres"() {
@@ -115,7 +112,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['email'].code == 'maxSize.exceeded'
+        usuario.errors['email']?.code == 'maxSize.exceeded'
     }
 
     void "No debe ser el password nulo"() {
@@ -125,7 +122,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['password'].code == 'nullable'
+        usuario.errors['password']?.code == 'nullable'
     }
 
     void "No debe ser el password blanco"() {
@@ -135,7 +132,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['password'].code == 'blank'
+        usuario.errors['password']?.code == 'blank'
     }
 
     void "No debe el password tener mas de 512 caracteres"() {
@@ -145,7 +142,7 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['password'].code == 'maxSize.exceeded'
+        usuario.errors['password']?.code == 'maxSize.exceeded'
     }
 
     void "No debe esAdmin ser nulo"() {
@@ -155,6 +152,6 @@ class UsuarioSpec extends Specification {
         then: 'la validacion debe fallar'
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['esAdmin'].code == 'nullable'
+        usuario.errors['esAdmin']?.code == 'nullable'
     }
 }

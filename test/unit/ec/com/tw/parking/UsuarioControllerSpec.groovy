@@ -62,9 +62,9 @@ class UsuarioControllerSpec extends Specification {
 
     void "Debe guardar un usuario valido"() {
         setup:
-        controller.params.nombre = TestsHelpers.getRandomNombre()
+        controller.params.nombre = TestsHelpers.getRandomString(3, 50, false)
         controller.params.email = TestsHelpers.getRandomMail()
-        controller.params.password = TestsHelpers.getRandomPass()
+        controller.params.password = TestsHelpers.getRandomString(3, 512, true)
         controller.params.esAdmin = TestsHelpers.getRandomAdmin()
         def expectedMessage = "SUCCESS*default.saved.message"
         TestsHelpers.mockObjeto(crudHelperServiceMock, new Usuario())
@@ -88,7 +88,7 @@ class UsuarioControllerSpec extends Specification {
     void "Debe actualizar un usuario valido"() {
         setup:
         usuarioInstance.save()
-        def nombreNuevo = TestsHelpers.getRandomNombre()
+        def nombreNuevo = TestsHelpers.getRandomString(3, 50, false)
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreNuevo
@@ -131,7 +131,7 @@ class UsuarioControllerSpec extends Specification {
     void "Debe mostrar error al actualizar un usuario con datos invalidos"() {
         setup:
         usuarioInstance.save()
-        def nombreInvalido = TestsHelpers.getRandomNombreInvalido()
+        def nombreInvalido = TestsHelpers.getRandomString(51, 150, false)
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreInvalido
