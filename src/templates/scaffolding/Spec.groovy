@@ -34,7 +34,7 @@ class ${className}ControllerSpec extends Specification {
 
     void "Debe devolver una nueva instancia de ${classNameLower}"() {
         setup:
-        mock${className}(new ${className}())
+        TestsHelpers.mockObjeto(crudHelperServiceMock, new ${className}())
         injectMock()
 
         expect:
@@ -48,7 +48,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = ${modelName}.id
-        mock${className}(${modelName})
+        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
         injectMock()
 
         expect:
@@ -63,8 +63,8 @@ class ${className}ControllerSpec extends Specification {
 //        TODO: aqui setear los parametros
 //        controller.params.nombre = TestsHelpers.getRandomNombre()
         def expectedMessage = "SUCCESS*default.saved.message"
-        mock${className}(new ${className}())
-        mockGuardar${className}(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, new ${className}())
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -87,8 +87,8 @@ class ${className}ControllerSpec extends Specification {
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = ${modelName}.id
         controller.params.nombre = nombreNuevo
-        mock${className}(${modelName})
-        mockGuardar${className}(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -108,7 +108,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = 3
-        mock${className}(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -131,8 +131,8 @@ class ${className}ControllerSpec extends Specification {
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.${className}] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = ${modelName}.id
         controller.params.nombre = nombreInvalido
-        mock${className}(${modelName})
-        mockGuardar${className}(expectedError)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
 
         when:
@@ -152,8 +152,8 @@ class ${className}ControllerSpec extends Specification {
         ${modelName}.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = ${modelName}.id
-        mock${className}(${modelName})
-        mockEliminar${className}(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
+        TestsHelpers.mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -172,7 +172,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = 3
-        mock${className}(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -190,7 +190,7 @@ class ${className}ControllerSpec extends Specification {
     void "Debe mostrar error al intentar eliminar un ${classNameLower} sin parametro id"() {
         setup:
         ${modelName}.save()
-        mock${className}(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -203,26 +203,6 @@ class ${className}ControllerSpec extends Specification {
 
         where:
         ${modelName} = TestsHelpers.getValid${className}()
-    }
-
-    def mock${className}(expectedReturn) {
-        crudHelperServiceMock.demand.obtenerObjeto { dominio, id -> return expectedReturn }
-        return crudHelperServiceMock
-    }
-
-    def mockGuardar${className}(expectedReturn) {
-        crudHelperServiceMock.demand.guardarObjeto { entidad, objeto, params ->
-            objeto.properties = params
-            objeto.save(flush: true)
-            return expectedReturn
-        }
-    }
-
-    def mockEliminar${className}(expectedReturn) {
-        crudHelperServiceMock.demand.eliminarObjeto { entidad, objeto ->
-            objeto.delete(flush: true)
-            return expectedReturn
-        }
     }
 
     def injectMock() {

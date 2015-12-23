@@ -1,5 +1,7 @@
 package ec.com.tw.parking
 
+
+
 import grails.test.mixin.*
 import spock.lang.*
 
@@ -34,7 +36,7 @@ class UsuarioControllerSpec extends Specification {
 
     void "Debe devolver una nueva instancia de usuario"() {
         setup:
-        mockUsuario(new Usuario())
+        TestsHelpers.mockObjeto(crudHelperServiceMock, new Usuario())
         injectMock()
 
         expect:
@@ -48,7 +50,7 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = usuarioInstance.id
-        mockUsuario(usuarioInstance)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
         injectMock()
 
         expect:
@@ -65,8 +67,8 @@ class UsuarioControllerSpec extends Specification {
         controller.params.password = TestsHelpers.getRandomPass()
         controller.params.esAdmin = TestsHelpers.getRandomAdmin()
         def expectedMessage = "SUCCESS*default.saved.message"
-        mockUsuario(new Usuario())
-        mockGuardarUsuario(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, new Usuario())
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -90,8 +92,8 @@ class UsuarioControllerSpec extends Specification {
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreNuevo
-        mockUsuario(usuarioInstance)
-        mockGuardarUsuario(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -111,7 +113,7 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
-        mockUsuario(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -133,8 +135,8 @@ class UsuarioControllerSpec extends Specification {
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreInvalido
-        mockUsuario(usuarioInstance)
-        mockGuardarUsuario(expectedError)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
+        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
 
         when:
@@ -154,8 +156,8 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = usuarioInstance.id
-        mockUsuario(usuarioInstance)
-        mockEliminarUsuario(expectedMessage)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
+        TestsHelpers.mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -174,7 +176,7 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
-        mockUsuario(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -192,7 +194,7 @@ class UsuarioControllerSpec extends Specification {
     void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
         setup:
         usuarioInstance.save()
-        mockUsuario(null)
+        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -205,26 +207,6 @@ class UsuarioControllerSpec extends Specification {
 
         where:
         usuarioInstance = TestsHelpers.getValidUsuario()
-    }
-
-    def mockUsuario(expectedReturn) {
-        crudHelperServiceMock.demand.obtenerObjeto { dominio, id -> return expectedReturn }
-        return crudHelperServiceMock
-    }
-
-    def mockGuardarUsuario(expectedReturn) {
-        crudHelperServiceMock.demand.guardarObjeto { entidad, objeto, params ->
-            objeto.properties = params
-            objeto.save(flush: true)
-            return expectedReturn
-        }
-    }
-
-    def mockEliminarUsuario(expectedReturn) {
-        crudHelperServiceMock.demand.eliminarObjeto { entidad, objeto ->
-            objeto.delete(flush: true)
-            return expectedReturn
-        }
     }
 
     def injectMock() {

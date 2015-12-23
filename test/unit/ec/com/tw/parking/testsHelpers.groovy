@@ -43,4 +43,24 @@ class TestsHelpers {
                             password: getRandomPass(),
                             esAdmin : getRandomAdmin()])
     }
+
+    static def mockObjeto(crudHelperServiceMock, expectedReturn) {
+        crudHelperServiceMock.demand.obtenerObjeto { dominio, id -> return expectedReturn }
+        return crudHelperServiceMock
+    }
+
+    static def mockGuardarObjeto(crudHelperServiceMock, expectedReturn) {
+        crudHelperServiceMock.demand.guardarObjeto { entidad, objeto, params ->
+            objeto.properties = params
+            objeto.save(flush: true)
+            return expectedReturn
+        }
+    }
+
+    static def mockEliminarObjeto(crudHelperServiceMock, expectedReturn) {
+        crudHelperServiceMock.demand.eliminarObjeto { entidad, objeto ->
+            objeto.delete(flush: true)
+            return expectedReturn
+        }
+    }
 }
