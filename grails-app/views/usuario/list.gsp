@@ -5,7 +5,7 @@
     <head>
         <meta name="layout" content="main">
         <title>
-            <g:message code="default.list.label" args="[message(code: 'usuario.label', default: 'Usuario')]"/>
+            <g:message code="default.list.label" args="[message(code: 'usuario.label')]"/>
         </title>
     </head>
     <body>
@@ -36,11 +36,11 @@
             <thead>
                 <tr>
                     
-                    <g:sortableColumn property="nombre" title="${message(code: 'usuario.nombre.label', default: 'Nombre')}"/>
+                    <g:sortableColumn property="nombre" title="${message(code: 'usuario.nombre.label')}"/>
                     
-                    <g:sortableColumn property="email" title="${message(code: 'usuario.email.label', default: 'Email')}"/>
+                    <g:sortableColumn property="email" title="${message(code: 'usuario.email.label')}"/>
                     
-                    <g:sortableColumn property="esAdmin" title="${message(code: 'usuario.esAdmin.label', default: 'Es Admin')}"/>
+                    <g:sortableColumn property="esAdmin" title="${message(code: 'usuario.esAdmin.label')}"/>
                     
                     <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
                 </tr>
@@ -94,7 +94,7 @@
                             data    : $form.serialize(),
                             success : function (msg) {
                         var parts = msg.split("*");
-                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                        log(parts[1], parts[0]); // log(msg, type, title, hide)
                         setTimeout(function() {
                             if (parts[0] == "SUCCESS") {
                                 location.reload(true);
@@ -138,7 +138,7 @@
                                     },
                                     success : function (msg) {
                                         var parts = msg.split("*");
-                                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                                        log(parts[1], parts[0]); // log(msg, type, title, hide)
                                         if (parts[0] == "SUCCESS") {
                                             setTimeout(function() {
                                                 location.reload(true);

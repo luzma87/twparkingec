@@ -1,150 +1,231 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>
-
+<% classNameLower = domainClass.propertyName %>
 import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(${className}Controller)
-@Mock(${className})
+@Mock([${className}, MensajesBuilderTagLib])
 class ${className}ControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+    def crudHelperServiceMock
+
+    def setup() {
+        crudHelperServiceMock = mockFor(CrudHelperService)
     }
 
-    void "Test the index action returns the correct model"() {
-
-        when:"The index action is executed"
-            controller.index()
-
-        then:"The model is correct"
-            !model.${modelName}List
-            model.${modelName}Count == 0
+    void "Debe redireccionar a list cuando se ejecuta index"() {
+        when:
+        controller.index()
+        then:
+        response.redirectedUrl == "/${classNameLower}/list"
     }
 
-    void "Test the create action returns the correct model"() {
-        when:"The create action is executed"
-            controller.create()
+    void "Debe obtener la lista de ${classNameLower}s y su numero"() {
+        setup:
+        ${modelName}.save()
 
-        then:"The model is correctly created"
-            model.${modelName}!= null
+        expect:
+        controller.list() == [${modelName}List: [${modelName}],
+                              ${modelName}Count: 1]
+
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
     }
 
-    void "Test the save action correctly persists an instance"() {
+    void "Debe devolver una nueva instancia de ${classNameLower}"() {
+        setup:
+        mock${className}(new ${className}())
+        injectMock()
 
-        when:"The save action is executed with an invalid instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'POST'
-            def ${propertyName} = new ${className}()
-            ${propertyName}.validate()
-            controller.save(${propertyName})
+        expect:
+        controller.form_ajax().${modelName}.properties == ${modelName}.properties
 
-        then:"The create view is rendered again with the correct model"
-            model.${modelName}!= null
-            view == 'create'
-
-        when:"The save action is executed with a valid instance"
-            response.reset()
-            populateValidParams(params)
-            ${propertyName} = new ${className}(params)
-
-            controller.save(${propertyName})
-
-        then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/${propertyName}/show/1'
-            controller.flash.message != null
-            ${className}.count() == 1
+        where:
+        ${modelName} = new ${className}()
     }
 
-    void "Test that the show action returns the correct model"() {
-        when:"The show action is executed with a null domain"
-            controller.show(null)
+    void "Debe devolver una instancia de ${classNameLower} cuando recibe id"() {
+        setup:
+        ${modelName}.save()
+        controller.params.id = ${modelName}.id
+        mock${className}(${modelName})
+        injectMock()
 
-        then:"A 404 error is returned"
-            response.status == 404
+        expect:
+        controller.form_ajax().${modelName}.properties == ${modelName}.properties
 
-        when:"A domain instance is passed to the show action"
-            populateValidParams(params)
-            def ${propertyName} = new ${className}(params)
-            controller.show(${propertyName})
-
-        then:"A model is populated containing the domain instance"
-            model.${modelName} == ${propertyName}
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
     }
 
-    void "Test that the edit action returns the correct model"() {
-        when:"The edit action is executed with a null domain"
-            controller.edit(null)
+    void "Debe guardar un ${classNameLower} valido"() {
+        setup:
+//        TODO: aqui setear los parametros
+//        controller.params.nombre = TestsHelpers.getRandomNombre()
+        def expectedMessage = "SUCCESS*default.saved.message"
+        mock${className}(new ${className}())
+        mockGuardar${className}(expectedMessage)
+        injectMock()
 
-        then:"A 404 error is returned"
-            response.status == 404
+        when:
+        request.method = "POST"
+        controller.save_ajax()
 
-        when:"A domain instance is passed to the edit action"
-            populateValidParams(params)
-            def ${propertyName} = new ${className}(params)
-            controller.edit(${propertyName})
-
-        then:"A model is populated containing the domain instance"
-            model.${modelName} == ${propertyName}
+        then:
+        ${className}.count() == 1
+        def ${modelName} = ${className}.get(1)
+//        TODO: aqui validar los datos:
+//        ${classNameLower}.nombre == controller.params.nombre
+        response.text == expectedMessage
     }
 
-    void "Test the update action performs an update on a valid domain instance"() {
-        when:"Update is called for a domain instance that doesn't exist"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'PUT'
-            controller.update(null)
+    void "Debe actualizar un ${classNameLower} valido"() {
+        setup:
+        ${modelName}.save()
+//        TODO: cambiar aqui a un campo existente y valido
+        def nombreNuevo = TestsHelpers.getRandomNombre()
+        def expectedMessage = "SUCCESS*default.saved.message"
+        controller.params.id = ${modelName}.id
+        controller.params.nombre = nombreNuevo
+        mock${className}(${modelName})
+        mockGuardar${className}(expectedMessage)
+        injectMock()
 
-        then:"A 404 error is returned"
-            response.redirectedUrl == '/${propertyName}/index'
-            flash.message != null
+        when:
+        request.method = "POST"
+        controller.save_ajax()
 
+        then:
+        ${className}.count() == 1
+        ${className}.get(1).nombre == nombreNuevo
+        response.text == expectedMessage
 
-        when:"An invalid domain instance is passed to the update action"
-            response.reset()
-            def ${propertyName} = new ${className}()
-            ${propertyName}.validate()
-            controller.update(${propertyName})
-
-        then:"The edit view is rendered again with the invalid instance"
-            view == 'edit'
-            model.${modelName} == ${propertyName}
-
-        when:"A valid domain instance is passed to the update action"
-            response.reset()
-            populateValidParams(params)
-            ${propertyName} = new ${className}(params).save(flush: true)
-            controller.update(${propertyName})
-
-        then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
-            flash.message != null
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
     }
 
-    void "Test that the delete action deletes an instance if it exists"() {
-        when:"The delete action is called for a null instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'DELETE'
-            controller.delete(null)
+    void "Debe mostrar error al intentar actualizar un ${classNameLower} no encontrado"() {
+        setup:
+        ${modelName}.save()
+        controller.params.id = 3
+        mock${className}(null)
+        injectMock()
 
-        then:"A 404 is returned"
-            response.redirectedUrl == '/${propertyName}/index'
-            flash.message != null
+        when:
+        request.method = "POST"
+        controller.save_ajax()
 
-        when:"A domain instance is created"
-            response.reset()
-            populateValidParams(params)
-            def ${propertyName} = new ${className}(params).save(flush: true)
+        then:
+        ${className}.count() == 1
+        response.text == "ERROR*default.not.found.message"
 
-        then:"It exists"
-            ${className}.count() == 1
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
+    }
 
-        when:"The domain instance is passed to the delete action"
-            controller.delete(${propertyName})
+    void "Debe mostrar error al actualizar un ${classNameLower} con datos invalidos"() {
+        setup:
+        ${modelName}.save()
+//        TODO: cambiar aqui a un campo existente y no valido
+        def nombreInvalido = TestsHelpers.getRandomNombreInvalido()
+        def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.${className}] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
+        controller.params.id = ${modelName}.id
+        controller.params.nombre = nombreInvalido
+        mock${className}(${modelName})
+        mockGuardar${className}(expectedError)
+        injectMock()
 
-        then:"The instance is deleted"
-            ${className}.count() == 0
-            response.redirectedUrl == '/${propertyName}/index'
-            flash.message != null
+        when:
+        request.method = "POST"
+        controller.save_ajax()
+
+        then:
+        ${className}.count() == 1
+        response.text == expectedError
+
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
+    }
+
+    void "Debe eliminar un ${classNameLower} valido"() {
+        setup:
+        ${modelName}.save()
+        def expectedMessage = "SUCCESS*default.deleted.message"
+        controller.params.id = ${modelName}.id
+        mock${className}(${modelName})
+        mockEliminar${className}(expectedMessage)
+        injectMock()
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        ${className}.count() == 0
+        response.text == expectedMessage
+
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
+    }
+
+    void "Debe mostrar error al intentar eliminar un ${classNameLower} no encontrado"() {
+        setup:
+        ${modelName}.save()
+        controller.params.id = 3
+        mock${className}(null)
+        injectMock()
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        ${className}.count() == 1
+        response.text == "ERROR*default.not.found.message"
+
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
+    }
+
+    void "Debe mostrar error al intentar eliminar un ${classNameLower} sin parametro id"() {
+        setup:
+        ${modelName}.save()
+        mock${className}(null)
+        injectMock()
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        ${className}.count() == 1
+        response.text == "ERROR*default.not.found.message"
+
+        where:
+        ${modelName} = TestsHelpers.getValid${className}()
+    }
+
+    def mock${className}(expectedReturn) {
+        crudHelperServiceMock.demand.obtenerObjeto { dominio, id -> return expectedReturn }
+        return crudHelperServiceMock
+    }
+
+    def mockGuardar${className}(expectedReturn) {
+        crudHelperServiceMock.demand.guardarObjeto { entidad, objeto, params ->
+            objeto.properties = params
+            objeto.save(flush: true)
+            return expectedReturn
+        }
+    }
+
+    def mockEliminar${className}(expectedReturn) {
+        crudHelperServiceMock.demand.eliminarObjeto { entidad, objeto ->
+            objeto.delete(flush: true)
+            return expectedReturn
+        }
+    }
+
+    def injectMock() {
+        controller.crudHelperService = crudHelperServiceMock.createMock()
     }
 }

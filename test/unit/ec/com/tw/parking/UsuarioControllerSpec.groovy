@@ -6,6 +6,7 @@ import spock.lang.*
 @TestFor(UsuarioController)
 @Mock([Usuario, MensajesBuilderTagLib])
 class UsuarioControllerSpec extends Specification {
+
     def crudHelperServiceMock
 
     def setup() {
@@ -16,15 +17,16 @@ class UsuarioControllerSpec extends Specification {
         when:
         controller.index()
         then:
-        response.redirectedUrl == '/usuario/list'
+        response.redirectedUrl == "/usuario/list"
     }
 
-    void "Debe llamar a listar usuarios y su numero"() {
+    void "Debe obtener la lista de usuarios y su numero"() {
         setup:
         usuarioInstance.save()
 
         expect:
-        controller.list() == [usuarioInstanceList: [usuarioInstance], usuarioInstanceCount: 1]
+        controller.list() == [usuarioInstanceList: [usuarioInstance],
+                              usuarioInstanceCount: 1]
 
         where:
         usuarioInstance = TestsHelpers.getValidUsuario()
@@ -73,11 +75,11 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         Usuario.count() == 1
-        def usuario = Usuario.get(1)
-        usuario.nombre == controller.params.nombre
-        usuario.email == controller.params.email
-        usuario.password == controller.params.password
-        usuario.esAdmin == controller.params.esAdmin
+        def usuarioInstance = Usuario.get(1)
+        usuarioInstance.nombre == controller.params.nombre
+        usuarioInstance.email == controller.params.email
+        usuarioInstance.password == controller.params.password
+        usuarioInstance.esAdmin == controller.params.esAdmin
         response.text == expectedMessage
     }
 

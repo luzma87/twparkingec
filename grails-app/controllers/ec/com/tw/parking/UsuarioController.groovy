@@ -23,8 +23,8 @@ class UsuarioController extends Shield {
 
     def save_ajax() {
         def usuarioInstance = crudHelperService.obtenerObjeto(Usuario, params.id)
-        if (!usuarioInstance) {
-            render msgBuilder.renderNoEncontrado(entidad: 'usuario', id: params.id)
+        if(!usuarioInstance) {
+            render msgBuilder.renderNoEncontrado(entidad: 'usuario')
             return
         }
         render crudHelperService.guardarObjeto('usuario', usuarioInstance, params)
@@ -32,8 +32,8 @@ class UsuarioController extends Shield {
 
     def delete_ajax() {
         def usuarioInstance = crudHelperService.obtenerObjeto(Usuario, params.id)
-        if (!usuarioInstance || !usuarioInstance.id) {
-            render msgBuilder.renderNoEncontrado(entidad: 'usuario', id: params.id)
+        if(!usuarioInstance || !usuarioInstance.id) {
+            render msgBuilder.renderNoEncontrado(entidad: 'usuario')
             return
         }
         render crudHelperService.eliminarObjeto('usuario', usuarioInstance)

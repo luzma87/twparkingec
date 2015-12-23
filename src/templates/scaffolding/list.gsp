@@ -5,7 +5,7 @@
     <head>
         <meta name="layout" content="main">
         <title>
-            <g:message code="default.list.label" args="[message(code: '${domainClass.propertyName}.label', default: '${className}')]"/>
+            <g:message code="default.list.label" args="[message(code: '${domainClass.propertyName}.label')]"/>
         </title>
     </head>
     <body>
@@ -46,11 +46,10 @@
                         if (i < 6) {
                             colCount ++
                             if (p.isAssociation()) { %>
-                    <th><g:message code="${domainClass.propertyName}.${p.name}.label" default="${
-                            p.naturalName}"/></th>
+                    <th><g:message code="${domainClass.propertyName}.${p.name}.label" /></th>
                     <% } else { %>
                     <g:sortableColumn property="${p.name}" title="\${message(code: '${domainClass.propertyName}.${
-                            p.name}.label', default: '${p.naturalName}')}"/>
+                            p.name}.label')}"/>
                     <% }
                     }
                     } %>
