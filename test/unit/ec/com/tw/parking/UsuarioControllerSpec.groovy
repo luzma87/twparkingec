@@ -123,7 +123,7 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance = getValidUsuario()
     }
 
-    void "Debe mostrar error al actualizar un usuario no encontrado"() {
+    void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
@@ -160,4 +160,53 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance = getValidUsuario()
     }
 
+    void "Debe eliminar un usuario valido"() {
+        setup:
+        usuarioInstance.save()
+        controller.params.id = usuarioInstance.id
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        Usuario.count() == 0
+        response.text == "SUCCESS*default.deleted.message"
+
+        where:
+        usuarioInstance = getValidUsuario()
+    }
+
+    void "Debe mostrar error al intentar eliminar un usuario no encontrado"() {
+        setup:
+        usuarioInstance.save()
+        controller.params.id = 3
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        Usuario.count() == 1
+        response.text == "ERROR*default.not.found.message"
+
+        where:
+        usuarioInstance = getValidUsuario()
+    }
+
+    void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
+        setup:
+        usuarioInstance.save()
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        Usuario.count() == 1
+        response.text == "ERROR*default.not.found.message"
+
+        where:
+        usuarioInstance = getValidUsuario()
+    }
 }
