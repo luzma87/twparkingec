@@ -20,10 +20,11 @@ class UsuarioSpec extends Specification {
         def nombre = RandomStringUtils.randomAlphabetic(lengthNombre)
         def mail = RandomStringUtils.randomAlphabetic(lengthMail) + "@test.com"
         def pass = RandomStringUtils.random(lengthPass)
+        def esAdmin = random.nextBoolean()
         usuario = new Usuario([nombre  : nombre,
                                email   : mail,
                                password: pass,
-                               esAdmin : true])
+                               esAdmin : esAdmin])
     }
 
     def cleanup() {
