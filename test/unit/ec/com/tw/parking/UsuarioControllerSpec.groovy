@@ -2,21 +2,46 @@ package ec.com.tw.parking
 
 import grails.test.mixin.*
 import spock.lang.*
+import org.apache.commons.lang.RandomStringUtils
 
 @TestFor(UsuarioController)
-@Mock(Usuario)
+@Mock([Usuario, MensajesBuilderTagLib])
 class UsuarioControllerSpec extends Specification {
 
-    def populateValidParams() {
-        assert params != null
-        params["nombre"] = "nombre"
-        params["email"] = "mail@mail.com"
-        params["password"] = "pass"
-        params["esAdmin"] = false
+    def getRandomNombre() {
+        def random = new Random()
+        def lengthNombre = random.nextInt(50 - 3) + 3
+        return RandomStringUtils.randomAlphabetic(lengthNombre)
+    }
+
+    def getRandomNombreInvalido() {
+        def random = new Random()
+        def lengthNombre = random.nextInt(150 - 50) + 50
+        return RandomStringUtils.randomAlphabetic(lengthNombre)
+    }
+
+    def getRandomMail() {
+        def random = new Random()
+        def lengthMail = random.nextInt(90 - 3) + 3
+        return RandomStringUtils.randomAlphabetic(lengthMail) + "@test.com"
+    }
+
+    def getRandomPass() {
+        def random = new Random()
+        def lengthPass = random.nextInt(512 - 3) + 3
+        return RandomStringUtils.random(lengthPass)
+    }
+
+    def getRandomAdmin() {
+        def random = new Random()
+        return random.nextBoolean()
     }
 
     def getValidUsuario() {
-        return new Usuario([nombre: "nombre", email: "email@mail.com", password: "123", esAdmin: false])
+        return new Usuario([nombre  : getRandomNombre(),
+                            email   : getRandomMail(),
+                            password: getRandomPass(),
+                            esAdmin : getRandomAdmin()])
     }
 
     void "Debe redireccionar a list cuando se ejecuta index"() {
@@ -57,134 +82,82 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance = getValidUsuario()
     }
 
-    @Ignore
-    void "Test the create action returns the correct model"() {
-        when: "The create action is executed"
-        controller.create()
+    void "Debe guardar un usuario valido"() {
+        setup:
+        controller.params.nombre = getRandomNombre()
+        controller.params.email = getRandomMail()
+        controller.params.password = getRandomPass()
+        controller.params.esAdmin = getRandomAdmin()
 
-        then: "The model is correctly created"
-        model.usuarioInstance != null
-    }
+        when:
+        request.method = "POST"
+        controller.save_ajax()
 
-    @Ignore
-    void "Test the save action correctly persists an instance"() {
-
-        when: "The save action is executed with an invalid instance"
-        request.contentType = FORM_CONTENT_TYPE
-        request.method = 'POST'
-        def usuario = new Usuario()
-        usuario.validate()
-        controller.save(usuario)
-
-        then: "The create view is rendered again with the correct model"
-        model.usuarioInstance != null
-        view == 'create'
-
-        when: "The save action is executed with a valid instance"
-        response.reset()
-        populateValidParams(params)
-        usuario = new Usuario(params)
-
-        controller.save(usuario)
-
-        then: "A redirect is issued to the show action"
-        response.redirectedUrl == '/usuario/show/1'
-        controller.flash.message != null
+        then:
         Usuario.count() == 1
+        def usuario = Usuario.get(1)
+        usuario.nombre == controller.params.nombre
+        usuario.email == controller.params.email
+        usuario.password == controller.params.password
+        usuario.esAdmin == controller.params.esAdmin
+        response.text == "SUCCESS*default.saved.message"
     }
 
-    @Ignore
-    void "Test that the show action returns the correct model"() {
-        when: "The show action is executed with a null domain"
-        controller.show(null)
+    void "Debe actualizar un usuario valido"() {
+        setup:
+        usuarioInstance.save()
+        def nombreNuevo = getRandomNombre()
+        controller.params.id = usuarioInstance.id
+        controller.params.nombre = nombreNuevo
 
-        then: "A 404 error is returned"
-        response.status == 404
+        when:
+        request.method = "POST"
+        controller.save_ajax()
 
-        when: "A domain instance is passed to the show action"
-        populateValidParams(params)
-        def usuario = new Usuario(params)
-        controller.show(usuario)
-
-        then: "A model is populated containing the domain instance"
-        model.usuarioInstance == usuario
-    }
-
-    @Ignore
-    void "Test that the edit action returns the correct model"() {
-        when: "The edit action is executed with a null domain"
-        controller.edit(null)
-
-        then: "A 404 error is returned"
-        response.status == 404
-
-        when: "A domain instance is passed to the edit action"
-        populateValidParams(params)
-        def usuario = new Usuario(params)
-        controller.edit(usuario)
-
-        then: "A model is populated containing the domain instance"
-        model.usuarioInstance == usuario
-    }
-
-    @Ignore
-    void "Test the update action performs an update on a valid domain instance"() {
-        when: "Update is called for a domain instance that doesn't exist"
-        request.contentType = FORM_CONTENT_TYPE
-        request.method = 'PUT'
-        controller.update(null)
-
-        then: "A 404 error is returned"
-        response.redirectedUrl == '/usuario/index'
-        flash.message != null
-
-
-        when: "An invalid domain instance is passed to the update action"
-        response.reset()
-        def usuario = new Usuario()
-        usuario.validate()
-        controller.update(usuario)
-
-        then: "The edit view is rendered again with the invalid instance"
-        view == 'edit'
-        model.usuarioInstance == usuario
-
-        when: "A valid domain instance is passed to the update action"
-        response.reset()
-        populateValidParams(params)
-        usuario = new Usuario(params).save(flush: true)
-        controller.update(usuario)
-
-        then: "A redirect is issues to the show action"
-        response.redirectedUrl == "/usuario/show/$usuario.id"
-        flash.message != null
-    }
-
-    @Ignore
-    void "Test that the delete action deletes an instance if it exists"() {
-        when: "The delete action is called for a null instance"
-        request.contentType = FORM_CONTENT_TYPE
-        request.method = 'DELETE'
-        controller.delete(null)
-
-        then: "A 404 is returned"
-        response.redirectedUrl == '/usuario/index'
-        flash.message != null
-
-        when: "A domain instance is created"
-        response.reset()
-        populateValidParams(params)
-        def usuario = new Usuario(params).save(flush: true)
-
-        then: "It exists"
+        then:
         Usuario.count() == 1
+        Usuario.get(1).nombre == nombreNuevo
+        response.text == "SUCCESS*default.saved.message"
 
-        when: "The domain instance is passed to the delete action"
-        controller.delete(usuario)
-
-        then: "The instance is deleted"
-        Usuario.count() == 0
-        response.redirectedUrl == '/usuario/index'
-        flash.message != null
+        where:
+        usuarioInstance = getValidUsuario()
     }
+
+    void "Debe mostrar error al actualizar un usuario no encontrado"() {
+        setup:
+        usuarioInstance.save()
+        controller.params.id = 3
+
+        when:
+        request.method = "POST"
+        controller.save_ajax()
+
+        then:
+        Usuario.count() == 1
+        response.text == "ERROR*default.not.found.message"
+
+        where:
+        usuarioInstance = getValidUsuario()
+    }
+
+    void "Debe mostrar error al actualizar un usuario con datos invalidos"() {
+        setup:
+        usuarioInstance.save()
+        def nombreInvalido = getRandomNombreInvalido()
+        controller.params.id = usuarioInstance.id
+        controller.params.nombre = nombreInvalido
+
+        when:
+        request.method = "POST"
+        controller.save_ajax()
+
+        then:
+        Usuario.count() == 1
+        def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
+        response.text == expectedError
+
+        where:
+        usuarioInstance = getValidUsuario()
+    }
+
 }

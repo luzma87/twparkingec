@@ -25,7 +25,7 @@ class MensajesBuilderTagLib {
         def codigo = attrs.codigo
         def id = attrs.id
         def entidad = attrs.entidad
-        out << mensajeConCodigo(prefijio: "ERROR*", codigo: codigo, id: id, entidad: entidad)
+        out << mensajeConCodigo(prefijo: "ERROR*", codigo: codigo, id: id, entidad: entidad)
     }
 
     def renderExito = { attrs ->

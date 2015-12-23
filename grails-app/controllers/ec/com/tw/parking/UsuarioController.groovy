@@ -51,7 +51,7 @@ class UsuarioController extends Shield {
         if (usuario.save(flush: true)) {
             return msgBuilder.renderGuardado(entidad: 'usuario', id: params.id)
         }
-        return msgBuilder.renderNoGuardado(entidad: 'usuario', id: params.id)
+        return msgBuilder.renderNoGuardado(entidad: 'usuario', id: params.id) + ": " + renderErrors(bean: usuario)
     }
 
     def eliminarUsuario(usuario) {
