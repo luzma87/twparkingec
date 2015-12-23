@@ -2,6 +2,7 @@ package ec.com.tw.parking
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import org.apache.commons.lang.RandomStringUtils
 
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
@@ -12,7 +13,17 @@ class UsuarioSpec extends Specification {
     def usuario
 
     def setup() {
-        usuario = new Usuario([nombre: 'nombre', email: 'mail@test.com', password: '12346', esAdmin: true])
+        def random = new Random()
+        def lengthNombre = random.nextInt(50 - 3) + 3
+        def lengthMail = random.nextInt(90 - 3) + 3
+        def lengthPass = random.nextInt(512 - 3) + 3
+        def nombre = RandomStringUtils.randomAlphabetic(lengthNombre)
+        def mail = RandomStringUtils.randomAlphabetic(lengthMail) + "@test.com"
+        def pass = RandomStringUtils.random(lengthPass)
+        usuario = new Usuario([nombre  : nombre,
+                               email   : mail,
+                               password: pass,
+                               esAdmin : true])
     }
 
     def cleanup() {
