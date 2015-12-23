@@ -1,6 +1,6 @@
 package ec.com.tw.parking
 
-class MensajesTagLib {
+class MensajesBuilderTagLib {
     static defaultEncodeAs = [taglib: 'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
 

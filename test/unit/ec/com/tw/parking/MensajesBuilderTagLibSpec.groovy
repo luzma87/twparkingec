@@ -6,8 +6,8 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.web.GroovyPageUnitTestMixin} for usage instructions
  */
-@TestFor(MensajesTagLib)
-class MensajesTagLibSpec extends Specification {
+@TestFor(MensajesBuilderTagLib)
+class MensajesBuilderTagLibSpec extends Specification {
 
     def setup() {
     }
