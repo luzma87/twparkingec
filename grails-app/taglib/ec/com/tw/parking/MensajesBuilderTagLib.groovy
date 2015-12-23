@@ -10,7 +10,7 @@ class MensajesBuilderTagLib {
         def codigo = attrs.codigo
         def id = attrs.id
         def entidad = message(code: attrs.entidad + '.label')
-        def prefijo = attrs.prefijio ?: ""
+        def prefijo = attrs.prefijo ?: ""
         out << prefijo << message(code: codigo, args: [entidad, id])
     }
 

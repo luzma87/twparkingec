@@ -26,7 +26,12 @@ function log(msg, type, title, hide) {
         icon    : icon,
         buttons : {
             closer_hover  : false,
-            sticker_hover : false
+            sticker_hover : false,
+            classes       : {
+                closer   : 'fa fa-bomb',
+                pin_up   : 'fa fa-anchor',
+                pin_down : 'fa fa-hourglass'
+            }
         },
         styling : 'fontawesome',
         text    : msg,
@@ -47,7 +52,7 @@ function openLoader(msg, title) {
         title = false;
     }
 
-    $msg.append('<i class="fa fa-5x fa-circle-o-notch fa-spin"></i>');
+    $msg.append('<i class="fa fa-5x icon-debian fa-spin"></i>'); //fa-circle-o-notch
 
     bootbox.dialog({
         id          : 'dlgLoader',
