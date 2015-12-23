@@ -96,7 +96,5 @@
     </script>
 </g:if>
 <g:else>
-    <elm:flashMessage tipo="notFound" closable="${false}">
-        <g:message code="default.not.found.message" args="[message(code: 'usuario.label', default: 'Usuario'),params.id]"/>
-    </elm:flashMessage>
+    <msgBuilder:noEncontradoHtml entidad="usuario"/>
 </g:else>

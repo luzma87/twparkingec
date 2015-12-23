@@ -7,61 +7,66 @@ class MensajesBuilderTagLib {
     static namespace = "msgBuilder"
 
     def mensajeConCodigo = { attrs ->
-        def tipo = attrs.tipo
         def codigo = attrs.codigo
         def id = attrs.id
         def entidad = message(code: attrs.entidad + '.label')
-        def separador = attrs.separador ?: "*"
-        out << tipo << separador << message(code: codigo, args: [entidad, id])
+        def prefijo = attrs.prefijio ?: ""
+        out << prefijo << message(code: codigo, args: [entidad, id])
     }
 
-    def error = { attrs ->
-        def codigo = attrs.codigo
-        def id = attrs.id
-        def entidad = attrs.entidad
-        out << mensajeConCodigo(tipo: "ERROR", codigo: codigo, id: id, entidad: entidad)
-    }
-
-    def exito = { attrs ->
-        def codigo = attrs.codigo
-        def id = attrs.id
-        def entidad = attrs.entidad
-        out << mensajeConCodigo(tipo: "SUCCESS", codigo: codigo, id: id, entidad: entidad)
-    }
-
-    def noEncontrado = { attrs ->
+    def noEncontradoHtml = { attrs ->
         def codigo = 'default.not.found.message'
-        def id = attrs.id
         def entidad = attrs.entidad
-        out << error(codigo: codigo, id: id, entidad: entidad)
+        def msg = mensajeConCodigo(codigo: codigo, entidad: entidad)
+        out << elm.flashMessage(tipo: "notFound", closable: false, contenido: msg)
     }
 
-    def noGuardado = {attrs ->
+    def renderError = { attrs ->
+        def codigo = attrs.codigo
+        def id = attrs.id
+        def entidad = attrs.entidad
+        out << mensajeConCodigo(prefijio: "ERROR*", codigo: codigo, id: id, entidad: entidad)
+    }
+
+    def renderExito = { attrs ->
+        def codigo = attrs.codigo
+        def id = attrs.id
+        def entidad = attrs.entidad
+        out << mensajeConCodigo(prefijo: "SUCCESS*", codigo: codigo, id: id, entidad: entidad)
+    }
+
+    def renderNoEncontrado = { attrs ->
+        def codigo = 'default.not.found.message'
+        def entidad = attrs.entidad
+        out << renderError(codigo: codigo, entidad: entidad)
+    }
+
+    def renderNoGuardado = { attrs ->
         def codigo = 'default.not.saved.message'
         def id = attrs.id
         def entidad = attrs.entidad
-        out << error(codigo: codigo, id: id, entidad: entidad)
+        out << renderError(codigo: codigo, id: id, entidad: entidad)
     }
 
-    def guardado = {attrs ->
+    def renderGuardado = { attrs ->
         def codigo = 'default.saved.message'
         def id = attrs.id
         def entidad = attrs.entidad
-        out << exito(codigo: codigo, id: id, entidad: entidad)
+        out << renderExito(codigo: codigo, id: id, entidad: entidad)
     }
 
-    def noEliminado = {attrs ->
+    def renderNoEliminado = { attrs ->
         def codigo = 'default.not.deleted.message'
         def id = attrs.id
         def entidad = attrs.entidad
-        out << error(codigo: codigo, id: id, entidad: entidad)
+        out << renderError(codigo: codigo, id: id, entidad: entidad)
     }
 
-    def eliminado = {attrs ->
+    def renderEliminado = { attrs ->
         def codigo = 'default.deleted.message'
         def id = attrs.id
         def entidad = attrs.entidad
-        out << exito(codigo: codigo, id: id, entidad: entidad)
+        out << renderExito(codigo: codigo, id: id, entidad: entidad)
     }
 
 }

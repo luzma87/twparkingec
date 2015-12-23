@@ -4,7 +4,7 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(UsuarioController)
-@Mock([Usuario, MensajesTagLib])
+@Mock(Usuario)
 class UsuarioControllerSpec extends Specification {
 
     def populateValidParams() {
