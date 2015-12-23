@@ -1,6 +1,8 @@
 package ec.com.tw.parking
 
-class InicioController {
+import ec.com.tw.parking.commons.Shield
+
+class InicioController extends Shield {
 
     def index() {}
 }
