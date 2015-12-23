@@ -7,41 +7,10 @@ import org.apache.commons.lang.RandomStringUtils
 @TestFor(UsuarioController)
 @Mock([Usuario, MensajesBuilderTagLib])
 class UsuarioControllerSpec extends Specification {
+    def crudHelperServiceMock
 
-    def getRandomNombre() {
-        def random = new Random()
-        def lengthNombre = random.nextInt(50 - 3) + 3
-        return RandomStringUtils.randomAlphabetic(lengthNombre)
-    }
-
-    def getRandomNombreInvalido() {
-        def random = new Random()
-        def lengthNombre = random.nextInt(150 - 50) + 50
-        return RandomStringUtils.randomAlphabetic(lengthNombre)
-    }
-
-    def getRandomMail() {
-        def random = new Random()
-        def lengthMail = random.nextInt(90 - 3) + 3
-        return RandomStringUtils.randomAlphabetic(lengthMail) + "@test.com"
-    }
-
-    def getRandomPass() {
-        def random = new Random()
-        def lengthPass = random.nextInt(512 - 3) + 3
-        return RandomStringUtils.random(lengthPass)
-    }
-
-    def getRandomAdmin() {
-        def random = new Random()
-        return random.nextBoolean()
-    }
-
-    def getValidUsuario() {
-        return new Usuario([nombre  : getRandomNombre(),
-                            email   : getRandomMail(),
-                            password: getRandomPass(),
-                            esAdmin : getRandomAdmin()])
+    def setup() {
+        crudHelperServiceMock = mockFor(CrudHelperService)
     }
 
     void "Debe redireccionar a list cuando se ejecuta index"() {
@@ -63,6 +32,10 @@ class UsuarioControllerSpec extends Specification {
     }
 
     void "Debe devolver una nueva instancia de usuario"() {
+        setup:
+        mockUsuario(new Usuario())
+        injectMock()
+
         expect:
         controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
 
@@ -74,6 +47,8 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = usuarioInstance.id
+        mockUsuario(usuarioInstance)
+        injectMock()
 
         expect:
         controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
@@ -88,6 +63,10 @@ class UsuarioControllerSpec extends Specification {
         controller.params.email = getRandomMail()
         controller.params.password = getRandomPass()
         controller.params.esAdmin = getRandomAdmin()
+        def expectedMessage = "SUCCESS*default.saved.message"
+        mockUsuario(new Usuario())
+        mockGuardarUsuario(expectedMessage)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -100,15 +79,19 @@ class UsuarioControllerSpec extends Specification {
         usuario.email == controller.params.email
         usuario.password == controller.params.password
         usuario.esAdmin == controller.params.esAdmin
-        response.text == "SUCCESS*default.saved.message"
+        response.text == expectedMessage
     }
 
     void "Debe actualizar un usuario valido"() {
         setup:
         usuarioInstance.save()
         def nombreNuevo = getRandomNombre()
+        def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreNuevo
+        mockUsuario(usuarioInstance)
+        mockGuardarUsuario(expectedMessage)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -117,7 +100,7 @@ class UsuarioControllerSpec extends Specification {
         then:
         Usuario.count() == 1
         Usuario.get(1).nombre == nombreNuevo
-        response.text == "SUCCESS*default.saved.message"
+        response.text == expectedMessage
 
         where:
         usuarioInstance = getValidUsuario()
@@ -127,6 +110,8 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
+        mockUsuario(null)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -144,8 +129,12 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         def nombreInvalido = getRandomNombreInvalido()
+        def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreInvalido
+        mockUsuario(usuarioInstance)
+        mockGuardarUsuario(expectedError)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -153,7 +142,6 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         Usuario.count() == 1
-        def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         response.text == expectedError
 
         where:
@@ -163,7 +151,11 @@ class UsuarioControllerSpec extends Specification {
     void "Debe eliminar un usuario valido"() {
         setup:
         usuarioInstance.save()
+        def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = usuarioInstance.id
+        mockUsuario(usuarioInstance)
+        mockEliminarUsuario(expectedMessage)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -171,7 +163,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         Usuario.count() == 0
-        response.text == "SUCCESS*default.deleted.message"
+        response.text == expectedMessage
 
         where:
         usuarioInstance = getValidUsuario()
@@ -181,6 +173,8 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
+        mockUsuario(null)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -197,6 +191,8 @@ class UsuarioControllerSpec extends Specification {
     void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
         setup:
         usuarioInstance.save()
+        mockUsuario(null)
+        injectMock()
 
         when:
         request.method = "POST"
@@ -208,5 +204,66 @@ class UsuarioControllerSpec extends Specification {
 
         where:
         usuarioInstance = getValidUsuario()
+    }
+
+    def getRandomString(int min, int max, boolean allChars) {
+        def random = new Random()
+        def length = random.nextInt(max - min) + min
+        if (allChars) {
+            return RandomStringUtils.random(length)
+        }
+        return RandomStringUtils.randomAlphabetic(length)
+    }
+
+    def getRandomNombre() {
+        return getRandomString(3, 50, false)
+    }
+
+    def getRandomNombreInvalido() {
+        return getRandomString(51, 150, false)
+    }
+
+    def getRandomMail() {
+        return getRandomString(3, 90, false) + "@test.com"
+    }
+
+    def getRandomPass() {
+        return getRandomString(3, 512, true)
+    }
+
+    def getRandomAdmin() {
+        def random = new Random()
+        return random.nextBoolean()
+    }
+
+    def getValidUsuario() {
+        return new Usuario([nombre  : getRandomNombre(),
+                            email   : getRandomMail(),
+                            password: getRandomPass(),
+                            esAdmin : getRandomAdmin()])
+    }
+
+    def mockUsuario(expectedReturn) {
+        crudHelperServiceMock.demand.obtenerObjeto { dominio, id -> return expectedReturn }
+        return crudHelperServiceMock
+    }
+
+    def mockGuardarUsuario(expectedReturn) {
+        crudHelperServiceMock.demand.guardarObjeto { entidad, objeto, params ->
+            objeto.properties = params
+            objeto.save(flush: true)
+            return expectedReturn
+        }
+    }
+
+    def mockEliminarUsuario(expectedReturn) {
+        crudHelperServiceMock.demand.eliminarObjeto { entidad, objeto ->
+            objeto.delete(flush: true)
+            return expectedReturn
+        }
+    }
+
+    def injectMock() {
+        controller.crudHelperService = crudHelperServiceMock.createMock()
     }
 }

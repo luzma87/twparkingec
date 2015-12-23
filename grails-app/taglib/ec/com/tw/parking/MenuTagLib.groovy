@@ -29,9 +29,15 @@ class MenuTagLib {
                 items: [
                     usuarios: [
                         controller: "usuario",
-                        action    : "index",
+                        action    : "list",
                         label     : message(code: 'navbar.users'),
                         icon      : "fa-users"
+                    ],
+                    autos: [
+                        controller: "auto",
+                        action    : "list",
+                        label     : message(code: 'navbar.autos'),
+                        icon      : "fa-car"
                     ]
                 ]
             ]
@@ -114,6 +120,11 @@ class MenuTagLib {
         }
         if (item.items) {
             clase += " dropdown"
+            item.items.each { t, it ->
+                if (session.cn == it.controller && session.an == it.action) {
+                    clase = "active"
+                }
+            }
         }
         str += "<li class='" + clase + "'>"
         if (item.items) {
