@@ -31,7 +31,7 @@ class UsuarioControllerSpec extends Specification {
                               usuarioInstanceCount: 1]
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe devolver una nueva instancia de usuario"() {
@@ -57,7 +57,7 @@ class UsuarioControllerSpec extends Specification {
         controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe guardar un usuario valido"() {
@@ -106,7 +106,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
@@ -125,7 +125,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al actualizar un usuario con datos invalidos"() {
@@ -148,7 +148,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedError
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe eliminar un usuario valido"() {
@@ -169,7 +169,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar eliminar un usuario no encontrado"() {
@@ -188,7 +188,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
@@ -206,7 +206,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.getValidUsuario()
+        usuarioInstance = TestsHelpers.generaUsuarioValido()
     }
 
     def injectMock() {

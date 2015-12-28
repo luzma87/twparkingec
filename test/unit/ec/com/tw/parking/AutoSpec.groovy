@@ -11,57 +11,87 @@ import spock.lang.Specification
 @Mock([Usuario])
 class AutoSpec extends Specification {
 
-    def auto
-
-    def setup() {
-        auto = new Auto([marca: TestsHelpers.getRandomString(2, 20, false)])
-    }
-
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
+        def auto = TestsHelpers.generaAutoValido()
 
         then: 'la validacion debe pasar'
         auto.validate()
         !auto.hasErrors()
     }
 
-    void "No debe ser la marca nula"() {
-        when: 'la marca es nula'
-        auto.marca = null
+    void "Debe ser no nulo"(campo) {
+        setup:
+        def auto = TestsHelpers.generaAutoConCampo(campo, null)
 
-        then: 'la validacion debe fallar'
+        expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors['marca']?.code == 'nullable'
+        auto.errors[campo]?.code == 'nullable'
+
+        where:
+        campo << ["usuario", "marca", "modelo", "placa", "tamanio"]
     }
 
-    void "No debe ser la marca blanca"() {
-        when: 'la marca es blanca'
-        auto.marca = ''
+    void "Debe ser no blanco"(campo) {
+        setup:
+        def auto = TestsHelpers.generaAutoConCampo(campo, "")
 
-        then: 'la validacion debe fallar'
+        expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors['marca']?.code == 'blank'
+        auto.errors[campo]?.code == 'blank'
+
+        where:
+        campo << ["marca", "modelo", "placa", "tamanio"]
     }
 
-    void "No debe tener la marca menos de 2 caracteres"() {
-        when:
-        auto.marca = TestsHelpers.getRandomString(1)
+    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+        setup:
+        def valor = TestsHelpers.getRandomString(1, campo.minSize, false)
+        def auto = TestsHelpers.generaAutoConCampo(campo.nombre, valor)
 
-        then:
+        expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors['marca']?.code == 'minSize.notmet'
+        auto.errors[campo.nombre]?.code == 'minSize.notmet'
+
+        where:
+        campo << [
+            [nombre: "marca", minSize: 2],
+            [nombre: "modelo", minSize: 2],
+            [nombre: "placa", minSize: 8]
+        ]
     }
 
-    void "No debe tener la marca mas de 20 caracteres"() {
-        when:
-        auto.marca = TestsHelpers.getRandomString(21, 40, false)
+    void "Debe tener menos o igual el maximo de caracteres"(campo) {
+        setup:
+        def valor = TestsHelpers.getRandomString(campo.maxSize + 1, 100, false)
+        def auto = TestsHelpers.generaAutoConCampo(campo.nombre, valor)
 
-        then:
+        expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors['marca']?.code == 'maxSize.exceeded'
+        auto.errors[campo.nombre]?.code == 'maxSize.exceeded'
+
+        where:
+        campo << [
+            [nombre: "marca", maxSize: 20],
+            [nombre: "modelo", maxSize: 25],
+            [nombre: "placa", maxSize: 8],
+            [nombre: "tamanio", maxSize: 1]
+        ]
+    }
+
+    void "Debe el tamanio ser P o G"() {
+        setup:
+        def regex = /[A-FH-OQ-Z]/
+        def tamanio = TestsHelpers.getRandomString(regex, 1, 1)
+        def auto = TestsHelpers.generaAutoConCampo('tamanio', tamanio)
+
+        expect:
+        !auto.validate()
+        auto.hasErrors()
+        auto.errors["tamanio"]?.code == 'not.inList'
     }
 }
