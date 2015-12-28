@@ -29,7 +29,7 @@ class ${className}ControllerSpec extends Specification {
                               ${modelName}Count: 1]
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe devolver una nueva instancia de ${classNameLower}"() {
@@ -55,7 +55,7 @@ class ${className}ControllerSpec extends Specification {
         controller.form_ajax().${modelName}.properties == ${modelName}.properties
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe guardar un ${classNameLower} valido"() {
@@ -101,7 +101,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe mostrar error al intentar actualizar un ${classNameLower} no encontrado"() {
@@ -120,7 +120,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe mostrar error al actualizar un ${classNameLower} con datos invalidos"() {
@@ -144,7 +144,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == expectedError
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe eliminar un ${classNameLower} valido"() {
@@ -165,7 +165,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe mostrar error al intentar eliminar un ${classNameLower} no encontrado"() {
@@ -184,7 +184,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     void "Debe mostrar error al intentar eliminar un ${classNameLower} sin parametro id"() {
@@ -202,7 +202,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.getValid${className}()
+        ${modelName} = TestsHelpers.genera${className}Valido()
     }
 
     def injectMock() {

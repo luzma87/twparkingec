@@ -29,4 +29,8 @@ class Usuario {
         esAdmin nullable: false
     }
 
+    String toString() {
+        return this.nombre
+    }
+
 }

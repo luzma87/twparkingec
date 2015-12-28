@@ -154,4 +154,12 @@ class UsuarioSpec extends Specification {
         usuario.hasErrors()
         usuario.errors['esAdmin']?.code == 'nullable'
     }
+
+    void "Debe toString devolver el nombre"() {
+        setup:
+        def usuario = TestsHelpers.generaUsuarioValido()
+
+        expect:
+        usuario.toString() == usuario.nombre
+    }
 }

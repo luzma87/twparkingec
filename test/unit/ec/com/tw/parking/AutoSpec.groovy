@@ -94,4 +94,12 @@ class AutoSpec extends Specification {
         auto.hasErrors()
         auto.errors["tamanio"]?.code == 'not.inList'
     }
+
+    void "Debe toString devolver la marca y el modelo"() {
+        setup:
+        def auto = TestsHelpers.generaAutoValido()
+
+        expect:
+        auto.toString() == auto.marca + " " + auto.modelo
+    }
 }
