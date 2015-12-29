@@ -90,7 +90,7 @@ class AutoControllerSpec extends Specification {
         def marcaNueva = TestsHelpers.getRandomString(2, 20, false)
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = autoInstance.id
-        controller.params.nombre = marcaNueva
+        controller.params.marca = marcaNueva
         TestsHelpers.mockObjeto(crudHelperServiceMock, autoInstance)
         TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
