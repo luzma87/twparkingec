@@ -1,9 +1,12 @@
 package ec.com.tw.parking
 
-
-
+import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.*
 import spock.lang.*
+
+import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
 
 @TestFor(UsuarioController)
 @Mock([Usuario, MensajesBuilderTagLib])
@@ -31,12 +34,12 @@ class UsuarioControllerSpec extends Specification {
                               usuarioInstanceCount: 1]
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe devolver una nueva instancia de usuario"() {
         setup:
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new Usuario())
+        mockObjeto(crudHelperServiceMock, new Usuario())
         injectMock()
 
         expect:
@@ -50,25 +53,25 @@ class UsuarioControllerSpec extends Specification {
         setup:
         usuarioInstance.save()
         controller.params.id = usuarioInstance.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
+        mockObjeto(crudHelperServiceMock, usuarioInstance)
         injectMock()
 
         expect:
         controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe guardar un usuario valido"() {
         setup:
-        controller.params.nombre = TestsHelpers.getRandomString(3, 50, false)
-        controller.params.email = TestsHelpers.getRandomMail()
-        controller.params.password = TestsHelpers.getRandomString(3, 512, true)
-        controller.params.esAdmin = TestsHelpers.getRandomAdmin()
+        controller.params.nombre = RandomUtilsHelpers.getRandomString(3, 50, false)
+        controller.params.email = RandomUtilsHelpers.getRandomMail()
+        controller.params.password = RandomUtilsHelpers.getRandomString(3, 512, true)
+        controller.params.esAdmin = RandomUtilsHelpers.getRandomBoolean()
         def expectedMessage = "SUCCESS*default.saved.message"
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new Usuario())
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, new Usuario())
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -88,12 +91,12 @@ class UsuarioControllerSpec extends Specification {
     void "Debe actualizar un usuario valido"() {
         setup:
         usuarioInstance.save()
-        def nombreNuevo = TestsHelpers.getRandomString(3, 50, false)
+        def nombreNuevo = RandomUtilsHelpers.getRandomString(3, 50, false)
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreNuevo
-        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, usuarioInstance)
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -106,14 +109,14 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -125,18 +128,18 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al actualizar un usuario con datos invalidos"() {
         setup:
         usuarioInstance.save()
-        def nombreInvalido = TestsHelpers.getRandomString(51, 150, false)
+        def nombreInvalido = RandomUtilsHelpers.getRandomString(51, 150, false)
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.Usuario] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = usuarioInstance.id
         controller.params.nombre = nombreInvalido
-        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedError)
+        mockObjeto(crudHelperServiceMock, usuarioInstance)
+        mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
 
         when:
@@ -148,7 +151,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedError
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe eliminar un usuario valido"() {
@@ -156,8 +159,8 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = usuarioInstance.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, usuarioInstance)
-        TestsHelpers.mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, usuarioInstance)
+        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -169,14 +172,14 @@ class UsuarioControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar eliminar un usuario no encontrado"() {
         setup:
         usuarioInstance.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -188,13 +191,13 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
         setup:
         usuarioInstance.save()
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -206,7 +209,7 @@ class UsuarioControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        usuarioInstance = TestsHelpers.generaUsuarioValido()
+        usuarioInstance = RandomUtilsHelpers.generaUsuarioValido()
     }
 
     def injectMock() {

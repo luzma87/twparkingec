@@ -3,6 +3,10 @@
 import grails.test.mixin.*
 import spock.lang.*
 
+import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
+
 @TestFor(${className}Controller)
 @Mock([${className}, MensajesBuilderTagLib])
 class ${className}ControllerSpec extends Specification {
@@ -34,7 +38,7 @@ class ${className}ControllerSpec extends Specification {
 
     void "Debe devolver una nueva instancia de ${classNameLower}"() {
         setup:
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new ${className}())
+        mockObjeto(crudHelperServiceMock, new ${className}())
         injectMock()
 
         expect:
@@ -48,7 +52,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = ${modelName}.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
+        mockObjeto(crudHelperServiceMock, ${modelName})
         injectMock()
 
         expect:
@@ -63,8 +67,8 @@ class ${className}ControllerSpec extends Specification {
 //        TODO: aqui setear los parametros
 //        controller.params.nombre = TestsHelpers.getRandomNombre()
         def expectedMessage = "SUCCESS*default.saved.message"
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new ${className}())
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, new ${className}())
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -87,8 +91,8 @@ class ${className}ControllerSpec extends Specification {
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = ${modelName}.id
         controller.params.nombre = nombreNuevo
-        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, ${modelName})
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -108,7 +112,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -131,8 +135,8 @@ class ${className}ControllerSpec extends Specification {
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.${className}] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
         controller.params.id = ${modelName}.id
         controller.params.nombre = nombreInvalido
-        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedError)
+        mockObjeto(crudHelperServiceMock, ${modelName})
+        mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
 
         when:
@@ -152,8 +156,8 @@ class ${className}ControllerSpec extends Specification {
         ${modelName}.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = ${modelName}.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, ${modelName})
-        TestsHelpers.mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, ${modelName})
+        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -172,7 +176,7 @@ class ${className}ControllerSpec extends Specification {
         setup:
         ${modelName}.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -190,7 +194,7 @@ class ${className}ControllerSpec extends Specification {
     void "Debe mostrar error al intentar eliminar un ${classNameLower} sin parametro id"() {
         setup:
         ${modelName}.save()
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:

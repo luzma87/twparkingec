@@ -1,9 +1,12 @@
 package ec.com.tw.parking
 
-
+import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.*
-import org.junit.Test
 import spock.lang.*
+
+import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
+import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
 
 @TestFor(AutoController)
 @Mock([Auto, MensajesBuilderTagLib])
@@ -31,12 +34,12 @@ class AutoControllerSpec extends Specification {
                               autoInstanceCount: 1]
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe devolver una nueva instancia de auto"() {
         setup:
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new Auto())
+        mockObjeto(crudHelperServiceMock, new Auto())
         injectMock()
 
         expect:
@@ -50,25 +53,25 @@ class AutoControllerSpec extends Specification {
         setup:
         autoInstance.save()
         controller.params.id = autoInstance.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, autoInstance)
+        mockObjeto(crudHelperServiceMock, autoInstance)
         injectMock()
 
         expect:
         controller.form_ajax().autoInstance.properties == autoInstance.properties
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe guardar un auto valido"() {
         setup:
-        def auto = TestsHelpers.generaAutoValido()
+        def auto = RandomUtilsHelpers.generaAutoValido()
         auto.properties.each { property, value ->
             controller.params[property] = value
         }
         def expectedMessage = "SUCCESS*default.saved.message"
-        TestsHelpers.mockObjeto(crudHelperServiceMock, new Auto())
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, new Auto())
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -87,12 +90,12 @@ class AutoControllerSpec extends Specification {
     void "Debe actualizar un auto valido"() {
         setup:
         autoInstance.save()
-        def marcaNueva = TestsHelpers.getRandomString(2, 20, false)
+        def marcaNueva = RandomUtilsHelpers.getRandomString(2, 20, false)
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = autoInstance.id
         controller.params.marca = marcaNueva
-        TestsHelpers.mockObjeto(crudHelperServiceMock, autoInstance)
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, autoInstance)
+        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -105,14 +108,14 @@ class AutoControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe mostrar error al intentar actualizar un auto no encontrado"() {
         setup:
         autoInstance.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -124,18 +127,18 @@ class AutoControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe mostrar error al actualizar un auto con datos invalidos"() {
         setup:
         autoInstance.save()
-        def marcaInvalida = TestsHelpers.getRandomString(21, 200, false)
+        def marcaInvalida = RandomUtilsHelpers.getRandomString(21, 200, false)
         def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [marca] of class [class ec.com.tw.parking.Auto] with value [" + marcaInvalida + "] exceeds the maximum size of [20]</li></ul>"
         controller.params.id = autoInstance.id
         controller.params.nombre = marcaInvalida
-        TestsHelpers.mockObjeto(crudHelperServiceMock, autoInstance)
-        TestsHelpers.mockGuardarObjeto(crudHelperServiceMock, expectedError)
+        mockObjeto(crudHelperServiceMock, autoInstance)
+        mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
 
         when:
@@ -147,7 +150,7 @@ class AutoControllerSpec extends Specification {
         response.text == expectedError
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe eliminar un auto valido"() {
@@ -155,8 +158,8 @@ class AutoControllerSpec extends Specification {
         autoInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
         controller.params.id = autoInstance.id
-        TestsHelpers.mockObjeto(crudHelperServiceMock, autoInstance)
-        TestsHelpers.mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
+        mockObjeto(crudHelperServiceMock, autoInstance)
+        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
 
         when:
@@ -168,14 +171,14 @@ class AutoControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe mostrar error al intentar eliminar un auto no encontrado"() {
         setup:
         autoInstance.save()
         controller.params.id = 3
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -187,13 +190,13 @@ class AutoControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     void "Debe mostrar error al intentar eliminar un auto sin parametro id"() {
         setup:
         autoInstance.save()
-        TestsHelpers.mockObjeto(crudHelperServiceMock, null)
+        mockObjeto(crudHelperServiceMock, null)
         injectMock()
 
         when:
@@ -205,7 +208,7 @@ class AutoControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        autoInstance = TestsHelpers.generaAutoValido()
+        autoInstance = RandomUtilsHelpers.generaAutoValido()
     }
 
     def injectMock() {

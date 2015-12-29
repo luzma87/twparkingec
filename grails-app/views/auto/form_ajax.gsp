@@ -66,7 +66,7 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <div class="col-md-8">
-                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}" optionKey="id" required="" value="${autoInstance?.usuario?.id}" class="many-to-one"/>
+                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}" optionKey="id" required="" value="${autoInstance?.usuario?.id}" class="form-control many-to-one"/>
 
                     </div>
                 </div>

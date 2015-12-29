@@ -1,8 +1,9 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.builders.UsuarioBuilder
+import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.TestFor
 import spock.lang.Specification
-import org.apache.commons.lang.RandomStringUtils
 
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
@@ -10,94 +11,93 @@ import org.apache.commons.lang.RandomStringUtils
 @TestFor(Usuario)
 class UsuarioSpec extends Specification {
 
-    def usuario
-
-    def setup() {
-        def random = new Random()
-        def lengthNombre = random.nextInt(50 - 3) + 3
-        def lengthMail = random.nextInt(90 - 3) + 3
-        def lengthPass = random.nextInt(512 - 3) + 3
-        def nombre = RandomStringUtils.randomAlphabetic(lengthNombre)
-        def mail = RandomStringUtils.randomAlphabetic(lengthMail) + "@test.com"
-        def pass = RandomStringUtils.random(lengthPass)
-        def esAdmin = random.nextBoolean()
-        usuario = new Usuario([nombre  : nombre,
-                               email   : mail,
-                               password: pass,
-                               esAdmin : esAdmin])
-    }
-
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
+        def usuario = new UsuarioBuilder().crear()
 
         then: 'la validacion debe pasar'
         usuario.validate()
         !usuario.hasErrors()
     }
 
-    void "No debe ser el nombre nulo"() {
-        when: 'el nombre es nulo'
-        usuario.nombre = null
+    void "Debe ser no nulo"(campo) {
+        setup:
+        def usuarioBuilder = new UsuarioBuilder()
+        usuarioBuilder[campo] = null
+        def usuario = usuarioBuilder.crear()
 
-        then: 'la validacion debe fallar'
+        expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre']?.code == 'nullable'
+        usuario.errors[campo]?.code == 'nullable'
+
+        where:
+        campo << ["nombre", "email", "password", "esAdmin"]
     }
 
-    void "No debe ser el nombre blanco"() {
-        when: 'el nombre es blanco'
-        usuario.nombre = ''
+    void "Debe ser no blanco"(campo) {
+        setup:
+        def usuarioBuilder = new UsuarioBuilder()
+        def usuario = usuarioBuilder.crear()
+        usuario[campo] = ""
 
-        then: 'la validacion debe fallar'
+        expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre']?.code == 'blank'
+        usuario.errors[campo]?.code == 'blank'
+
+        where:
+        campo << ["nombre", "email", "password"]
     }
 
-    void "No debe el nombre tener menos de 3 caracteres"() {
-        when: 'el nombre tiene menos de 3 caracteres'
-        usuario.nombre = 'ab'
+    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+        setup:
+        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
+        def usuarioBuilder = new UsuarioBuilder()
+        usuarioBuilder[campo.nombre] = valor
+        def usuario = usuarioBuilder.crear();
 
-        then: 'la validacion debe fallar'
+        expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre']?.code == 'minSize.notmet'
+        usuario.errors[campo.nombre]?.code == 'minSize.notmet'
+
+        where:
+        campo << [
+            [nombre: "nombre", minSize: 3]
+        ]
     }
 
-    void "No debe el nombre tener mas de 50 caracteres"() {
-        when: 'el nombre tiene mas de 50 caracteres'
-        usuario.nombre = 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit'
+    void "Debe tener menos o igual el maximo de caracteres"(campo) {
+        setup:
+        def valor
+        if (campo.nombre == "email") {
+            valor = RandomUtilsHelpers.getRandomMail(campo.maxSize + 1, 850)
+        } else {
+            valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 850, false)
+        }
+        def usuarioBuilder = new UsuarioBuilder()
+        usuarioBuilder[campo.nombre] = valor
+        def usuario = usuarioBuilder.crear();
 
-        then: 'la validacion debe fallar'
+        expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors['nombre']?.code == 'maxSize.exceeded'
-    }
+        usuario.errors[campo.nombre]?.code == 'maxSize.exceeded'
 
-    void "No debe ser el email nulo"() {
-        when: 'el email es nulo'
-        usuario.email = null
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['email']?.code == 'nullable'
-    }
-
-    void "No debe ser el email blanco"() {
-        when: 'el email es blanco'
-        usuario.email = ''
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['email']?.code == 'blank'
+        where:
+        campo << [
+            [nombre: "nombre", maxSize: 50],
+            [nombre: "email", maxSize: 100],
+            [nombre: "password", maxSize: 512]
+        ]
     }
 
     void "Debe el email tener el formato correcto"() {
         when: 'el email tiene un formato incorrecto'
-        usuario.email = 'mail'
+        def usuarioBuilder = new UsuarioBuilder()
+        usuarioBuilder.email = RandomUtilsHelpers.getRandomString(1, 100, false)
+        def usuario = usuarioBuilder.crear();
 
         then: 'la validacion debe fallar'
         !usuario.validate()
@@ -105,59 +105,9 @@ class UsuarioSpec extends Specification {
         usuario.errors['email']?.code == 'email.invalid'
     }
 
-    void "No debe el email tener mas de 100 caracteres"() {
-        when: 'el email tiene mas de 100 caracteres'
-        usuario.email = 'Nequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsit@ametconsecteturadipiscivelit.com'
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['email']?.code == 'maxSize.exceeded'
-    }
-
-    void "No debe ser el password nulo"() {
-        when: 'el password es nulo'
-        usuario.password = null
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['password']?.code == 'nullable'
-    }
-
-    void "No debe ser el password blanco"() {
-        when: 'el password es blanco'
-        usuario.password = ''
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['password']?.code == 'blank'
-    }
-
-    void "No debe el password tener mas de 512 caracteres"() {
-        when: 'el password tiene mas de 512 caracteres'
-        usuario.password = 'NequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsitametconsecteturadipiscivelitcomNequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsitametconsecteturadipiscivelitcomNequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsitametconsecteturadipiscivelitcomNequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsitametconsecteturadipiscivelitcomNequeporroquisquamestquidoloremipsumquiadolorsitametconsecteturadipiscivelitsitametconsecteturadipiscivelitcom'
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['password']?.code == 'maxSize.exceeded'
-    }
-
-    void "No debe esAdmin ser nulo"() {
-        when: 'esAdmin es nulo'
-        usuario.esAdmin = null
-
-        then: 'la validacion debe fallar'
-        !usuario.validate()
-        usuario.hasErrors()
-        usuario.errors['esAdmin']?.code == 'nullable'
-    }
-
     void "Debe toString devolver el nombre"() {
         setup:
-        def usuario = TestsHelpers.generaUsuarioValido()
+        def usuario = new UsuarioBuilder().crear()
 
         expect:
         usuario.toString() == usuario.nombre
