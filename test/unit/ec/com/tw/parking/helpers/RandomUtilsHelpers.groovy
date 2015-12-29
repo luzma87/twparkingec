@@ -44,6 +44,12 @@ class RandomUtilsHelpers {
         return random.nextBoolean()
     }
 
+    static getRandomFromArray(array) {
+        Random random = new Random()
+        int pos = random.nextInt(array.size())
+        return array[pos]
+    }
+
     static generaUsuarioValido() {
         return new Usuario([nombre  : getRandomString(3, 50, false),
                             email   : getRandomMail(),

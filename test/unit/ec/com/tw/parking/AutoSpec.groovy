@@ -1,5 +1,6 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.builders.AutoBuilder
 import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -14,7 +15,7 @@ class AutoSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def auto = RandomUtilsHelpers.generaAutoValido()
+        def auto = new AutoBuilder().crear()
 
         then: 'la validacion debe pasar'
         auto.validate()
@@ -23,7 +24,9 @@ class AutoSpec extends Specification {
 
     void "Debe ser no nulo"(campo) {
         setup:
-        def auto = RandomUtilsHelpers.generaAutoConCampo(campo, null)
+        def autoBuilder = new AutoBuilder()
+        autoBuilder[campo] = null
+        def auto = autoBuilder.crear()
 
         expect:
         !auto.validate()
@@ -36,7 +39,9 @@ class AutoSpec extends Specification {
 
     void "Debe ser no blanco"(campo) {
         setup:
-        def auto = RandomUtilsHelpers.generaAutoConCampo(campo, "")
+        def autoBuilder = new AutoBuilder()
+        def auto = autoBuilder.crear()
+        auto[campo] = ""
 
         expect:
         !auto.validate()
@@ -50,7 +55,9 @@ class AutoSpec extends Specification {
     void "Debe tener mas o igual del minimo de caracteres"(campo) {
         setup:
         def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def auto = RandomUtilsHelpers.generaAutoConCampo(campo.nombre, valor)
+        def autoBuilder = new AutoBuilder()
+        autoBuilder[campo.nombre] = valor
+        def auto = autoBuilder.crear()
 
         expect:
         !auto.validate()
@@ -68,7 +75,9 @@ class AutoSpec extends Specification {
     void "Debe tener menos o igual el maximo de caracteres"(campo) {
         setup:
         def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def auto = RandomUtilsHelpers.generaAutoConCampo(campo.nombre, valor)
+        def autoBuilder = new AutoBuilder()
+        autoBuilder[campo.nombre] = valor
+        def auto = autoBuilder.crear()
 
         expect:
         !auto.validate()
@@ -88,7 +97,9 @@ class AutoSpec extends Specification {
         setup:
         def regex = /[A-FH-OQ-Z]/
         def tamanio = RandomUtilsHelpers.getRandomString(regex, 1, 1)
-        def auto = RandomUtilsHelpers.generaAutoConCampo('tamanio', tamanio)
+        def autoBuilder = new AutoBuilder()
+        autoBuilder.tamanio = tamanio
+        def auto = autoBuilder.crear()
 
         expect:
         !auto.validate()
@@ -98,7 +109,7 @@ class AutoSpec extends Specification {
 
     void "Debe toString devolver la marca y el modelo"() {
         setup:
-        def auto = RandomUtilsHelpers.generaAutoValido()
+        def auto = new AutoBuilder().crear()
 
         expect:
         auto.toString() == auto.marca + " " + auto.modelo
