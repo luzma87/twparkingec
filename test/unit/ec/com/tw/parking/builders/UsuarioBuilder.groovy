@@ -14,6 +14,7 @@ class UsuarioBuilder {
     String email = getRandomMail()
     String password = getRandomString(3, 512, true)
     Boolean esAdmin = getRandomBoolean()
+    String cedula = getRandomString(10)
 
     public UsuarioBuilder() {
     }
@@ -23,7 +24,8 @@ class UsuarioBuilder {
             nombre  : this.nombre,
             email   : this.email,
             password: this.password,
-            esAdmin : this.esAdmin
+            esAdmin : this.esAdmin,
+            cedula  : this.cedula
         ]
     }
 

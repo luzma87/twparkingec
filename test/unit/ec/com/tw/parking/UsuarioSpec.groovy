@@ -32,7 +32,7 @@ class UsuarioSpec extends Specification {
         usuario.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["nombre", "email", "password", "esAdmin"]
+        campo << ["nombre", "email", "password", "esAdmin", "cedula"]
     }
 
     void "Debe ser no blanco"(campo) {
@@ -47,7 +47,7 @@ class UsuarioSpec extends Specification {
         usuario.errors[campo]?.code == 'blank'
 
         where:
-        campo << ["nombre", "email", "password"]
+        campo << ["nombre", "email", "password", "cedula"]
     }
 
     void "Debe tener mas o igual del minimo de caracteres"(campo) {
@@ -64,7 +64,8 @@ class UsuarioSpec extends Specification {
 
         where:
         campo << [
-            [nombre: "nombre", minSize: 3]
+            [nombre: "nombre", minSize: 3],
+            [nombre: "cedula", minSize: 10]
         ]
     }
 
@@ -89,7 +90,8 @@ class UsuarioSpec extends Specification {
         campo << [
             [nombre: "nombre", maxSize: 50],
             [nombre: "email", maxSize: 100],
-            [nombre: "password", maxSize: 512]
+            [nombre: "password", maxSize: 512],
+            [nombre: "cedula", maxSize: 10]
         ]
     }
 

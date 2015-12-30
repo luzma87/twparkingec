@@ -42,6 +42,8 @@
                     
                     <g:sortableColumn property="esAdmin" title="${message(code: 'usuario.esAdmin.label')}"/>
                     
+                    <g:sortableColumn property="cedula" title="${message(code: 'usuario.cedula.label')}"/>
+                    
                     <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
                 </tr>
             </thead>
@@ -56,6 +58,8 @@
                                 
                             <td><g:formatBoolean boolean="${usuarioInstance.esAdmin}" false="${message(code: 'default.boolean.no')}" true="${message(code: 'default.boolean.yes')}" /></td>
                             
+                            <td><g:fieldValue bean="${usuarioInstance}" field="cedula"/></td>
+                                
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" class="btnEditar btn btn-info"
@@ -73,7 +77,7 @@
                 </g:if>
                 <g:else>
                     <tr class="info">
-                        <td class="text-center text-shadow" colspan="4">
+                        <td class="text-center text-shadow" colspan="5">
                             <i class="fa fa-2x icon-ghost"></i>
                             <g:message code="default.no.records.found"/>
                         </td>

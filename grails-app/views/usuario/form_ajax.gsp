@@ -59,6 +59,19 @@
                 </div>
             </div>
             
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'cedula', 'error')} required">
+                    <label for="cedula" class="col-md-4 control-label">
+                        <g:message code="usuario.cedula.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <div class="col-md-8">
+                        <g:textField name="cedula" maxlength="10" required="" class="form-control  required" value="${usuarioInstance?.cedula}"/>
+
+                    </div>
+                </div>
+            </div>
+            
         </g:form>
     </div>
 

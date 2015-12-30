@@ -6,6 +6,7 @@ class Usuario {
     String email
     String password
     Boolean esAdmin = false
+    String cedula
 
     static mapping = {
         table 'usuario'
@@ -27,6 +28,7 @@ class Usuario {
         email nullable: false, blank: false, email: true, maxSize: 100, unique: true
         password nullable: false, blank: false, maxSize: 512, password: true
         esAdmin nullable: false
+        cedula nullable: false, blank: false, minSize: 10, maxSize: 10
     }
 
     String toString() {
