@@ -56,6 +56,7 @@
                     sb << '<g:textArea name="' << property.name << '"'
                      sb << ' cols="40" rows="5"'
                     if (cp.maxSize) sb << ' maxlength="' << cp.maxSize << '"'
+                    if (cp.minSize) sb << ' minlength="' << cp.minSize << '"'
                     if(isRequired()) sb << ' required=""'
                     sb << ' class="form-control '
                     if (isRequired()) {

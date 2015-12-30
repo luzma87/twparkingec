@@ -11,9 +11,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <imp:favicon/>
+    <imp:importFonts/>
     <imp:bootstrap theme="lumen"/>
     <imp:importJs/>
-    <imp:importFonts/>
     <imp:importCss/>
 
     <imp:css href="${resource(dir: 'css', file: 'sticky-footer-navbar.css')}"/>
