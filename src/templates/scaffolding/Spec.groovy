@@ -1,5 +1,6 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>
 <% classNameLower = domainClass.propertyName %>
+import ec.com.tw.parking.builders.${className}Builder
 import grails.test.mixin.*
 import spock.lang.*
 
@@ -33,7 +34,7 @@ class ${className}ControllerSpec extends Specification {
                               ${modelName}Count: 1]
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     void "Debe devolver una nueva instancia de ${classNameLower}"() {
@@ -59,13 +60,13 @@ class ${className}ControllerSpec extends Specification {
         controller.form_ajax().${modelName}.properties == ${modelName}.properties
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     void "Debe guardar un ${classNameLower} valido"() {
         setup:
-//        TODO: aqui setear los parametros
-//        controller.params.nombre = TestsHelpers.getRandomNombre()
+        def parametrosValidos = new ${className}Builder().getParams()
+        controller.params.putAll(parametrosValidos)
         def expectedMessage = "SUCCESS*default.saved.message"
         mockObjeto(crudHelperServiceMock, new ${className}())
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
@@ -78,19 +79,18 @@ class ${className}ControllerSpec extends Specification {
         then:
         ${className}.count() == 1
         def ${modelName} = ${className}.get(1)
-//        TODO: aqui validar los datos:
-//        ${classNameLower}.nombre == controller.params.nombre
+        ${modelName}.properties.each {campo, valor ->
+            controller.params[campo] == valor
+        }
         response.text == expectedMessage
     }
 
     void "Debe actualizar un ${classNameLower} valido"() {
         setup:
         ${modelName}.save()
-//        TODO: cambiar aqui a un campo existente y valido
-        def nombreNuevo = TestsHelpers.getRandomNombre()
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = ${modelName}.id
-        controller.params.nombre = nombreNuevo
+        controller.params[campoNuevo.campo] = campoNuevo.valor
         mockObjeto(crudHelperServiceMock, ${modelName})
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
@@ -101,11 +101,13 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         ${className}.count() == 1
-        ${className}.get(1).nombre == nombreNuevo
+        ${className}.get(1)[campoNuevo.campo] == campoNuevo.valor
         response.text == expectedMessage
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${classNameLower}Builder = new ${className}Builder()
+        ${modelName} = ${classNameLower}Builder.crear()
+        campoNuevo = ${classNameLower}Builder.getCampoNuevoValido()
     }
 
     void "Debe mostrar error al intentar actualizar un ${classNameLower} no encontrado"() {
@@ -124,17 +126,15 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     void "Debe mostrar error al actualizar un ${classNameLower} con datos invalidos"() {
         setup:
         ${modelName}.save()
-//        TODO: cambiar aqui a un campo existente y no valido
-        def nombreInvalido = TestsHelpers.getRandomNombreInvalido()
-        def expectedError = "ERROR*default.not.saved.message: <ul><li>Property [nombre] of class [class ec.com.tw.parking.${className}] with value [" + nombreInvalido + "] exceeds the maximum size of [50]</li></ul>"
+        def expectedError = "ERROR*default.not.saved.message"
         controller.params.id = ${modelName}.id
-        controller.params.nombre = nombreInvalido
+        controller.params[campoNuevo.campo] = campoNuevo.valor
         mockObjeto(crudHelperServiceMock, ${modelName})
         mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
@@ -145,10 +145,12 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         ${className}.count() == 1
-        response.text == expectedError
+        response.text.startsWith(expectedError)
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${classNameLower}Builder = new ${className}Builder()
+        ${modelName} = ${classNameLower}Builder.crear()
+        campoNuevo = ${classNameLower}Builder.getCampoNuevoInvalido()
     }
 
     void "Debe eliminar un ${classNameLower} valido"() {
@@ -169,7 +171,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == expectedMessage
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     void "Debe mostrar error al intentar eliminar un ${classNameLower} no encontrado"() {
@@ -188,7 +190,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     void "Debe mostrar error al intentar eliminar un ${classNameLower} sin parametro id"() {
@@ -206,7 +208,7 @@ class ${className}ControllerSpec extends Specification {
         response.text == "ERROR*default.not.found.message"
 
         where:
-        ${modelName} = TestsHelpers.genera${className}Valido()
+        ${modelName} = new ${className}Builder().crear()
     }
 
     def injectMock() {
