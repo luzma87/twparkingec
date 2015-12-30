@@ -20,13 +20,25 @@ class AutoBuilder {
     public AutoBuilder() {
     }
 
-    public Auto crear() {
-        new Auto([
+    def getParams() {
+        return [
             marca  : this.marca,
             modelo : this.modelo,
             placa  : this.placa,
             tamanio: this.tamanio,
             usuario: this.usuario
-        ])
+        ]
+    }
+
+    public Auto crear() {
+        new Auto(getParams())
+    }
+
+    def getCampoNuevoValido() {
+        return [campo: 'marca', valor: this.marca]
+    }
+
+    def getCampoNuevoInvalido() {
+        return [campo: 'marca', valor: getRandomString(21, 150, false)]
     }
 }

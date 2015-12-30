@@ -68,7 +68,7 @@ class Shield {
             }
 
         } catch (e) {
-            println "ec.com.tw.parking.commons.Shield execption e: " + e
+            println "Shield exception e: " + e
             return false
         }
     }

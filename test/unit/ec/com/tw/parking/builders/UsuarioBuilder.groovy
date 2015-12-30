@@ -18,12 +18,24 @@ class UsuarioBuilder {
     public UsuarioBuilder() {
     }
 
-    public Usuario crear() {
-        new Usuario([
+    def getParams() {
+        return [
             nombre  : this.nombre,
             email   : this.email,
             password: this.password,
             esAdmin : this.esAdmin
-        ])
+        ]
+    }
+
+    def getCampoNuevoValido() {
+        return [campo: 'nombre', valor: this.nombre]
+    }
+
+    def getCampoNuevoInvalido() {
+        return [campo: 'nombre', valor: getRandomString(51, 150, false)]
+    }
+
+    def Usuario crear() {
+        new Usuario(getParams())
     }
 }

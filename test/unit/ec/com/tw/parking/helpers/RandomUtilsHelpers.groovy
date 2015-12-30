@@ -1,8 +1,6 @@
 package ec.com.tw.parking.helpers
 
 import com.mifmif.common.regex.Generex
-import ec.com.tw.parking.Auto
-import ec.com.tw.parking.Usuario
 import org.apache.commons.lang.RandomStringUtils
 
 /**
@@ -48,31 +46,5 @@ class RandomUtilsHelpers {
         Random random = new Random()
         int pos = random.nextInt(array.size())
         return array[pos]
-    }
-
-    static generaUsuarioValido() {
-        return new Usuario([nombre  : getRandomString(3, 50, false),
-                            email   : getRandomMail(),
-                            password: getRandomString(3, 512, true),
-                            esAdmin : getRandomBoolean()])
-    }
-
-    static Auto generaAutoValido() {
-        def tamanios = ["P", "G"]
-        Random random = new Random()
-        int pos = random.nextInt(2)
-        return new Auto([
-            usuario: generaUsuarioValido(),
-            marca  : getRandomString(2, 20, false),
-            modelo : getRandomString(2, 20, false),
-            placa  : getRandomString(8),
-            tamanio: tamanios[pos]
-        ])
-    }
-
-    static Auto generaAutoConCampo(campo, valor) {
-        def auto = generaAutoValido()
-        auto[campo] = valor
-        return auto
     }
 }

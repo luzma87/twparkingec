@@ -31,7 +31,7 @@ class MenuTagLib {
                         controller: "usuario",
                         action    : "list",
                         label     : message(code: 'navbar.users'),
-                        icon      : "fa-users"
+                        icon      : "fa-user"
                     ],
                     autos: [
                         controller: "auto",
