@@ -72,7 +72,7 @@ class AutoSpec extends Specification {
         ]
     }
 
-    void "Debe tener menos o igual el maximo de caracteres"(campo) {
+    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
         setup:
         def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
         def autoBuilder = new AutoBuilder()

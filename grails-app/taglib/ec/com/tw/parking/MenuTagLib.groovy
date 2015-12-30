@@ -38,6 +38,12 @@ class MenuTagLib {
                         action    : "list",
                         label     : message(code: 'navbar.autos'),
                         icon      : "fa-car"
+                    ],
+                    edificios: [
+                        controller: "edificio",
+                        action    : "list",
+                        label     : message(code: 'navbar.edificios'),
+                        icon      : "fa-building"
                     ]
                 ]
             ]
