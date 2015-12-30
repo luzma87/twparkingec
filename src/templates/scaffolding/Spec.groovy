@@ -7,6 +7,7 @@ import spock.lang.*
 import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(${className}Controller)
 @Mock([${className}, MensajesBuilderTagLib])
@@ -90,7 +91,7 @@ class ${className}ControllerSpec extends Specification {
         ${modelName}.save()
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = ${modelName}.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = campoNuevo.value
         mockObjeto(crudHelperServiceMock, ${modelName})
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
@@ -101,13 +102,13 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         ${className}.count() == 1
-        ${className}.get(1)[campoNuevo.campo] == campoNuevo.valor
+        ${className}.get(1)[campoNuevo.key] == campoNuevo.value
         response.text == expectedMessage
 
         where:
         ${classNameLower}Builder = new ${className}Builder()
         ${modelName} = ${classNameLower}Builder.crear()
-        campoNuevo = ${classNameLower}Builder.getCampoNuevoValido()
+        campoNuevo = ${classNameLower}Builder.getParams().find()
     }
 
     void "Debe mostrar error al intentar actualizar un ${classNameLower} no encontrado"() {
@@ -134,7 +135,7 @@ class ${className}ControllerSpec extends Specification {
         ${modelName}.save()
         def expectedError = "ERROR*default.not.saved.message"
         controller.params.id = ${modelName}.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] =  getRandomString(550, 1550, true)
         mockObjeto(crudHelperServiceMock, ${modelName})
         mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
@@ -150,7 +151,7 @@ class ${className}ControllerSpec extends Specification {
         where:
         ${classNameLower}Builder = new ${className}Builder()
         ${modelName} = ${classNameLower}Builder.crear()
-        campoNuevo = ${classNameLower}Builder.getCampoNuevoInvalido()
+        campoNuevo = ${classNameLower}Builder.getParams().find()
     }
 
     void "Debe eliminar un ${classNameLower} valido"() {

@@ -22,12 +22,4 @@ class EdificioBuilder {
     public Edificio crear() {
         new Edificio(getParams())
     }
-
-    def getCampoNuevoValido() {
-        return [campo: 'nombre', valor: this.nombre]
-    }
-
-    def getCampoNuevoInvalido() {
-        return [campo: 'nombre', valor: getRandomString(51, 150, false)]
-    }
 }

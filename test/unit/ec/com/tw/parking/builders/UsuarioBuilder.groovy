@@ -29,14 +29,6 @@ class UsuarioBuilder {
         ]
     }
 
-    def getCampoNuevoValido() {
-        return [campo: 'nombre', valor: this.nombre]
-    }
-
-    def getCampoNuevoInvalido() {
-        return [campo: 'nombre', valor: getRandomString(51, 150, false)]
-    }
-
     def Usuario crear() {
         new Usuario(getParams())
     }

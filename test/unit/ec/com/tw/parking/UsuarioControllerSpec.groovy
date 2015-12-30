@@ -7,6 +7,7 @@ import spock.lang.*
 import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(UsuarioController)
 @Mock([Usuario, MensajesBuilderTagLib])
@@ -90,7 +91,7 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance.save()
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = usuarioInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = campoNuevo.value
         mockObjeto(crudHelperServiceMock, usuarioInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
@@ -101,13 +102,13 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         Usuario.count() == 1
-        Usuario.get(1)[campoNuevo.campo] == campoNuevo.valor
+        Usuario.get(1)[campoNuevo.key] == campoNuevo.value
         response.text == expectedMessage
 
         where:
         usuarioBuilder = new UsuarioBuilder()
         usuarioInstance = usuarioBuilder.crear()
-        campoNuevo = usuarioBuilder.getCampoNuevoValido()
+        campoNuevo = usuarioBuilder.getParams().find()
     }
 
     void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
@@ -134,7 +135,7 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance.save()
         def expectedError = "ERROR*default.not.saved.message"
         controller.params.id = usuarioInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = getRandomString(550, 1550, true)
         mockObjeto(crudHelperServiceMock, usuarioInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
@@ -150,7 +151,7 @@ class UsuarioControllerSpec extends Specification {
         where:
         usuarioBuilder = new UsuarioBuilder()
         usuarioInstance = usuarioBuilder.crear()
-        campoNuevo = usuarioBuilder.getCampoNuevoInvalido()
+        campoNuevo = usuarioBuilder.getParams().find()
     }
 
     void "Debe eliminar un usuario valido"() {
@@ -206,6 +207,20 @@ class UsuarioControllerSpec extends Specification {
         then:
         Usuario.count() == 1
         response.text == "ERROR*default.not.found.message"
+
+        where:
+        usuarioInstance = new UsuarioBuilder().crear()
+    }
+
+    void "Debe  devolver una instancia de usuario cuando recibe id para cambiar password"() {
+        setup:
+        usuarioInstance.save()
+        controller.params.id = usuarioInstance.id
+        mockObjeto(crudHelperServiceMock, usuarioInstance)
+        injectMock()
+
+        expect:
+        controller.password_ajax().usuarioInstance.properties == usuarioInstance.properties
 
         where:
         usuarioInstance = new UsuarioBuilder().crear()

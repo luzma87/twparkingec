@@ -1,13 +1,13 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.AutoBuilder
-import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.*
 import spock.lang.*
 
 import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(AutoController)
 @Mock([Auto, MensajesBuilderTagLib])
@@ -91,7 +91,7 @@ class AutoControllerSpec extends Specification {
         autoInstance.save()
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = autoInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = campoNuevo.value
         mockObjeto(crudHelperServiceMock, autoInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
@@ -102,13 +102,13 @@ class AutoControllerSpec extends Specification {
 
         then:
         Auto.count() == 1
-        Auto.get(1)[campoNuevo.campo] == campoNuevo.valor
+        Auto.get(1)[campoNuevo.key] == campoNuevo.value
         response.text == expectedMessage
 
         where:
         autoBuilder = new AutoBuilder()
         autoInstance = autoBuilder.crear()
-        campoNuevo = autoBuilder.getCampoNuevoValido()
+        campoNuevo = autoBuilder.getParams().find()
     }
 
     void "Debe mostrar error al intentar actualizar un auto no encontrado"() {
@@ -135,7 +135,7 @@ class AutoControllerSpec extends Specification {
         autoInstance.save()
         def expectedError = "ERROR*default.not.saved.message"
         controller.params.id = autoInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = getRandomString(550, 1550, true)
         mockObjeto(crudHelperServiceMock, autoInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
@@ -151,7 +151,7 @@ class AutoControllerSpec extends Specification {
         where:
         autoBuilder = new AutoBuilder()
         autoInstance = autoBuilder.crear()
-        campoNuevo = autoBuilder.getCampoNuevoInvalido()
+        campoNuevo = autoBuilder.getParams().find()
     }
 
     void "Debe eliminar un auto valido"() {

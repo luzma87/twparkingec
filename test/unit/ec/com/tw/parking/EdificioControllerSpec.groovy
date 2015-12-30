@@ -1,6 +1,7 @@
 package ec.com.tw.parking
 
 
+
 import ec.com.tw.parking.builders.EdificioBuilder
 import grails.test.mixin.*
 import spock.lang.*
@@ -8,6 +9,7 @@ import spock.lang.*
 import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
 import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(EdificioController)
 @Mock([Edificio, MensajesBuilderTagLib])
@@ -31,7 +33,7 @@ class EdificioControllerSpec extends Specification {
         edificioInstance.save()
 
         expect:
-        controller.list() == [edificioInstanceList : [edificioInstance],
+        controller.list() == [edificioInstanceList: [edificioInstance],
                               edificioInstanceCount: 1]
 
         where:
@@ -80,7 +82,7 @@ class EdificioControllerSpec extends Specification {
         then:
         Edificio.count() == 1
         def edificioInstance = Edificio.get(1)
-        edificioInstance.properties.each { campo, valor ->
+        edificioInstance.properties.each {campo, valor ->
             controller.params[campo] == valor
         }
         response.text == expectedMessage
@@ -91,7 +93,7 @@ class EdificioControllerSpec extends Specification {
         edificioInstance.save()
         def expectedMessage = "SUCCESS*default.saved.message"
         controller.params.id = edificioInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] = campoNuevo.value
         mockObjeto(crudHelperServiceMock, edificioInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
         injectMock()
@@ -102,13 +104,13 @@ class EdificioControllerSpec extends Specification {
 
         then:
         Edificio.count() == 1
-        Edificio.get(1)[campoNuevo.campo] == campoNuevo.valor
+        Edificio.get(1)[campoNuevo.key] == campoNuevo.value
         response.text == expectedMessage
 
         where:
         edificioBuilder = new EdificioBuilder()
         edificioInstance = edificioBuilder.crear()
-        campoNuevo = edificioBuilder.getCampoNuevoValido()
+        campoNuevo = edificioBuilder.getParams().find()
     }
 
     void "Debe mostrar error al intentar actualizar un edificio no encontrado"() {
@@ -135,7 +137,7 @@ class EdificioControllerSpec extends Specification {
         edificioInstance.save()
         def expectedError = "ERROR*default.not.saved.message"
         controller.params.id = edificioInstance.id
-        controller.params[campoNuevo.campo] = campoNuevo.valor
+        controller.params[campoNuevo.key] =  getRandomString(550, 1550, true)
         mockObjeto(crudHelperServiceMock, edificioInstance)
         mockGuardarObjeto(crudHelperServiceMock, expectedError)
         injectMock()
@@ -151,7 +153,7 @@ class EdificioControllerSpec extends Specification {
         where:
         edificioBuilder = new EdificioBuilder()
         edificioInstance = edificioBuilder.crear()
-        campoNuevo = edificioBuilder.getCampoNuevoInvalido()
+        campoNuevo = edificioBuilder.getParams().find()
     }
 
     void "Debe eliminar un edificio valido"() {
