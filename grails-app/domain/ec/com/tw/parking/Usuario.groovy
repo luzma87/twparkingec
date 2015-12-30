@@ -28,7 +28,7 @@ class Usuario {
         email nullable: false, blank: false, email: true, maxSize: 100, unique: true
         password nullable: false, blank: false, maxSize: 512, password: true
         esAdmin nullable: false
-        cedula nullable: false, blank: false, minSize: 10, maxSize: 10
+        cedula nullable: false, blank: false, minSize: 10, maxSize: 10, unique: true
     }
 
     String toString() {

@@ -44,7 +44,7 @@
                     
                     <g:sortableColumn property="cedula" title="${message(code: 'usuario.cedula.label')}"/>
                     
-                    <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
+                    <th style="width: 106px"><g:message code="default.button.actions.label"/> </th>
                 </tr>
             </thead>
             <tbody>
@@ -65,6 +65,10 @@
                                     <a href="#" class="btnEditar btn btn-info"
                                        title="${message(code:'default.button.edit.label')}">
                                         <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="#" class="btnPassword btn btn-warning"
+                                       title="${message(code:'default.button.password.label')}">
+                                        <i class="fa fa-unlock"></i>
                                     </a>
                                     <a href="#" class="btnEliminar btn btn-danger"
                                        title="${message(code:'default.button.delete.label')}">
