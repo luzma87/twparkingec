@@ -66,7 +66,7 @@
                         <span class="required-indicator">*</span>
                     </label>
                     <div class="col-md-8">
-                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}" optionKey="id" required="" value="${autoInstance?.usuario?.id}" class="form-control many-to-one"/>
+                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}" optionKey="id" required="" value="${autoInstance?.usuario?.id}" class="many-to-one form-control"/>
 
                     </div>
                 </div>
@@ -77,17 +77,18 @@
 
     <script type="text/javascript">
         var validator = $("#frmAuto").validate({
-            errorClass     : "help-block",
+            errorElement   : "span",
+            errorClass     : "text-danger",
             errorPlacement : function (error, element) {
                 if (element.parent().hasClass("input-group")) {
                     error.insertAfter(element.parent());
                 } else {
                     error.insertAfter(element);
                 }
-                element.parents(".grupo").addClass('has-error');
+                element.parents(".form-group").addClass('has-error');
             },
             success        : function (label) {
-                label.parents(".grupo").removeClass('has-error');
+                label.parents(".form-group").removeClass('has-error');
                 label.remove();
             }
         });
