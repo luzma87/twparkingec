@@ -4,19 +4,15 @@ import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.*
 import spock.lang.*
 
-import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
-
 @TestFor(UsuarioController)
 @Mock([Usuario, MensajesBuilderTagLib])
 class UsuarioControllerSpec extends Specification {
 
-    def crudHelperServiceMock
+    CrudHelperService crudHelperServiceMock
 
     def setup() {
-        crudHelperServiceMock = mockFor(CrudHelperService)
+        crudHelperServiceMock = Mock(CrudHelperService)
+        controller.crudHelperService = crudHelperServiceMock
     }
 
     void "Debe redireccionar a list cuando se ejecuta index"() {
@@ -38,195 +34,105 @@ class UsuarioControllerSpec extends Specification {
         usuarioInstance = new UsuarioBuilder().crear()
     }
 
-    void "Debe devolver una nueva instancia de usuario"() {
-        setup:
-        mockObjeto(crudHelperServiceMock, new Usuario())
-        injectMock()
+    void "Debe devolver una instancia de usuario"() {
+        when:
+        def usuarioReturned = controller.form_ajax().usuarioInstance
 
-        expect:
-        controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
-
-        where:
-        usuarioInstance = new Usuario()
-    }
-
-    void "Debe devolver una instancia de usuario cuando recibe id"() {
-        setup:
-        usuarioInstance.save()
-        controller.params.id = usuarioInstance.id
-        mockObjeto(crudHelperServiceMock, usuarioInstance)
-        injectMock()
-
-        expect:
-        controller.form_ajax().usuarioInstance.properties == usuarioInstance.properties
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        usuarioReturned.properties == usuario.properties
 
         where:
-        usuarioInstance = new UsuarioBuilder().crear()
+        usuario << [new Usuario(), new UsuarioBuilder().crear()]
     }
 
     void "Debe guardar un usuario valido"() {
         setup:
-        def parametrosValidos = new UsuarioBuilder().getParams()
-        controller.params.putAll(parametrosValidos)
+        Usuario usuario = new Usuario()
         def expectedMessage = "SUCCESS*default.saved.message"
-        mockObjeto(crudHelperServiceMock, new Usuario())
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Usuario.count() == 1
-        def usuarioInstance = Usuario.get(1)
-        usuarioInstance.properties.each { campo, valor ->
-            controller.params[campo] == valor
-        }
-        response.text == expectedMessage
-    }
-
-    void "Debe actualizar un usuario valido"() {
-        setup:
-        usuarioInstance.save()
-        def expectedMessage = "SUCCESS*default.saved.message"
-        controller.params.id = usuarioInstance.id
-        controller.params[campoNuevo.key] = campoNuevo.value
-        mockObjeto(crudHelperServiceMock, usuarioInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.save_ajax()
-
-        then:
-        Usuario.count() == 1
-        Usuario.get(1)[campoNuevo.key] == campoNuevo.value
-        response.text == expectedMessage
-
-        where:
-        usuarioBuilder = new UsuarioBuilder()
-        usuarioInstance = usuarioBuilder.crear()
-        campoNuevo = usuarioBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        1 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
         setup:
-        usuarioInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.found.message"
+        def usuario = null
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Usuario.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        usuarioInstance = new UsuarioBuilder().crear()
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        0 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _)
+        response.text == expectedMessage
     }
 
     void "Debe mostrar error al actualizar un usuario con datos invalidos"() {
         setup:
-        usuarioInstance.save()
-        def expectedError = "ERROR*default.not.saved.message"
-        controller.params.id = usuarioInstance.id
-        controller.params[campoNuevo.key] = getRandomString(550, 1550, true)
-        mockObjeto(crudHelperServiceMock, usuarioInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedError)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.saved.message"
+        def usuario = new UsuarioBuilder().crear()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Usuario.count() == 1
-        response.text.startsWith(expectedError)
-
-        where:
-        usuarioBuilder = new UsuarioBuilder()
-        usuarioInstance = usuarioBuilder.crear()
-        campoNuevo = usuarioBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        1 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _) >> expectedMessage
+        response.text == expectedMessage
     }
 
     void "Debe eliminar un usuario valido"() {
         setup:
-        usuarioInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
-        controller.params.id = usuarioInstance.id
-        mockObjeto(crudHelperServiceMock, usuarioInstance)
-        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
+        def usuario = new UsuarioBuilder().crear()
+        def random = new Random()
+        usuario.id = random.nextInt()
 
         when:
         request.method = "POST"
         controller.delete_ajax()
 
         then:
-        Usuario.count() == 0
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        1 * crudHelperServiceMock.eliminarObjeto('usuario', _ as Usuario) >> expectedMessage
+        response.text == expectedMessage
+    }
+
+    void "Debe mostrar error al intentar eliminar un usuario no encontrado o sin id"() {
+        setup:
+        def expectedMessage = "ERROR*default.not.found.message"
+
+        when:
+        request.method = "POST"
+        controller.delete_ajax()
+
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        0 * crudHelperServiceMock.eliminarObjeto('usuario', _ as Usuario)
         response.text == expectedMessage
 
         where:
-        usuarioInstance = new UsuarioBuilder().crear()
-    }
-
-    void "Debe mostrar error al intentar eliminar un usuario no encontrado"() {
-        setup:
-        usuarioInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.delete_ajax()
-
-        then:
-        Usuario.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        usuarioInstance = new UsuarioBuilder().crear()
-    }
-
-    void "Debe mostrar error al intentar eliminar un usuario sin parametro id"() {
-        setup:
-        usuarioInstance.save()
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.delete_ajax()
-
-        then:
-        Usuario.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        usuarioInstance = new UsuarioBuilder().crear()
+        usuario << [null, new Usuario()]
     }
 
     void "Debe  devolver una instancia de usuario cuando recibe id para cambiar password"() {
-        setup:
-        usuarioInstance.save()
-        controller.params.id = usuarioInstance.id
-        mockObjeto(crudHelperServiceMock, usuarioInstance)
-        injectMock()
+        when:
+        def usuarioReturned = controller.password_ajax().usuarioInstance
 
-        expect:
-        controller.password_ajax().usuarioInstance.properties == usuarioInstance.properties
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
+        usuarioReturned.properties == usuario.properties
 
         where:
-        usuarioInstance = new UsuarioBuilder().crear()
-    }
-
-    def injectMock() {
-        controller.crudHelperService = crudHelperServiceMock.createMock()
+        usuario << [new Usuario(), new UsuarioBuilder().crear()]
     }
 }

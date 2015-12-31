@@ -1,22 +1,20 @@
 package ec.com.tw.parking
 
+
+
 import ec.com.tw.parking.builders.AutoBuilder
 import grails.test.mixin.*
 import spock.lang.*
-
-import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(AutoController)
 @Mock([Auto, MensajesBuilderTagLib])
 class AutoControllerSpec extends Specification {
 
-    def crudHelperServiceMock
+    CrudHelperService crudHelperServiceMock
 
     def setup() {
-        crudHelperServiceMock = mockFor(CrudHelperService)
+        crudHelperServiceMock = Mock(CrudHelperService)
+        controller.crudHelperService = crudHelperServiceMock
     }
 
     void "Debe redireccionar a list cuando se ejecuta index"() {
@@ -31,188 +29,100 @@ class AutoControllerSpec extends Specification {
         autoInstance.save()
 
         expect:
-        controller.list() == [autoInstanceList : [autoInstance],
+        controller.list() == [autoInstanceList: [autoInstance],
                               autoInstanceCount: 1]
 
         where:
         autoInstance = new AutoBuilder().crear()
     }
 
-    void "Debe devolver una nueva instancia de auto"() {
-        setup:
-        mockObjeto(crudHelperServiceMock, new Auto())
-        injectMock()
+    void "Debe devolver una instancia de auto"() {
+        when:
+        def autoInstanceReturned = controller.form_ajax().autoInstance
 
-        expect:
-        controller.form_ajax().autoInstance.properties == autoInstance.properties
-
-        where:
-        autoInstance = new Auto()
-    }
-
-    void "Debe devolver una instancia de auto cuando recibe id"() {
-        setup:
-        autoInstance.save()
-        controller.params.id = autoInstance.id
-        mockObjeto(crudHelperServiceMock, autoInstance)
-        injectMock()
-
-        expect:
-        controller.form_ajax().autoInstance.properties == autoInstance.properties
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        autoInstanceReturned.properties == autoInstance.properties
 
         where:
-        autoInstance = new AutoBuilder().crear()
+        autoInstance << [new Auto(), new AutoBuilder().crear()]
     }
 
     void "Debe guardar un auto valido"() {
         setup:
-        def parametrosValidos = new AutoBuilder().getParams()
-        controller.params.putAll(parametrosValidos)
+        def autoInstance = new Auto()
         def expectedMessage = "SUCCESS*default.saved.message"
-        mockObjeto(crudHelperServiceMock, new Auto())
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Auto.count() == 1
-        def autoInstance = Auto.get(1)
-        autoInstance.properties.each { campo, valor ->
-            controller.params[campo] == valor
-        }
-        response.text == expectedMessage
-    }
-
-    void "Debe actualizar un auto valido"() {
-        setup:
-        autoInstance.save()
-        def expectedMessage = "SUCCESS*default.saved.message"
-        controller.params.id = autoInstance.id
-        controller.params[campoNuevo.key] = campoNuevo.value
-        mockObjeto(crudHelperServiceMock, autoInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.save_ajax()
-
-        then:
-        Auto.count() == 1
-        Auto.get(1)[campoNuevo.key] == campoNuevo.value
-        response.text == expectedMessage
-
-        where:
-        autoBuilder = new AutoBuilder()
-        autoInstance = autoBuilder.crear()
-        campoNuevo = autoBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        1 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un auto no encontrado"() {
         setup:
-        autoInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.found.message"
+        def autoInstance = null
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Auto.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        autoInstance = new AutoBuilder().crear()
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        0 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _)
+        response.text == expectedMessage
     }
 
     void "Debe mostrar error al actualizar un auto con datos invalidos"() {
         setup:
-        autoInstance.save()
-        def expectedError = "ERROR*default.not.saved.message"
-        controller.params.id = autoInstance.id
-        controller.params[campoNuevo.key] = getRandomString(550, 1550, true)
-        mockObjeto(crudHelperServiceMock, autoInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedError)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.saved.message"
+        def autoInstance = new AutoBuilder().crear()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Auto.count() == 1
-        response.text.startsWith(expectedError)
-
-        where:
-        autoBuilder = new AutoBuilder()
-        autoInstance = autoBuilder.crear()
-        campoNuevo = autoBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        1 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _) >> expectedMessage
+        response.text == expectedMessage
     }
 
     void "Debe eliminar un auto valido"() {
         setup:
-        autoInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
-        controller.params.id = autoInstance.id
-        mockObjeto(crudHelperServiceMock, autoInstance)
-        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
+        def autoInstance = new AutoBuilder().crear()
+        def random = new Random()
+        autoInstance.id = random.nextInt()
 
         when:
         request.method = "POST"
         controller.delete_ajax()
 
         then:
-        Auto.count() == 0
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        1 * crudHelperServiceMock.eliminarObjeto("auto", _ as Auto) >> expectedMessage
         response.text == expectedMessage
-
-        where:
-        autoInstance = new AutoBuilder().crear()
     }
 
     void "Debe mostrar error al intentar eliminar un auto no encontrado"() {
         setup:
-        autoInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.found.message"
 
         when:
         request.method = "POST"
         controller.delete_ajax()
 
         then:
-        Auto.count() == 1
-        response.text == "ERROR*default.not.found.message"
+        1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
+        0 * crudHelperServiceMock.eliminarObjeto("auto", _ as Auto)
+        response.text == expectedMessage
 
         where:
-        autoInstance = new AutoBuilder().crear()
-    }
-
-    void "Debe mostrar error al intentar eliminar un auto sin parametro id"() {
-        setup:
-        autoInstance.save()
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.delete_ajax()
-
-        then:
-        Auto.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        autoInstance = new AutoBuilder().crear()
-    }
-
-    def injectMock() {
-        controller.crudHelperService = crudHelperServiceMock.createMock()
+        autoInstance << [null, new Auto()]
     }
 }

@@ -25,17 +25,18 @@
 
     <script type="text/javascript">
         var validator = $("#frmEdificio").validate({
-            errorClass     : "help-block",
+            errorElement   : "span",
+            errorClass     : "text-danger",
             errorPlacement : function (error, element) {
                 if (element.parent().hasClass("input-group")) {
                     error.insertAfter(element.parent());
                 } else {
                     error.insertAfter(element);
                 }
-                element.parents(".grupo").addClass('has-error');
+                element.parents(".form-group").addClass('has-error');
             },
             success        : function (label) {
-                label.parents(".grupo").removeClass('has-error');
+                label.parents(".form-group").removeClass('has-error');
                 label.remove();
             }
         });

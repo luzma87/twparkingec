@@ -23,7 +23,7 @@ class AutoController extends Shield {
 
     def save_ajax() {
         def autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
-        if (!autoInstance) {
+        if(!autoInstance) {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }
@@ -32,7 +32,7 @@ class AutoController extends Shield {
 
     def delete_ajax() {
         def autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
-        if (!autoInstance || !autoInstance.id) {
+        if(!autoInstance || !autoInstance.id) {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }

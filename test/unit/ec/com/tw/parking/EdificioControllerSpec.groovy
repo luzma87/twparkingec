@@ -1,24 +1,18 @@
 package ec.com.tw.parking
 
-
-
 import ec.com.tw.parking.builders.EdificioBuilder
 import grails.test.mixin.*
 import spock.lang.*
-
-import static ec.com.tw.parking.helpers.MocksHelpers.mockEliminarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockGuardarObjeto
-import static ec.com.tw.parking.helpers.MocksHelpers.mockObjeto
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(EdificioController)
 @Mock([Edificio, MensajesBuilderTagLib])
 class EdificioControllerSpec extends Specification {
 
-    def crudHelperServiceMock
+    CrudHelperService crudHelperServiceMock
 
     def setup() {
-        crudHelperServiceMock = mockFor(CrudHelperService)
+        crudHelperServiceMock = Mock(CrudHelperService)
+        controller.crudHelperService = crudHelperServiceMock
     }
 
     void "Debe redireccionar a list cuando se ejecuta index"() {
@@ -40,181 +34,93 @@ class EdificioControllerSpec extends Specification {
         edificioInstance = new EdificioBuilder().crear()
     }
 
-    void "Debe devolver una nueva instancia de edificio"() {
-        setup:
-        mockObjeto(crudHelperServiceMock, new Edificio())
-        injectMock()
+    void "Debe devolver una instancia de edificio"() {
+        when:
+        def edificioInstanceReturned = controller.form_ajax().edificioInstance
 
-        expect:
-        controller.form_ajax().edificioInstance.properties == edificioInstance.properties
-
-        where:
-        edificioInstance = new Edificio()
-    }
-
-    void "Debe devolver una instancia de edificio cuando recibe id"() {
-        setup:
-        edificioInstance.save()
-        controller.params.id = edificioInstance.id
-        mockObjeto(crudHelperServiceMock, edificioInstance)
-        injectMock()
-
-        expect:
-        controller.form_ajax().edificioInstance.properties == edificioInstance.properties
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        edificioInstanceReturned.properties == edificioInstance.properties
 
         where:
-        edificioInstance = new EdificioBuilder().crear()
+        edificioInstance << [new Edificio(), new EdificioBuilder().crear()]
     }
 
     void "Debe guardar un edificio valido"() {
         setup:
-        def parametrosValidos = new EdificioBuilder().getParams()
-        controller.params.putAll(parametrosValidos)
+        def edificioInstance = new Edificio()
         def expectedMessage = "SUCCESS*default.saved.message"
-        mockObjeto(crudHelperServiceMock, new Edificio())
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Edificio.count() == 1
-        def edificioInstance = Edificio.get(1)
-        edificioInstance.properties.each {campo, valor ->
-            controller.params[campo] == valor
-        }
-        response.text == expectedMessage
-    }
-
-    void "Debe actualizar un edificio valido"() {
-        setup:
-        edificioInstance.save()
-        def expectedMessage = "SUCCESS*default.saved.message"
-        controller.params.id = edificioInstance.id
-        controller.params[campoNuevo.key] = campoNuevo.value
-        mockObjeto(crudHelperServiceMock, edificioInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.save_ajax()
-
-        then:
-        Edificio.count() == 1
-        Edificio.get(1)[campoNuevo.key] == campoNuevo.value
-        response.text == expectedMessage
-
-        where:
-        edificioBuilder = new EdificioBuilder()
-        edificioInstance = edificioBuilder.crear()
-        campoNuevo = edificioBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        1 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un edificio no encontrado"() {
         setup:
-        edificioInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.found.message"
+        def edificioInstance = null
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Edificio.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        edificioInstance = new EdificioBuilder().crear()
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        0 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _)
+        response.text == expectedMessage
     }
 
     void "Debe mostrar error al actualizar un edificio con datos invalidos"() {
         setup:
-        edificioInstance.save()
-        def expectedError = "ERROR*default.not.saved.message"
-        controller.params.id = edificioInstance.id
-        controller.params[campoNuevo.key] =  getRandomString(550, 1550, true)
-        mockObjeto(crudHelperServiceMock, edificioInstance)
-        mockGuardarObjeto(crudHelperServiceMock, expectedError)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.saved.message"
+        def edificioInstance = new EdificioBuilder().crear()
 
         when:
         request.method = "POST"
         controller.save_ajax()
 
         then:
-        Edificio.count() == 1
-        response.text.startsWith(expectedError)
-
-        where:
-        edificioBuilder = new EdificioBuilder()
-        edificioInstance = edificioBuilder.crear()
-        campoNuevo = edificioBuilder.getParams().find()
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        1 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _) >> expectedMessage
+        response.text == expectedMessage
     }
 
     void "Debe eliminar un edificio valido"() {
         setup:
-        edificioInstance.save()
         def expectedMessage = "SUCCESS*default.deleted.message"
-        controller.params.id = edificioInstance.id
-        mockObjeto(crudHelperServiceMock, edificioInstance)
-        mockEliminarObjeto(crudHelperServiceMock, expectedMessage)
-        injectMock()
+        def edificioInstance = new EdificioBuilder().crear()
+        def random = new Random()
+        edificioInstance.id = random.nextInt()
 
         when:
         request.method = "POST"
         controller.delete_ajax()
 
         then:
-        Edificio.count() == 0
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        1 * crudHelperServiceMock.eliminarObjeto("edificio", _ as Edificio) >> expectedMessage
         response.text == expectedMessage
-
-        where:
-        edificioInstance = new EdificioBuilder().crear()
     }
 
     void "Debe mostrar error al intentar eliminar un edificio no encontrado"() {
         setup:
-        edificioInstance.save()
-        controller.params.id = 3
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
+        def expectedMessage = "ERROR*default.not.found.message"
 
         when:
         request.method = "POST"
         controller.delete_ajax()
 
         then:
-        Edificio.count() == 1
-        response.text == "ERROR*default.not.found.message"
+        1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
+        0 * crudHelperServiceMock.eliminarObjeto("edificio", _ as Edificio)
+        response.text == expectedMessage
 
         where:
-        edificioInstance = new EdificioBuilder().crear()
-    }
-
-    void "Debe mostrar error al intentar eliminar un edificio sin parametro id"() {
-        setup:
-        edificioInstance.save()
-        mockObjeto(crudHelperServiceMock, null)
-        injectMock()
-
-        when:
-        request.method = "POST"
-        controller.delete_ajax()
-
-        then:
-        Edificio.count() == 1
-        response.text == "ERROR*default.not.found.message"
-
-        where:
-        edificioInstance = new EdificioBuilder().crear()
-    }
-
-    def injectMock() {
-        controller.crudHelperService = crudHelperServiceMock.createMock()
+        edificioInstance << [null, new Edificio()]
     }
 }

@@ -27,12 +27,12 @@ class CrudHelperService {
 
     def eliminarObjeto(entidad, objeto) {
         def msgBuilder = grailsApplication.mainContext.getBean('ec.com.tw.parking.MensajesBuilderTagLib')
-
-        try {
+//
+//        try {
             objeto.delete(flush: true)
             return msgBuilder.renderEliminado(entidad: entidad)
-        } catch (DataIntegrityViolationException e) {
-            return msgBuilder.renderNoEliminado(entidad: entidad)
-        }
+//        } catch (DataIntegrityViolationException e) {
+//            return msgBuilder.renderNoEliminado(entidad: entidad)
+//        }
     }
 }

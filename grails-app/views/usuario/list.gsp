@@ -202,6 +202,41 @@
                     } //success
                 }); //ajax
             } //createEdit
+            function editarPassword(id) {
+                var title = "${message(code: 'default.edit.password.label')}";
+                var data = id ? { id: id } : {};
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(controller:'usuario', action:'password_ajax')}",
+                    data    : data,
+                    success : function (msg) {
+                        var b = bootbox.dialog({
+                            id      : "dlgEditPassUsuario",
+                            title   : title,
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "${message(code: 'default.button.cancel.label')}",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                guardar  : {
+                                    id        : "btnSave",
+                                    label     : "<i class='fa fa-save'></i> ${message(code: 'default.button.save.label')}",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        return guardarUsuario();
+                                    } //callback
+                                } //guardar
+                            } //buttons
+                        }); //dialog
+                        setTimeout(function () {
+                            b.find(".form-control").first().focus()
+                        }, 500);
+                    } //success
+                }); //ajax
+            }
             $(function () {
                 $(".btnCrear").click(function() {
                     crearEditarUsuario();
@@ -209,6 +244,10 @@
                 });
                 $(".btnEditar").click(function() {
                     crearEditarUsuario($(this).parents("tr").data("id"));
+                    return false;
+                });
+                $(".btnPassword").click(function() {
+                    editarPassword($(this).parents("tr").data("id"));
                     return false;
                 });
                 $(".btnEliminar").click(function() {

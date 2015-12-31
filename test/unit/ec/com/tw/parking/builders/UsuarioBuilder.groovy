@@ -12,7 +12,7 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 class UsuarioBuilder {
     String nombre = getRandomString(3, 50, false)
     String email = getRandomMail()
-    String password = getRandomString(3, 512, true)
+    String password = getRandomString(3, 512, false)
     Boolean esAdmin = getRandomBoolean()
     String cedula = getRandomString(10)
 
