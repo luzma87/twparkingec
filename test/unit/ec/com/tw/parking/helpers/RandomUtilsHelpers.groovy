@@ -47,4 +47,9 @@ class RandomUtilsHelpers {
         int pos = random.nextInt(array.size())
         return array[pos]
     }
+
+    static getRandomInt(max) {
+        Random random = new Random()
+        return random.nextInt(max)
+    }
 }

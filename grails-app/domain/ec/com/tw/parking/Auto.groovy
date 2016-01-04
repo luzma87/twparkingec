@@ -22,6 +22,7 @@ class Auto {
             modelo column: 'modelo'
             placa column: 'placa'
             tamanio column: 'tamanio'
+            usuario column: 'usuario_id'
         }
     }
 

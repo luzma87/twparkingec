@@ -44,6 +44,12 @@ class MenuTagLib {
                         action    : "list",
                         label     : message(code: 'navbar.edificios'),
                         icon      : "fa-building"
+                    ],
+                    puestos: [
+                        controller: "puesto",
+                        action    : "list",
+                        label     : message(code: 'navbar.puestos'),
+                        icon      : "fa-cube"
                     ]
                 ]
             ]

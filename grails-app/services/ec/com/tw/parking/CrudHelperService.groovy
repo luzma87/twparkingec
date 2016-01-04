@@ -16,7 +16,7 @@ class CrudHelperService {
     }
 
     def guardarObjeto(objeto, params) {
-        def entidad =  GrailsNameUtils.getPropertyName(Usuario)
+        def entidad =  GrailsNameUtils.getPropertyName(objeto.class)
         def msgBuilder = grailsApplication.mainContext.getBean('ec.com.tw.parking.MensajesBuilderTagLib')
         def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib')
 
@@ -28,7 +28,7 @@ class CrudHelperService {
     }
 
     def eliminarObjeto(objeto) {
-        def entidad =  GrailsNameUtils.getPropertyName(Usuario)
+        def entidad =  GrailsNameUtils.getPropertyName(objeto.class)
         def msgBuilder = grailsApplication.mainContext.getBean('ec.com.tw.parking.MensajesBuilderTagLib')
         try {
             objeto.delete(flush: true)

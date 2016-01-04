@@ -1,11 +1,11 @@
 
-<%@ page import="ec.com.tw.parking.Auto" %>
+<%@ page import="ec.com.tw.parking.Puesto" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
         <title>
-            <g:message code="default.list.label" args="[message(code: 'auto.label')]"/>
+            <g:message code="default.list.label" args="[message(code: 'puesto.label')]"/>
         </title>
     </head>
     <body>
@@ -24,7 +24,7 @@
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
                     <span class="input-group-btn">
-                        <g:link controller="auto" action="list" class="btn btn-default btn-search">
+                        <g:link controller="puesto" action="list" class="btn btn-default btn-search">
                             <i class="fa fa-search"></i>&nbsp;
                         </g:link>
                     </span>
@@ -36,35 +36,27 @@
             <thead>
                 <tr>
                     
-                    <g:sortableColumn property="marca" title="${message(code: 'auto.marca.label')}"/>
+                    <g:sortableColumn property="tamanio" title="${message(code: 'puesto.tamanio.label')}"/>
                     
-                    <g:sortableColumn property="modelo" title="${message(code: 'auto.modelo.label')}"/>
+                    <g:sortableColumn property="numero" title="${message(code: 'puesto.numero.label')}"/>
                     
-                    <g:sortableColumn property="placa" title="${message(code: 'auto.placa.label')}"/>
-                    
-                    <g:sortableColumn property="tamanio" title="${message(code: 'auto.tamanio.label')}"/>
-                    
-                    <th><g:message code="auto.usuario.label" /></th>
+                    <th><g:message code="puesto.edificio.label" /></th>
                     
                     <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
                 </tr>
             </thead>
             <tbody>
-                <g:if test="${autoInstanceCount > 0}">
-                    <g:each in="${autoInstanceList}" status="i" var="autoInstance">
-                        <tr data-id="${autoInstance.id}">
-                            
-                            <td>${autoInstance.marca}</td>
-                            
-                            <td><g:fieldValue bean="${autoInstance}" field="modelo"/></td>
-                                
-                            <td><g:fieldValue bean="${autoInstance}" field="placa"/></td>
-                                
+                <g:if test="${puestoInstanceCount > 0}">
+                    <g:each in="${puestoInstanceList}" status="i" var="puestoInstance">
+                        <tr data-id="${puestoInstance.id}">
+
                             <td>
-                                <g:message code="tamanio.${autoInstance.tamanio}" />
+                                <g:message code="tamanio.${puestoInstance.tamanio}" />
                             </td>
+                            
+                            <td><g:fieldValue bean="${puestoInstance}" field="numero"/></td>
                                 
-                            <td><g:fieldValue bean="${autoInstance}" field="usuario"/></td>
+                            <td><g:fieldValue bean="${puestoInstance}" field="edificio"/></td>
                                 
                             <td>
                                 <div class="btn-group btn-group-sm">
@@ -83,7 +75,7 @@
                 </g:if>
                 <g:else>
                     <tr class="info">
-                        <td class="text-center text-shadow" colspan="6">
+                        <td class="text-center text-shadow" colspan="4">
                             <i class="fa fa-2x icon-ghost"></i>
                             <g:message code="default.no.records.found"/>
                         </td>
@@ -94,10 +86,10 @@
 
         <script type="text/javascript">
             var id = null;
-            function guardarAuto() {
-                var $form = $("#frmAuto");
+            function guardarPuesto() {
+                var $form = $("#frmPuesto");
                 if ($form.valid()) {
-                    openLoader("${message(code: 'default.saving', args:[message(code: 'auto.label')])}");
+                    openLoader("${message(code: 'default.saving', args:[message(code: 'puesto.label')])}");
                     $.ajax({
                         type    : "POST",
                         url     : $form.attr("action"),
@@ -123,11 +115,11 @@
                     return false;
                 } //else
             }
-            function eliminarAuto(itemId) {
+            function eliminarPuesto(itemId) {
                 bootbox.dialog({
                     title   : "${message(code: 'default.alert.title')}",
                     message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-                              "${message(code: 'default.delete.confirm.message', args:[message(code: 'auto.label')])}</p>",
+                              "${message(code: 'default.delete.confirm.message', args:[message(code: 'puesto.label')])}</p>",
                     buttons : {
                         cancelar : {
                             label     : "${message(code: 'default.button.cancel.label')}",
@@ -139,10 +131,10 @@
                             label     : "<i class='fa fa-trash-o'></i> ${message(code: 'default.button.delete.label')}",
                             className : "btn-danger",
                             callback  : function () {
-                                openLoader("${message(code: 'default.deleting', args:[message(code: 'auto.label')])}");
+                                openLoader("${message(code: 'default.deleting', args:[message(code: 'puesto.label')])}");
                                 $.ajax({
                                     type    : "POST",
-                                    url     : '${createLink(controller:'auto', action:'delete_ajax')}',
+                                    url     : '${createLink(controller:'puesto', action:'delete_ajax')}',
                                     data    : {
                                         id : itemId
                                     },
@@ -167,18 +159,18 @@
                     }
                 });
             }
-            function crearEditarAuto(id) {
+            function crearEditarPuesto(id) {
                 var title = id ?
-                            "${message(code: 'default.edit.label', args:[message(code: 'auto.label')])}" :
-                            "${message(code: 'default.create.label', args:[message(code: 'auto.label')])}";
+                            "${message(code: 'default.edit.label', args:[message(code: 'puesto.label')])}" :
+                            "${message(code: 'default.create.label', args:[message(code: 'puesto.label')])}";
                 var data = id ? { id: id } : {};
                 $.ajax({
                     type    : "POST",
-                    url     : "${createLink(controller:'auto', action:'form_ajax')}",
+                    url     : "${createLink(controller:'puesto', action:'form_ajax')}",
                     data    : data,
                     success : function (msg) {
                         var b = bootbox.dialog({
-                            id      : "dlgCreateEditAuto",
+                            id      : "dlgCreateEditPuesto",
                             title   : title,
                             message : msg,
                             buttons : {
@@ -193,7 +185,7 @@
                                     label     : "<i class='fa fa-save'></i> ${message(code: 'default.button.save.label')}",
                                     className : "btn-success",
                                     callback  : function () {
-                                        return guardarAuto();
+                                        return guardarPuesto();
                                     } //callback
                                 } //guardar
                             } //buttons
@@ -206,15 +198,15 @@
             } //createEdit
             $(function () {
                 $(".btnCrear").click(function() {
-                    crearEditarAuto();
+                    crearEditarPuesto();
                     return false;
                 });
                 $(".btnEditar").click(function() {
-                    crearEditarAuto($(this).parents("tr").data("id"));
+                    crearEditarPuesto($(this).parents("tr").data("id"));
                     return false;
                 });
                 $(".btnEliminar").click(function() {
-                    eliminarAuto($(this).parents("tr").data("id"));
+                    eliminarPuesto($(this).parents("tr").data("id"));
                     return false;
                 });
             });
