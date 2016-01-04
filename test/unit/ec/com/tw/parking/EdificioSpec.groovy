@@ -5,9 +5,6 @@ import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-/**
- * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
- */
 @TestFor(Edificio)
 class EdificioSpec extends Specification {
 

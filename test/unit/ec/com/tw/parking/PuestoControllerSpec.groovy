@@ -1,6 +1,5 @@
 package ec.com.tw.parking
 
-
 import ec.com.tw.parking.builders.PuestoBuilder
 import grails.test.mixin.*
 import spock.lang.*

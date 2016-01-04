@@ -13,9 +13,6 @@ import spock.lang.Specification
 
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
-/**
- * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
- */
 @TestFor(CrudHelperService)
 @Mock([Usuario, Auto, Edificio, MensajesBuilderTagLib, ValidationTagLib])
 class CrudHelperServiceSpec extends Specification {
