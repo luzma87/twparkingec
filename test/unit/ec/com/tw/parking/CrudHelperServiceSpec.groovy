@@ -82,7 +82,7 @@ class CrudHelperServiceSpec extends Specification {
     void "Debe retornar un mensaje de exito cuando el objeto se elimina exitosamente"() {
         when:
         objeto.save()
-        def respuesta = service.eliminarObjeto(objeto,)
+        def respuesta = service.eliminarObjeto(objeto)
 
         then:
         respuesta == "SUCCESS*default.deleted.message"
@@ -106,12 +106,5 @@ class CrudHelperServiceSpec extends Specification {
 
         then:
         respuesta == "ERROR*default.not.deleted.message"
-
-//        where:
-//        objetos << [
-//            [entidad: 'usuario', objeto: null],
-//            [entidad: 'auto', objeto: null],
-//            [entidad: 'edificio', objeto: null],
-//        ]
     }
 }
