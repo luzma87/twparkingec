@@ -4,8 +4,7 @@ class Edificio {
 
     String nombre
 
-//     TODO
-//    static hasMany = [puestos: Puesto]
+    static hasMany = [puestos: Puesto]
 
     static mapping = {
         table 'edificio'

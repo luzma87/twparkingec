@@ -1,11 +1,14 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.builders.AutoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import ec.com.tw.parking.helpers.RandomUtilsHelpers
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 @TestFor(Usuario)
+@Mock([Auto])
 class UsuarioSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
@@ -102,6 +105,18 @@ class UsuarioSpec extends Specification {
         !usuario.validate()
         usuario.hasErrors()
         usuario.errors['email']?.code == 'email.invalid'
+    }
+
+    void "Debe tener varios autos"() {
+        setup:
+        def auto = new AutoBuilder().crear()
+        auto.save()
+        def usuario = new UsuarioBuilder().crear()
+        usuario.save()
+
+        expect:
+        usuario.addToAutos(auto)
+        usuario.autos.size() == 1
     }
 
     void "Debe toString devolver el nombre"() {

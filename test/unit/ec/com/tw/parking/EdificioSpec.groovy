@@ -1,6 +1,7 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.EdificioBuilder
+import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -81,6 +82,18 @@ class EdificioSpec extends Specification {
         campo << [
             [nombre: "nombre", maxSize: 50]
         ]
+    }
+
+    void "Debe tener varios puestos"() {
+        setup:
+        def puesto = new PuestoBuilder().crear()
+        puesto.save()
+        def edificio = new EdificioBuilder().crear()
+        edificio.save()
+
+        expect:
+        edificio.addToPuestos(puesto)
+        edificio.puestos.size() == 1
     }
 
     void "Debe toString devolver el nombre"() {

@@ -7,7 +7,7 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 @TestFor(Puesto)
-@Mock([Puesto])
+@Mock([Edificio])
 class PuestoSpec extends Specification {
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'

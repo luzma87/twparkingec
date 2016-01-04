@@ -8,6 +8,8 @@ class Usuario {
     Boolean esAdmin = false
     String cedula
 
+    static hasMany = [autos: Auto]
+
     static mapping = {
         table 'usuario'
         cache usage: 'read-write', include: 'lazy'
