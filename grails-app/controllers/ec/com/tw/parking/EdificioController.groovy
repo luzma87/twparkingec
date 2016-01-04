@@ -27,7 +27,7 @@ class EdificioController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'edificio')
             return
         }
-        render crudHelperService.guardarObjeto('edificio', edificioInstance, params)
+        render crudHelperService.guardarObjeto(edificioInstance, params)
     }
 
     def delete_ajax() {
@@ -36,6 +36,6 @@ class EdificioController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'edificio')
             return
         }
-        render crudHelperService.eliminarObjeto('edificio', edificioInstance)
+        render crudHelperService.eliminarObjeto(edificioInstance)
     }
 }

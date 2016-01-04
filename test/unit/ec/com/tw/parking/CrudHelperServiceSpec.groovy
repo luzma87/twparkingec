@@ -5,7 +5,9 @@ import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import grails.util.GrailsNameUtils
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
+import org.springframework.dao.DataIntegrityViolationException
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 
@@ -47,52 +49,72 @@ class CrudHelperServiceSpec extends Specification {
 
     void "Debe retornar un mensaje de exito cuando el objeto se guarda exitosamente"() {
         when:
-        def objeto = objetos.builder.crear()
-        def params = objetos.builder.getParams()
-        def respuesta = service.guardarObjeto(objetos.entidad, objeto, params)
+        def objeto = builder.crear()
+        def params = builder.getParams()
+        def respuesta = service.guardarObjeto(objeto, params)
 
         then:
         respuesta == "SUCCESS*default.saved.message"
 
         where:
-        objetos << [
-            [entidad: 'usuario', builder: new UsuarioBuilder()],
-            [entidad: 'auto', builder: new AutoBuilder()],
-            [entidad: 'edificio', builder: new EdificioBuilder()],
+        builder << [
+            new UsuarioBuilder(),
+            new AutoBuilder(),
+            new EdificioBuilder(),
         ]
     }
 
     void "Debe retornar un mensaje de error cuando no se pudo guardar el objeto"() {
         when:
-        def objeto = objetos.builder.crear()
-        def params = objetos.builder.getParams()
+        def objeto = builder.crear()
+        def params = builder.getParams()
         params.find().value = getRandomString(550, 1550, true)
-        def respuesta = service.guardarObjeto(objetos.entidad, objeto, params)
+        def respuesta = service.guardarObjeto(objeto, params)
 
         then:
         respuesta.startsWith("ERROR*default.not.saved.message")
 
         where:
-        objetos << [
-            [entidad: 'usuario', builder: new UsuarioBuilder()],
-            [entidad: 'auto', builder: new AutoBuilder()],
-            [entidad: 'edificio', builder: new EdificioBuilder()],
+        builder << [
+            new UsuarioBuilder(),
+            new AutoBuilder(),
+            new EdificioBuilder(),
         ]
     }
 
     void "Debe retornar un mensaje de exito cuando el objeto se elimina exitosamente"() {
         when:
-        objetos.objeto.save()
-        def respuesta = service.eliminarObjeto(objetos.entidad, objetos.objeto,)
+        objeto.save()
+        def respuesta = service.eliminarObjeto(objeto,)
 
         then:
         respuesta == "SUCCESS*default.deleted.message"
 
         where:
-        objetos << [
-            [entidad: 'usuario', objeto: new UsuarioBuilder().crear()],
-            [entidad: 'auto', objeto: new AutoBuilder().crear()],
-            [entidad: 'edificio', objeto: new EdificioBuilder().crear()],
+        objeto << [
+            new UsuarioBuilder().crear(),
+            new AutoBuilder().crear(),
+            new EdificioBuilder().crear(),
         ]
+    }
+
+    void "Debe retornar un mensaje de error cuando no puede eliminar el objeto"() {
+        when:
+        mockDomain(Usuario, [new UsuarioBuilder().getParams()])
+        Usuario.metaClass.delete = { Map params ->
+            throw new DataIntegrityViolationException("ERROR")
+        }
+        def mocked = Usuario.get(1)
+        def respuesta = service.eliminarObjeto(mocked)
+
+        then:
+        respuesta == "ERROR*default.not.deleted.message"
+
+//        where:
+//        objetos << [
+//            [entidad: 'usuario', objeto: null],
+//            [entidad: 'auto', objeto: null],
+//            [entidad: 'edificio', objeto: null],
+//        ]
     }
 }

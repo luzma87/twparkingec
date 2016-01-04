@@ -1,5 +1,7 @@
 package ec.com.tw.parking
 
+
+
 import ec.com.tw.parking.builders.EdificioBuilder
 import grails.test.mixin.*
 import spock.lang.*
@@ -57,7 +59,7 @@ class EdificioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
-        1 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Edificio, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un edificio no encontrado"() {
@@ -71,7 +73,7 @@ class EdificioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
-        0 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _)
+        0 * crudHelperServiceMock.guardarObjeto(_ as Edificio, _)
         response.text == expectedMessage
     }
 
@@ -86,7 +88,7 @@ class EdificioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
-        1 * crudHelperServiceMock.guardarObjeto("edificio", _ as Edificio, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Edificio, _) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -103,7 +105,7 @@ class EdificioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
-        1 * crudHelperServiceMock.eliminarObjeto("edificio", _ as Edificio) >> expectedMessage
+        1 * crudHelperServiceMock.eliminarObjeto(_ as Edificio) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -117,7 +119,7 @@ class EdificioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Edificio, _) >> edificioInstance
-        0 * crudHelperServiceMock.eliminarObjeto("edificio", _ as Edificio)
+        0 * crudHelperServiceMock.eliminarObjeto(_ as Edificio)
         response.text == expectedMessage
 
         where:

@@ -57,7 +57,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(${className}, _) >> ${modelName}
-        1 * crudHelperServiceMock.guardarObjeto("${classNameLower}", _ as ${className}, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as ${className}, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un ${classNameLower} no encontrado"() {
@@ -71,7 +71,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(${className}, _) >> ${modelName}
-        0 * crudHelperServiceMock.guardarObjeto("${classNameLower}", _ as ${className}, _)
+        0 * crudHelperServiceMock.guardarObjeto(_ as ${className}, _)
         response.text == expectedMessage
     }
 
@@ -86,7 +86,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(${className}, _) >> ${modelName}
-        1 * crudHelperServiceMock.guardarObjeto("${classNameLower}", _ as ${className}, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as ${className}, _) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -103,7 +103,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(${className}, _) >> ${modelName}
-        1 * crudHelperServiceMock.eliminarObjeto("${classNameLower}", _ as ${className}) >> expectedMessage
+        1 * crudHelperServiceMock.eliminarObjeto(_ as ${className}) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -117,7 +117,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(${className}, _) >> ${modelName}
-        0 * crudHelperServiceMock.eliminarObjeto("${classNameLower}", _ as ${className})
+        0 * crudHelperServiceMock.eliminarObjeto(_ as ${className})
         response.text == expectedMessage
 
         where:

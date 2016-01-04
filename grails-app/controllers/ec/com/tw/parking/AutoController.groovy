@@ -27,7 +27,7 @@ class AutoController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }
-        render crudHelperService.guardarObjeto('auto', autoInstance, params)
+        render crudHelperService.guardarObjeto(autoInstance, params)
     }
 
     def delete_ajax() {
@@ -36,6 +36,6 @@ class AutoController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }
-        render crudHelperService.eliminarObjeto('auto', autoInstance)
+        render crudHelperService.eliminarObjeto(autoInstance)
     }
 }

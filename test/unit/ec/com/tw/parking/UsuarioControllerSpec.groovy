@@ -57,7 +57,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
-        1 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Usuario, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un usuario no encontrado"() {
@@ -71,7 +71,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
-        0 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _)
+        0 * crudHelperServiceMock.guardarObjeto(_ as Usuario, _)
         response.text == expectedMessage
     }
 
@@ -86,7 +86,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
-        1 * crudHelperServiceMock.guardarObjeto('usuario', _ as Usuario, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Usuario, _) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -103,7 +103,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
-        1 * crudHelperServiceMock.eliminarObjeto('usuario', _ as Usuario) >> expectedMessage
+        1 * crudHelperServiceMock.eliminarObjeto(_ as Usuario) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -117,7 +117,7 @@ class UsuarioControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Usuario, _) >> usuario
-        0 * crudHelperServiceMock.eliminarObjeto('usuario', _ as Usuario)
+        0 * crudHelperServiceMock.eliminarObjeto(_ as Usuario)
         response.text == expectedMessage
 
         where:

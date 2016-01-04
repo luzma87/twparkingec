@@ -7,7 +7,7 @@ class Auto {
     String placa
     String tamanio
 
-    //TODO: prueba de integracion delete usuario => delete auto
+    //TODO: prueba de integracion delete usuario => delete autos
     static belongsTo = [usuario: Usuario]
 
     static mapping = {

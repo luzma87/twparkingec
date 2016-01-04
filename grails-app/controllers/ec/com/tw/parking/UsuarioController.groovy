@@ -27,7 +27,7 @@ class UsuarioController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'usuario')
             return
         }
-        render crudHelperService.guardarObjeto('usuario', usuarioInstance, params)
+        render crudHelperService.guardarObjeto(usuarioInstance, params)
     }
 
     def delete_ajax() {
@@ -36,7 +36,7 @@ class UsuarioController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'usuario')
             return
         }
-        render crudHelperService.eliminarObjeto('usuario', usuarioInstance)
+        render crudHelperService.eliminarObjeto(usuarioInstance)
     }
 
     def password_ajax() {

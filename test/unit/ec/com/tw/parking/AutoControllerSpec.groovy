@@ -59,7 +59,7 @@ class AutoControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
-        1 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Auto, _) >> expectedMessage
     }
 
     void "Debe mostrar error al intentar actualizar un auto no encontrado"() {
@@ -73,7 +73,7 @@ class AutoControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
-        0 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _)
+        0 * crudHelperServiceMock.guardarObjeto(_ as Auto, _)
         response.text == expectedMessage
     }
 
@@ -88,7 +88,7 @@ class AutoControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
-        1 * crudHelperServiceMock.guardarObjeto("auto", _ as Auto, _) >> expectedMessage
+        1 * crudHelperServiceMock.guardarObjeto(_ as Auto, _) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -105,7 +105,7 @@ class AutoControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
-        1 * crudHelperServiceMock.eliminarObjeto("auto", _ as Auto) >> expectedMessage
+        1 * crudHelperServiceMock.eliminarObjeto(_ as Auto) >> expectedMessage
         response.text == expectedMessage
     }
 
@@ -119,7 +119,7 @@ class AutoControllerSpec extends Specification {
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Auto, _) >> autoInstance
-        0 * crudHelperServiceMock.eliminarObjeto("auto", _ as Auto)
+        0 * crudHelperServiceMock.eliminarObjeto(_ as Auto)
         response.text == expectedMessage
 
         where:

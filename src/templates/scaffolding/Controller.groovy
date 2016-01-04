@@ -27,7 +27,7 @@ class ${className}Controller extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: '${classNameLower}')
             return
         }
-        render crudHelperService.guardarObjeto('${classNameLower}', ${propertyName}, params)
+        render crudHelperService.guardarObjeto(${propertyName}, params)
     }
 
     def delete_ajax() {
@@ -36,6 +36,6 @@ class ${className}Controller extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: '${classNameLower}')
             return
         }
-        render crudHelperService.eliminarObjeto('${classNameLower}', ${propertyName})
+        render crudHelperService.eliminarObjeto(${propertyName})
     }
 }
