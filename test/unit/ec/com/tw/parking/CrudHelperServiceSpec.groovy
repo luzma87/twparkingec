@@ -5,10 +5,8 @@ import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import grails.util.GrailsNameUtils
 import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 import org.springframework.dao.DataIntegrityViolationException
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString

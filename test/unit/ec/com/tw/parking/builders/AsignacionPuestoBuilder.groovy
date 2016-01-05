@@ -20,9 +20,9 @@ class AsignacionPuestoBuilder {
 
     def getParams() {
         return [
-            auto  : this.auto,
-            puesto : this.puesto,
-            fechaAsignacion  : this.fechaAsignacion,
+            auto           : this.auto,
+            puesto         : this.puesto,
+            fechaAsignacion: this.fechaAsignacion,
             fechaLiberacion: this.fechaLiberacion
         ]
     }

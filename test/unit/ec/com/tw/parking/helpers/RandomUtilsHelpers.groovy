@@ -49,8 +49,12 @@ class RandomUtilsHelpers {
     }
 
     static getRandomInt(max) {
+        return getRandomInt(0, max)
+    }
+
+    static getRandomInt(min, max) {
         Random random = new Random()
-        return random.nextInt(max)
+        return random.nextInt(max - min) + min
     }
 
     static getRandomDouble(max) {
