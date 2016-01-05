@@ -12,13 +12,15 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 @Mock([AsignacionPuesto])
 class AsignadorPuestosServiceSpec extends Specification {
 
-    def "Debe devolver una lista con todas las asignaciones de puesto"() {
-        setup:
-        def listaAsignaciones = []
+    List<AsignacionPuesto> listaAsignaciones = []
+
+    def setup() {
         10.times {
             listaAsignaciones.add(new AsignacionPuestoBuilder().crear())
         }
+    }
 
+    def "Debe devolver una lista con todas las asignaciones de puesto"() {
         when:
         GroovyMock(AsignacionPuesto, global: true)
         AsignacionPuesto.list() >> listaAsignaciones
@@ -43,6 +45,14 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         expect:
         service.obtenerMapaAsignacionPorDistanciaEdificio(lista1 + lista2 + lista3) == mapa
+    }
+
+    def "Debe retornar la asignacion con fecha minima de una lista de asignaciones"() {
+        setup:
+        def asignacionConFechaMinima = listaAsignaciones.min { it.fechaAsignacion }
+
+        expect:
+        service.obtenerAsignacionConFechaMinima(listaAsignaciones) == asignacionConFechaMinima
     }
 
     private List<AsignacionPuesto> crearListaPorDistanciaEdificio(cantidad, distancia) {

@@ -24,4 +24,8 @@ class AsignadorPuestosService {
         }
         return mapa
     }
+
+    AsignacionPuesto obtenerAsignacionConFechaMinima(List<AsignacionPuesto> asignaciones) {
+        return asignaciones.min { it.fechaAsignacion }
+    }
 }
