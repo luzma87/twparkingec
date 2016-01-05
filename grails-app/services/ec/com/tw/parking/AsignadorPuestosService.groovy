@@ -28,4 +28,8 @@ class AsignadorPuestosService {
     AsignacionPuesto obtenerAsignacionConFechaMinima(List<AsignacionPuesto> asignaciones) {
         return asignaciones.min { it.fechaAsignacion }
     }
+
+    List<TipoTransicion> obtenerTodosTiposTransicion() {
+        return TipoTransicion.list()
+    }
 }

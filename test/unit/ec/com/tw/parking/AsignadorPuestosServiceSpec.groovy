@@ -2,6 +2,7 @@ package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import ec.com.tw.parking.builders.DistanciaEdificioBuilder
+import ec.com.tw.parking.builders.TipoTransicionBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -56,13 +57,19 @@ class AsignadorPuestosServiceSpec extends Specification {
     }
 
     def "Debe devolver una lista de tipo transicion"() {
+        setup:
+        def listaTipoTransiciones = []
+        3.times {
+            listaTipoTransiciones.add(new TipoTransicionBuilder().crear())
+        }
+
         when:
-        GroovyMock(AsignacionPuesto, global: true)
-        AsignacionPuesto.list() >> listaAsignaciones
-        def respuesta = service.obtenerTodasAsignaciones()
+        GroovyMock(TipoTransicion, global: true)
+        TipoTransicion.list() >> listaTipoTransiciones
+        def respuesta = service.obtenerTodosTiposTransicion()
 
         then:
-        respuesta == listaAsignaciones
+        respuesta == listaTipoTransiciones
     }
 
     private List<AsignacionPuesto> crearListaPorDistanciaEdificio(cantidad, distancia) {
