@@ -1,5 +1,6 @@
 <% import grails.persistence.Event %>
 <%=packageName%>
+<% classNameLower = domainClass.propertyName %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,7 +25,7 @@
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control input-search" placeholder="Buscar" value="\${params.search}">
                     <span class="input-group-btn">
-                        <g:link controller="${className.toLowerCase()}" action="list" class="btn btn-default btn-search">
+                        <g:link controller="${classNameLower}" action="list" class="btn btn-default btn-search">
                             <i class="fa fa-search"></i>&nbsp;
                         </g:link>
                     </span>
@@ -152,7 +153,7 @@
                                 openLoader("\${message(code: 'default.deleting', args:[message(code: '${domainClass.propertyName}.label')])}");
                                 \$.ajax({
                                     type    : "POST",
-                                    url     : '\${createLink(controller:'${domainClass.propertyName.toLowerCase()}', action:'delete_ajax')}',
+                                    url     : '\${createLink(controller:'${classNameLower}', action:'delete_ajax')}',
                                     data    : {
                                         id : itemId
                                     },
@@ -184,7 +185,7 @@
                 var data = id ? { id: id } : {};
                 \$.ajax({
                     type    : "POST",
-                    url     : "\${createLink(controller:'${domainClass.propertyName.toLowerCase()}', action:'form_ajax')}",
+                    url     : "\${createLink(controller:'${classNameLower}', action:'form_ajax')}",
                     data    : data,
                     success : function (msg) {
                         var b = bootbox.dialog({

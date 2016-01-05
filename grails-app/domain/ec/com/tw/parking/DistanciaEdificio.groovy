@@ -10,7 +10,7 @@ class DistanciaEdificio {
         cache usage: 'read-write', include: 'lazy'
         version false
         id generator: 'identity'
-        sort nombre: "asc"
+        sort codigo: "asc"
         columns {
             id column: 'id'
             codigo column: 'codigo'
