@@ -1,5 +1,6 @@
 package ec.com.tw.parking.builders
 
+import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.Edificio
 
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
@@ -9,13 +10,15 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
  */
 class EdificioBuilder {
     String nombre = getRandomString(2, 50, false)
+    DistanciaEdificio distancia = new DistanciaEdificioBuilder().crear()
 
     public EdificioBuilder() {
     }
 
     def getParams() {
         return [
-            nombre: this.nombre
+            nombre   : this.nombre,
+            distancia: this.distancia
         ]
     }
 
