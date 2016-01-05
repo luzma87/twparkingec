@@ -55,6 +55,16 @@ class AsignadorPuestosServiceSpec extends Specification {
         service.obtenerAsignacionConFechaMinima(listaAsignaciones) == asignacionConFechaMinima
     }
 
+    def "Debe devolver una lista de tipo transicion"() {
+        when:
+        GroovyMock(AsignacionPuesto, global: true)
+        AsignacionPuesto.list() >> listaAsignaciones
+        def respuesta = service.obtenerTodasAsignaciones()
+
+        then:
+        respuesta == listaAsignaciones
+    }
+
     private List<AsignacionPuesto> crearListaPorDistanciaEdificio(cantidad, distancia) {
         def lista = []
         cantidad.times {
