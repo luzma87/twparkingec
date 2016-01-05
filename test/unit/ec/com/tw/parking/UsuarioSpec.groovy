@@ -32,7 +32,7 @@ class UsuarioSpec extends Specification {
         usuario.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["nombre", "email", "password", "esAdmin", "cedula"]
+        campo << ["nombre", "email", "password", "esAdmin", "cedula", "estaActivo"]
     }
 
     void "Debe ser no blanco"(campo) {

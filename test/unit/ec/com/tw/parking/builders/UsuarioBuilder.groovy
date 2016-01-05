@@ -15,17 +15,19 @@ class UsuarioBuilder {
     String password = getRandomString(3, 512, false)
     Boolean esAdmin = getRandomBoolean()
     String cedula = getRandomString(10)
+    Boolean estaActivo = getRandomBoolean()
 
     public UsuarioBuilder() {
     }
 
     def getParams() {
         return [
-            nombre  : this.nombre,
-            email   : this.email,
-            password: this.password,
-            esAdmin : this.esAdmin,
-            cedula  : this.cedula
+            nombre    : this.nombre,
+            email     : this.email,
+            password  : this.password,
+            esAdmin   : this.esAdmin,
+            cedula    : this.cedula,
+            estaActivo: this.estaActivo
         ]
     }
 

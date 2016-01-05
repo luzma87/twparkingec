@@ -7,6 +7,7 @@ class Usuario {
     String password
     Boolean esAdmin = false
     String cedula
+    Boolean estaActivo = true
 
     static hasMany = [autos: Auto]
 
@@ -21,7 +22,8 @@ class Usuario {
             nombre column: 'nombre'
             email column: 'email'
             password column: 'password'
-            esAdmin column: 'esAdmin'
+            esAdmin column: 'es_admin'
+            estaActivo column: 'esta_activo'
         }
     }
 
@@ -31,6 +33,7 @@ class Usuario {
         password nullable: false, blank: false, maxSize: 512, password: true
         esAdmin nullable: false
         cedula nullable: false, blank: false, minSize: 10, maxSize: 10, unique: true
+        estaActivo nullable: false
     }
 
     String toString() {
