@@ -4,6 +4,7 @@ class Puesto {
 
     String tamanio
     String numero
+    Double precio = 0.0
 
     //TODO: prueba de integracion delete edificio => delete puestos
     static belongsTo = [edificio: Edificio]
@@ -19,12 +20,14 @@ class Puesto {
             tamanio column: 'tamanio'
             numero column: 'numero'
             edificio column: 'edificio_id'
+            precio column: 'precio'
         }
     }
 
     static constraints = {
         tamanio nullable: false, blank: false, inList: ["P", "G"]
         numero nullable: false, blank: false, minSize: 1, maxSize: 6
+        precio nullable: false, min: 0d
     }
 
     String toString() {

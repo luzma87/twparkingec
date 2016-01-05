@@ -3,6 +3,7 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Edificio
 import ec.com.tw.parking.Puesto
 
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomFromArray
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 
@@ -13,6 +14,7 @@ class PuestoBuilder {
     String tamanio = getRandomFromArray(["P", "G"])
     String numero = getRandomInt(100)
     Edificio edificio = new EdificioBuilder().crear()
+    Double precio = getRandomDouble(100)
 
     public PuestoBuilder() {
     }
@@ -21,7 +23,8 @@ class PuestoBuilder {
         return [
             tamanio : this.tamanio,
             numero  : this.numero,
-            edificio: this.edificio
+            edificio: this.edificio,
+            precio  : this.precio
         ]
     }
 

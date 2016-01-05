@@ -52,4 +52,11 @@ class RandomUtilsHelpers {
         Random random = new Random()
         return random.nextInt(max)
     }
+
+    static getRandomDouble(max) {
+        Random random = new Random()
+        def entero = random.nextInt(max - 1)
+        def decimal = random.nextInt(100) / 100
+        return entero + decimal
+    }
 }

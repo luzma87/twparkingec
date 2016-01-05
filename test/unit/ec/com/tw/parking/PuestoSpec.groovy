@@ -6,6 +6,8 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
+
 @TestFor(Puesto)
 @Mock([Edificio])
 class PuestoSpec extends Specification {
@@ -30,7 +32,7 @@ class PuestoSpec extends Specification {
         puesto.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["tamanio", "numero", "edificio"]
+        campo << ["tamanio", "numero", "edificio", "precio"]
     }
 
     void "Debe ser no blanco"(campo) {
@@ -79,6 +81,19 @@ class PuestoSpec extends Specification {
         !puesto.validate()
         puesto.hasErrors()
         puesto.errors["tamanio"]?.code == 'not.inList'
+    }
+
+    void "Debe el precio ser positivo"() {
+        setup:
+        def negativo = getRandomDouble(100) * -1
+        def puestoBuilder = new PuestoBuilder()
+        puestoBuilder.precio = negativo
+        def puesto = puestoBuilder.crear()
+
+        expect:
+        !puesto.validate()
+        puesto.hasErrors()
+        puesto.errors['precio']?.code == "min.notmet"
     }
 
     void "Debe toString devolver el nombre del edificio y el numero"() {
