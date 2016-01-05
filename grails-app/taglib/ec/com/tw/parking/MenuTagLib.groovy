@@ -27,29 +27,36 @@ class MenuTagLib {
                 label: message(code: 'navbar.admin'),
                 icon : "fa-cog",
                 items: [
-                    usuarios: [
+                    usuarios  : [
                         controller: "usuario",
                         action    : "list",
                         label     : message(code: 'navbar.users'),
                         icon      : "fa-user"
                     ],
-                    autos: [
+                    autos     : [
                         controller: "auto",
                         action    : "list",
                         label     : message(code: 'navbar.autos'),
                         icon      : "fa-car"
                     ],
-                    edificios: [
+                    edificios : [
                         controller: "edificio",
                         action    : "list",
                         label     : message(code: 'navbar.edificios'),
                         icon      : "fa-building"
                     ],
-                    puestos: [
+                    puestos   : [
                         controller: "puesto",
                         action    : "list",
                         label     : message(code: 'navbar.puestos'),
                         icon      : "fa-cube"
+                    ],
+                    parametros: [
+                        controller: "parametros",
+                        action    : "index",
+                        label     : message(code: 'navbar.parametros'),
+                        icon      : "fa-cog",
+                        separator : true
                     ]
                 ]
             ]
@@ -138,6 +145,11 @@ class MenuTagLib {
                 }
             }
         }
+
+        if (item.separator == true) {
+            str += "<li role=\"separator\" class=\"divider\"></li>"
+        }
+
         str += "<li class='" + clase + "'>"
         if (item.items) {
             str += "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>"
