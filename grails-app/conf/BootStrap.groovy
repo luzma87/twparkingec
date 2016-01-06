@@ -2,6 +2,7 @@ import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.TipoTransicion
 import ec.com.tw.parking.Usuario
+import ec.com.tw.parking.Auto
 
 class BootStrap {
 
@@ -18,9 +19,9 @@ class BootStrap {
 
         if (TipoPreferencia.count() == 0) {
             listaTiposPreferenciaIniciales().each { datosPreferencia ->
-                def tipoPreferencia = new TipoPreferencia(datosPreferencia)
-                if (!tipoPreferencia.save()) {
-                    println "Error al crear tipo preferencia: " + tipoPreferencia.errors
+                def preferencia = new TipoPreferencia(datosPreferencia)
+                if (!preferencia.save()) {
+                    println "Error al crear tipo preferencia: " + preferencia.errors
                 }
             }
         }
@@ -74,11 +75,12 @@ class BootStrap {
         return [
             [
                 usuario: [
-                    nombre  : "Carlos Oquendo",
-                    email   : "coquendo@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "0721351797"
+                    nombre     : "Carlos Oquendo",
+                    email      : "coquendo@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "0721351797",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Renault",
                           modelo : "Logan",
@@ -87,11 +89,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Mauricio Murillo",
-                    email   : "mmurillo@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1714579305"
+                    nombre     : "Mauricio Murillo",
+                    email      : "mmurillo@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1714579305",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Spark",
@@ -100,11 +103,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Fausto de la Torre",
-                    email   : "ftorre@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1710876275"
+                    nombre     : "Fausto de la Torre",
+                    email      : "ftorre@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1710876275",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Kia",
                           modelo : "Sportage",
@@ -113,11 +117,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Fausto Castañeda",
-                    email   : "fcastane@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : true,
-                    cedula  : "1718198938"
+                    nombre     : "Fausto Castañeda",
+                    email      : "fcastane@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : true,
+                    cedula     : "1718198938",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Nissan",
                           modelo : "Pathfinder",
@@ -126,11 +131,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Paola Jimenez",
-                    email   : "pjimenez@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "0703594747"
+                    nombre     : "Paola Jimenez",
+                    email      : "pjimenez@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "0703594747",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Grand Vitara",
@@ -139,11 +145,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Gustavo Eguez",
-                    email   : "geguez@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1714060439"
+                    nombre     : "Gustavo Eguez",
+                    email      : "geguez@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1714060439",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Grand Vitara 5P",
@@ -152,11 +159,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Gaby Cortez",
-                    email   : "gcortez@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1717360281"
+                    nombre     : "Gaby Cortez",
+                    email      : "gcortez@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1717360281",
+                    preferencia: TipoPreferencia.findByCodigo("N")
                 ],
                 auto   : [marca  : "Volkswagen",
                           modelo : "Gol",
@@ -165,11 +173,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Felipe Ureta",
-                    email   : "fureta@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1707157093"
+                    nombre     : "Felipe Ureta",
+                    email      : "fureta@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1707157093",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Vitara 3P",
@@ -178,11 +187,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Iván Pazmiño",
-                    email   : "ipazmino@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1234567898"
+                    nombre     : "Iván Pazmiño",
+                    email      : "ipazmino@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1234567898",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Vitara 5P",
@@ -191,11 +201,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Rodrigo Vallejo",
-                    email   : "rvallejo@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1716368251"
+                    nombre     : "Rodrigo Vallejo",
+                    email      : "rvallejo@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1716368251",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Grand Vitara SZ",
@@ -204,11 +215,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "María Fernanda Escudero",
-                    email   : "mescudero@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "0602772220"
+                    nombre     : "María Fernanda Escudero",
+                    email      : "mescudero@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "0602772220",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Grand Vitara 5P",
@@ -217,11 +229,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Viviana Perez",
-                    email   : "vperez@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1720984630"
+                    nombre     : "Viviana Perez",
+                    email      : "vperez@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1720984630",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Hyundai",
                           modelo : "Getz",
@@ -230,11 +243,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Freddy Coronel",
-                    email   : "fcoronel@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1234567812"
+                    nombre     : "Freddy Coronel",
+                    email      : "fcoronel@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1234567812",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Toyota",
                           modelo : "Fortuner",
@@ -243,11 +257,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Luz Marina Unda",
-                    email   : "lmunda@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1715068159"
+                    nombre     : "Luz Marina Unda",
+                    email      : "lmunda@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1715068159",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Aveo",
@@ -256,11 +271,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Nelson Jumbo",
-                    email   : "njumbo@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1718642174"
+                    nombre     : "Nelson Jumbo",
+                    email      : "njumbo@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1718642174",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Chevrolet",
                           modelo : "Esteem",
@@ -269,11 +285,12 @@ class BootStrap {
             ],
             [
                 usuario: [
-                    nombre  : "Diego Alcocer",
-                    email   : "dalcocer@thoughtworks.com",
-                    password: "123".encodeAsSHA256(),
-                    esAdmin : false,
-                    cedula  : "1234567815"
+                    nombre     : "Diego Alcocer",
+                    email      : "dalcocer@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1234567815",
+                    preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca  : "Ford",
                           modelo : "F150",
