@@ -1,8 +1,28 @@
+import ec.com.tw.parking.DistanciaEdificio
+import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.Usuario
 
 class BootStrap {
 
     def init = { servletContext ->
+
+        if (DistanciaEdificio.count() == 0) {
+            listaDistanciasEdificioIniciales().each { datosDistancia ->
+                def distanciaEdificio = new DistanciaEdificio(datosDistancia)
+                if (!distanciaEdificio.save()) {
+                    println "Error al crear distancia edificio: " + distanciaEdificio.errors
+                }
+            }
+        }
+
+        if (TipoPreferencia.count() == 0) {
+            listaTiposPreferenciaIniciales().each { datosPreferencia ->
+                def tipoPreferencia = new TipoPreferencia(datosPreferencia)
+                if (!tipoPreferencia.save()) {
+                    println "Error al crear tipo preferencia: " + tipoPreferencia.errors
+                }
+            }
+        }
 
         if (Usuario.count() == 0) {
             listaUsuariosIniciales().each { datosUsuario ->
@@ -130,6 +150,21 @@ class BootStrap {
                 esAdmin : false,
                 cedula  : "1234567815"
             ]
+        ]
+    }
+
+    def listaDistanciasEdificioIniciales() {
+        return [
+            [codigo: 'M', descripcion: 'Matriz'],
+            [codigo: 'C', descripcion: 'Cerca'],
+            [codigo: 'L', descripcion: 'Lejos']
+        ]
+    }
+
+    def listaTiposPreferenciaIniciales() {
+        return [
+            [codigo: 'S', descripcion: 'Sale'],
+            [codigo: 'N', descripcion: 'No sale']
         ]
     }
 }
