@@ -115,3 +115,12 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+grails.mail.default.from="TWParking"
+grails {
+    mail {
+        host = "mailtrap.io"
+        port = 2525
+        username = "547054a0a973274f2"
+        password = "b4bcc6e9e30af6"
+    }
+}
