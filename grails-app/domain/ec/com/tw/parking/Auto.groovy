@@ -29,7 +29,7 @@ class Auto {
     static constraints = {
         marca nullable: false, blank: false, minSize: 2, maxSize: 20
         modelo nullable: false, blank: false, minSize: 2, maxSize: 25
-        placa nullable: false, blank: false, minSize: 8, maxSize: 8
+        placa nullable: false, blank: false, minSize: 7, maxSize: 8
         tamanio nullable: false, blank: false, maxSize: 1, inList: ["P", "G"]
     }
 

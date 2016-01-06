@@ -65,7 +65,7 @@ class AutoSpec extends Specification {
         campo << [
             [nombre: "marca", minSize: 2],
             [nombre: "modelo", minSize: 2],
-            [nombre: "placa", minSize: 8]
+            [nombre: "placa", minSize: 7]
         ]
     }
 

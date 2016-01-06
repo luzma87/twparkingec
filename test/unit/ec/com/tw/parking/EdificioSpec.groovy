@@ -33,6 +33,20 @@ class EdificioSpec extends Specification {
         campo << ["nombre", "distancia"]
     }
 
+    void "Debe poder ser nulo"(campo) {
+        setup:
+        def edificioBuilder = new EdificioBuilder()
+        edificioBuilder[campo] = null
+        def edificio = edificioBuilder.crear()
+
+        expect:
+        edificio.validate()
+        !edificio.hasErrors()
+
+        where:
+        campo << ["datosPago"]
+    }
+
     void "Debe ser no blanco"(campo) {
         setup:
         def edificioBuilder = new EdificioBuilder()
@@ -45,7 +59,7 @@ class EdificioSpec extends Specification {
         edificio.errors[campo]?.code == 'blank'
 
         where:
-        campo << ["nombre"]
+        campo << ["nombre", "datosPago"]
     }
 
     void "Debe tener mas o igual del minimo de caracteres"(campo) {

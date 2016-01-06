@@ -8,7 +8,7 @@ class TipoTransicion {
     Integer prioridad
 
     static mapping = {
-        table 'tipo_preferencia'
+        table 'tipo_transicion'
         cache usage: 'read-write', include: 'lazy'
         version false
         id generator: 'identity'

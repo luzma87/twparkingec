@@ -5,6 +5,8 @@ class Edificio {
     String nombre
     DistanciaEdificio distancia
 
+    String datosPago
+
     static hasMany = [puestos: Puesto]
 
     static mapping = {
@@ -17,12 +19,15 @@ class Edificio {
             id column: 'id'
             nombre column: 'nombre'
             distancia column: 'distancia_edificio_id'
+            datosPago column: 'datos_pago'
+            datosPago type: 'text'
         }
     }
 
     static constraints = {
         nombre nullable: false, blank: false, minSize: 2, maxSize: 50
         distancia nullable: false
+        datosPago nullable: true, blank: false
     }
 
     String toString() {
