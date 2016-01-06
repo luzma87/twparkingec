@@ -10,8 +10,8 @@ class AsignadorPuestosService {
         if (totalUsuariosActivos > totalPuestos) {
             def puestosFaltantes = totalUsuariosActivos - totalPuestos
             def usuariosAdmin = Usuario.findAllByEsAdmin(true)
-            def mensaje = "Faltan $puestosFaltantes puestos: se necesitan $totalUsuariosActivos y solamente existen $totalPuestos."
-            mensaje += mensajeFactoryService.construirMensaje(totalUsuariosActivos, puestosFaltantes)
+            def mensaje = "Faltan $puestosFaltantes puestos: se necesitan $totalUsuariosActivos y solamente existen $totalPuestos. "
+            mensaje += mensajeFactoryService.construirMensaje(puestosFaltantes)
 
             return [
                 destinatarios: usuariosAdmin,

@@ -1,12 +1,12 @@
 package ec.com.tw.parking
 
-import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(AsignadorPuestosService)
 @Mock([CalculadorCuotaService, Edificio])
@@ -21,46 +21,52 @@ class AsignadorPuestosServiceSpec extends Specification {
 //    }
 
     def "Debe retornar mapa con destinatarios admin y mensaje de alerta si la cantidad de usuario supera la cantidad de puestos"() {
-        setup:
-        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadEdificios)
+        given:
+        def cantidadPuestos = getRandomInt(1, 10)
+        def puestosFaltantes = getRandomInt(1, 10)
+        def cantidadUsuarios = cantidadPuestos + puestosFaltantes
+        def mensajes = construirMensajes(puestosFaltantes, cantidadUsuarios, cantidadPuestos)
+        def mensajeFactoryServiceMock = mockMensajeFactoryService()
 
         when:
+        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensajes.mensaje)
         def respuesta = service.asignarPuestos()
 
         then:
+        1 * mensajeFactoryServiceMock.construirMensaje(_) >> mensajes.mensajeMock
         respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
         respuesta.mensaje == mapaEsperado.mensaje
-
-        where:
-        cantidadEdificios << [0, getRandomInt(2, 10)/*, 1*/]
     }
 
-    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadEdificios) {
-        def cantidadPuestos = getRandomInt(10)
-        def cantidadUsuarios = cantidadPuestos + getRandomInt(1, 10)
+    private mockMensajeFactoryService() {
+        MensajeFactoryService mensajeFactoryServiceMock = Mock(MensajeFactoryService)
+        service.mensajeFactoryService = mensajeFactoryServiceMock
+        return mensajeFactoryServiceMock
+    }
+
+    private construirMensajes(puestosFaltantes, cantidadUsuarios, cantidadPuestos) {
+        def mensajeEsperado = "Faltan $puestosFaltantes puestos: se necesitan $cantidadUsuarios " +
+            "y solamente existen $cantidadPuestos. "
+        def mensajeEsperadoDelMock = getRandomString(10, 100, false)
+        def mensaje = mensajeEsperado + mensajeEsperadoDelMock
+
+        return [mensaje: mensaje, mensajeMock: mensajeEsperadoDelMock]
+    }
+
+    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensaje) {
         def usuariosAdmin = []
         cantidadUsuarios.times {
             usuariosAdmin += new UsuarioBuilder().crear()
         }
-        def edificios = []
-        cantidadEdificios.times {
-            edificios += new EdificioBuilder().crear()
-        }
         GroovyMock(Puesto, global: true)
         Puesto.count() >> cantidadPuestos
         GroovyMock(Usuario, global: true)
-        Usuario.findAllByEsAdmin(true) >> usuariosAdmin
         Usuario.countByEstaActivo(true) >> cantidadUsuarios
-        def puestosFaltantes = cantidadUsuarios - cantidadPuestos;
-        def mensajeEsperado = "Faltan $puestosFaltantes puestos: se necesitan $cantidadUsuarios y solamente existen $cantidadPuestos."
-        if (cantidadEdificios == 0) {
-            mensajeEsperado += " No se encontraron edificios ampliables, no se pudo recalcular la cuota"
-        } else if (cantidadEdificios > 1) {
-            mensajeEsperado += " Se encontraron ${cantidadEdificios} edificios ampliables, no se pudo recalcular la cuota"
-        }
+        Usuario.findAllByEsAdmin(true) >> usuariosAdmin
+
         return [
             destinatarios: usuariosAdmin,
-            mensaje      : mensajeEsperado
+            mensaje      : mensaje
         ]
     }
 
