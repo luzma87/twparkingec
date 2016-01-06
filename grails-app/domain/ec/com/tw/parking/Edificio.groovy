@@ -1,10 +1,12 @@
 package ec.com.tw.parking
 
+import com.sun.org.apache.xpath.internal.operations.Bool
+
 class Edificio {
 
     String nombre
     DistanciaEdificio distancia
-
+    Boolean esAmpliable
     String datosPago
 
     static hasMany = [puestos: Puesto]
@@ -27,6 +29,7 @@ class Edificio {
     static constraints = {
         nombre nullable: false, blank: false, minSize: 2, maxSize: 50
         distancia nullable: false
+        esAmpliable nullable: false
         datosPago nullable: true, blank: false
     }
 

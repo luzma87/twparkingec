@@ -30,7 +30,7 @@ class EdificioSpec extends Specification {
         edificio.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["nombre", "distancia"]
+        campo << ["nombre", "distancia", "esAmpliable"]
     }
 
     void "Debe poder ser nulo"(campo) {
