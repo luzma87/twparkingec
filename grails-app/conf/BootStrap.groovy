@@ -1,5 +1,6 @@
 import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.TipoPreferencia
+import ec.com.tw.parking.TipoTransicion
 import ec.com.tw.parking.Usuario
 
 class BootStrap {
@@ -21,6 +22,33 @@ class BootStrap {
                 if (!tipoPreferencia.save()) {
                     println "Error al crear tipo preferencia: " + tipoPreferencia.errors
                 }
+            }
+        }
+
+        if (TipoTransicion.count() == 0) {
+            def tipoTransicion1 = new TipoTransicion([
+                nombre          : "Lejos a Matriz",
+                distanciaOrigen : DistanciaEdificio.findByCodigo("L"),
+                distanciaDestino: DistanciaEdificio.findByCodigo("M"),
+                prioridad       : 1
+            ])
+            def tipoTransicion2 = new TipoTransicion([
+                nombre          : "Cerca a Lejos",
+                distanciaOrigen : DistanciaEdificio.findByCodigo("C"),
+                distanciaDestino: DistanciaEdificio.findByCodigo("L"),
+                prioridad       : 2
+            ])
+            def tipoTransicion3 = new TipoTransicion([
+                nombre          : "Matriz a Cerca",
+                distanciaOrigen : DistanciaEdificio.findByCodigo("M"),
+                distanciaDestino: DistanciaEdificio.findByCodigo("C"),
+                prioridad       : 3
+            ])
+            if (!tipoTransicion1.save() || !tipoTransicion2.save() || !tipoTransicion3.save()) {
+                println "Error al crear tipo transicion: "
+                println "1: " + tipoTransicion1.errors
+                println "2: " + tipoTransicion2.errors
+                println "3: " + tipoTransicion3.errors
             }
         }
 
