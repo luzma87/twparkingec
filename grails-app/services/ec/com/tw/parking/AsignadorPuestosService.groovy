@@ -1,9 +1,8 @@
 package ec.com.tw.parking
 
-import grails.transaction.Transactional
-
-@Transactional
 class AsignadorPuestosService {
+    def mensajeFactoryService
+
     def asignarPuestos() {
         def totalPuestos = Puesto.count()
         def totalUsuariosActivos = Usuario.countByEstaActivo(true)
@@ -12,6 +11,8 @@ class AsignadorPuestosService {
             def puestosFaltantes = totalUsuariosActivos - totalPuestos
             def usuariosAdmin = Usuario.findAllByEsAdmin(true)
             def mensaje = "Faltan $puestosFaltantes puestos: se necesitan $totalUsuariosActivos y solamente existen $totalPuestos."
+            mensaje += mensajeFactoryService.construirMensaje(totalUsuariosActivos, puestosFaltantes)
+
             return [
                 destinatarios: usuariosAdmin,
                 mensaje      : mensaje

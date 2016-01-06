@@ -1,19 +1,15 @@
 package ec.com.tw.parking
 
-import ec.com.tw.parking.builders.AsignacionPuestoBuilder
-import ec.com.tw.parking.builders.DistanciaEdificioBuilder
-import ec.com.tw.parking.builders.TipoTransicionBuilder
+import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.Ignore
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 
 @TestFor(AsignadorPuestosService)
-@Mock([AsignacionPuesto])
+@Mock([CalculadorCuotaService, Edificio])
 class AsignadorPuestosServiceSpec extends Specification {
 
 //    List<AsignacionPuesto> listaAsignaciones = []
@@ -26,7 +22,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def "Debe retornar mapa con destinatarios admin y mensaje de alerta si la cantidad de usuario supera la cantidad de puestos"() {
         setup:
-        def mapaEsperado = setupTest1()
+        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadEdificios)
 
         when:
         def respuesta = service.asignarPuestos()
@@ -34,14 +30,21 @@ class AsignadorPuestosServiceSpec extends Specification {
         then:
         respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
         respuesta.mensaje == mapaEsperado.mensaje
+
+        where:
+        cantidadEdificios << [0, getRandomInt(2, 10)/*, 1*/]
     }
 
-    private setupTest1() {
+    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadEdificios) {
         def cantidadPuestos = getRandomInt(10)
-        def cantidadUsuarios = cantidadPuestos + getRandomInt(10)
+        def cantidadUsuarios = cantidadPuestos + getRandomInt(1, 10)
         def usuariosAdmin = []
         cantidadUsuarios.times {
             usuariosAdmin += new UsuarioBuilder().crear()
+        }
+        def edificios = []
+        cantidadEdificios.times {
+            edificios += new EdificioBuilder().crear()
         }
         GroovyMock(Puesto, global: true)
         Puesto.count() >> cantidadPuestos
@@ -50,6 +53,11 @@ class AsignadorPuestosServiceSpec extends Specification {
         Usuario.countByEstaActivo(true) >> cantidadUsuarios
         def puestosFaltantes = cantidadUsuarios - cantidadPuestos;
         def mensajeEsperado = "Faltan $puestosFaltantes puestos: se necesitan $cantidadUsuarios y solamente existen $cantidadPuestos."
+        if (cantidadEdificios == 0) {
+            mensajeEsperado += " No se encontraron edificios ampliables, no se pudo recalcular la cuota"
+        } else if (cantidadEdificios > 1) {
+            mensajeEsperado += " Se encontraron ${cantidadEdificios} edificios ampliables, no se pudo recalcular la cuota"
+        }
         return [
             destinatarios: usuariosAdmin,
             mensaje      : mensajeEsperado
