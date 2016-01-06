@@ -314,4 +314,93 @@ class BootStrap {
             [codigo: 'N', descripcion: 'No sale']
         ]
     }
+
+    def listaEdificiosIniciales() {
+        return [
+            [
+                edificio: [
+                    nombre     : "Brescia",
+                    distancia  : DistanciaEdificio.findByCodigo("M"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "P", numero: "26", precio: 0],
+                    [tamanio: "P", numero: "37", precio: 0],
+                    [tamanio: "P", numero: "44", precio: 0],
+                    [tamanio: "P", numero: "38", precio: 0],
+                    [tamanio: "P", numero: "25", precio: 0],
+                    [tamanio: "P", numero: "27", precio: 0],
+                    [tamanio: "P", numero: "18", precio: 0],
+                    [tamanio: "P", numero: "39", precio: 0]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Eloy Alfaro",
+                    distancia  : DistanciaEdificio.findByCodigo("L"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "6", precio: 0]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Praga 1",
+                    distancia  : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "9", precio: 0]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Praga 2",
+                    distancia  : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "22", precio: 0]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Le Parc",
+                    distancia  : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable: true,
+                    datosPago  : "Hotel Le Parc S.A.<br/>" +
+                        "RUC: 1792086817001<br/>" +
+                        "Dirección: República del Salvador 34-349 e Irlanda<br/>" +
+                        "E-mail: tsanchez@leparc.com.ec<br/>" +
+                        "Cuenta corriente Pacífico: 05265673"
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "s/n", precio: 70],
+                    [tamanio: "G", numero: "s/n", precio: 70],
+                    [tamanio: "G", numero: "s/n", precio: 70]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Samoa",
+                    distancia  : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "50", precio: 0]
+                ]
+            ],
+            [
+                edificio: [
+                    nombre     : "Ardres",
+                    distancia  : DistanciaEdificio.findByCodigo("L"),
+                    esAmpliable: false
+                ],
+                puestos : [
+                    [tamanio: "G", numero: "57", precio: 0]
+                ]
+            ]
+        ]
+    }
 }
