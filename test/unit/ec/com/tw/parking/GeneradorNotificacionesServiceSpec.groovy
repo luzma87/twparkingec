@@ -8,9 +8,9 @@ import spock.lang.Specification
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
-@TestFor(AsignadorPuestosService)
-@Mock([CalculadorCuotaService, Edificio])
-class AsignadorPuestosServiceSpec extends Specification {
+@TestFor(GeneradorNotificacionesService)
+@Mock([CalculadorCuotaService, Edificio, Usuario])
+class GeneradorNotificacionesServiceSpec extends Specification {
 
 //    List<AsignacionPuesto> listaAsignaciones = []
 //
@@ -27,14 +27,17 @@ class AsignadorPuestosServiceSpec extends Specification {
         def cantidadUsuarios = cantidadPuestos + puestosFaltantes
         def mensajes = construirMensajes(puestosFaltantes, cantidadUsuarios, cantidadPuestos)
         def mensajeFactoryServiceMock = mockMensajeFactoryService()
+        def asunto = "ALERTA: puestos faltantes"
 
         when:
-        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensajes.mensaje)
-        def respuesta = service.asignarPuestos()
+        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos,
+            mensajes.mensaje, asunto)
+        def respuesta = service.generarNotificacion()
 
         then:
         1 * mensajeFactoryServiceMock.construirMensaje(_) >> mensajes.mensajeMock
         respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
+        respuesta.asunto == mapaEsperado.asunto
         respuesta.mensaje == mapaEsperado.mensaje
     }
 
@@ -53,7 +56,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         return [mensaje: mensaje, mensajeMock: mensajeEsperadoDelMock]
     }
 
-    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensaje) {
+    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensaje, asunto) {
         def usuariosAdmin = []
         cantidadUsuarios.times {
             usuariosAdmin += new UsuarioBuilder().crear()
@@ -66,6 +69,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         return [
             destinatarios: usuariosAdmin,
+            asunto       : asunto,
             mensaje      : mensaje
         ]
     }
