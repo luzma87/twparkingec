@@ -37,4 +37,12 @@ class UsuarioBuilder {
     def Usuario crear() {
         new Usuario(getParams())
     }
+
+    static List<Usuario> crearLista(cantidad){
+        def lista = []
+        cantidad.times {
+            lista += new UsuarioBuilder().crear()
+        }
+        return lista
+    }
 }

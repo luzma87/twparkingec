@@ -30,4 +30,12 @@ class AsignacionPuestoBuilder {
     public AsignacionPuesto crear() {
         new AsignacionPuesto(getParams())
     }
+
+    public static List<AsignacionPuesto> crearLista(cantidad) {
+        def lista = []
+        cantidad.times{
+           lista += new AsignacionPuestoBuilder().crear()
+        }
+        return lista
+    }
 }

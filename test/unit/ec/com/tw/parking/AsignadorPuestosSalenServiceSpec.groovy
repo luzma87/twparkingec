@@ -9,12 +9,5 @@ import spock.lang.Specification
 @TestFor(AsignadorPuestosSalenService)
 class AsignadorPuestosSalenServiceSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
+//    def ""
 }

@@ -26,7 +26,7 @@ class MensajeFactoryServiceSpec extends Specification {
         def mensajeEsperado = "No se encontraron edificios ampliables, no se pudo recalcular la cuota"
 
         expect:
-        service.construirMensaje(puestosFaltantes) == mensajeEsperado
+        service.construirMensajePuestosFaltantes(puestosFaltantes) == mensajeEsperado
     }
 
     void "Debe devolver un mensaje de advertencia si con la cantidad de edificios ampliables si esta es mayor a 1"() {
@@ -41,7 +41,7 @@ class MensajeFactoryServiceSpec extends Specification {
         def mensajeEsperado = "Se encontraron " + cantEdificios + " edificios ampliables, no se pudo recalcular la cuota"
 
         expect:
-        service.construirMensaje(puestosFaltantes) == mensajeEsperado
+        service.construirMensajePuestosFaltantes(puestosFaltantes) == mensajeEsperado
     }
 
     void "Debe devolver un mensaje con la cuota recalculada si la cantidad de edificios ampliables es 1"() {
@@ -53,7 +53,7 @@ class MensajeFactoryServiceSpec extends Specification {
         def calculadorCuotaServiceMock = mockCalculadorCuotaService()
 
         when:
-        def respuesta = service.construirMensaje(puestosFaltantes)
+        def respuesta = service.construirMensajePuestosFaltantes(puestosFaltantes)
 
         then:
         1 * calculadorCuotaServiceMock.calcularCuota(_, _) >> nuevaCuota

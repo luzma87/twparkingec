@@ -4,7 +4,7 @@ class MensajeFactoryService {
 
     def calculadorCuotaService
 
-    def construirMensaje(puestosFaltantes) {
+    def construirMensajePuestosFaltantes(puestosFaltantes) {
         def mensaje
         def edificiosAmpliables = Edificio.findAllByEsAmpliable(true)
         switch (edificiosAmpliables.size()) {
@@ -23,4 +23,6 @@ class MensajeFactoryService {
         }
         return mensaje
     }
+
+    String construirMensajeExito() {}
 }

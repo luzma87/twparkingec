@@ -33,4 +33,12 @@ class AutoBuilder {
     public Auto crear() {
         new Auto(getParams())
     }
+
+    static List<Auto> crearLista(cantidad) {
+        def lista = []
+        cantidad.times {
+            lista += new AutoBuilder().crear()
+        }
+        return lista
+    }
 }
