@@ -2,6 +2,7 @@ package ec.com.tw.parking
 
 class GeneradorNotificacionesService {
     def mensajeFactoryService
+    def asignadorPuestosService
     final MENSAJE_ALERTA_PUESTOS_FALTANTES = "ALERTA: puestos faltantes"
 
     def generarNotificacion() {
@@ -11,7 +12,18 @@ class GeneradorNotificacionesService {
         if (totalUsuariosActivos > totalPuestos) {
             return generarNotificacionMasUsuariosQuePuestos(totalUsuariosActivos, totalPuestos)
         } else {
+//            def preferenciaNoSale = TipoPreferencia.findByCodigo("N")
+//            def usuariosNoSalen = Usuario.findAllByPreferencia(preferenciaNoSale)
+//            def autosNoSalen = Auto.findAllByUsuarioInList(usuariosNoSalen)
+//            def asignacionesUsuariosNoSalen = AsignacionPuesto.findAllByAutoInList(autosNoSalen)
+//            if (usuariosNoSalen.size() > asignacionesUsuariosNoSalen.size()) {
+//                asignadorPuestosService = new AsignadorPuestosNoSalenService()
+//                asignadorPuestosService.asignarPuesto()
+//            }
+//            asignadorPuestosService = new AsignadorPuestosSalenService()
+//            asignadorPuestosService.asignarPuesto()
 
+            //generar notificaion con puestos
         }
     }
 

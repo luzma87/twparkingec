@@ -3,6 +3,7 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
@@ -12,6 +13,9 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 @Mock([CalculadorCuotaService, Edificio, Usuario])
 class GeneradorNotificacionesServiceSpec extends Specification {
 
+    final CASO_MAS_USUARIOS_QUE_PUESTOS = 0
+    final CASO_EXITO = 1
+
 //    List<AsignacionPuesto> listaAsignaciones = []
 //
 //    def setup() {
@@ -19,26 +23,32 @@ class GeneradorNotificacionesServiceSpec extends Specification {
 //            listaAsignaciones.add(new AsignacionPuestoBuilder().crear())
 //        }
 //    }
+    def mensajeFactoryServiceMock
 
-    def "Debe retornar mapa con destinatarios admin y mensaje de alerta si la cantidad de usuario supera la cantidad de puestos"() {
+    def setup() {
+        mensajeFactoryServiceMock = mockMensajeFactoryService()
+    }
+
+    def "Debe retornar mapa con destinatarios admin y mensaje de alerta, y asunto si la cantidad de usuario supera la cantidad de puestos"() {
         given:
-        def cantidadPuestos = getRandomInt(1, 10)
-        def puestosFaltantes = getRandomInt(1, 10)
-        def cantidadUsuarios = cantidadPuestos + puestosFaltantes
-        def mensajes = construirMensajes(puestosFaltantes, cantidadUsuarios, cantidadPuestos)
-        def mensajeFactoryServiceMock = mockMensajeFactoryService()
-        def asunto = "ALERTA: puestos faltantes"
+        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(CASO_MAS_USUARIOS_QUE_PUESTOS)
 
         when:
-        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos,
-            mensajes.mensaje, asunto)
         def respuesta = service.generarNotificacion()
 
         then:
-        1 * mensajeFactoryServiceMock.construirMensaje(_) >> mensajes.mensajeMock
+        1 * mensajeFactoryServiceMock.construirMensaje(_) >> mapaEsperado.mensajeMock
         respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
         respuesta.asunto == mapaEsperado.asunto
         respuesta.mensaje == mapaEsperado.mensaje
+    }
+
+    @Ignore
+    def "Debe retornar mapa con destinatario grupo si la cantidad de usuario NO supera la cantidad de puestos"() {
+        given:
+        def mapaEsperado = obtenerMatrizMensajeEsperadoDestinatarios(CASO_EXITO)
+
+
     }
 
     private mockMensajeFactoryService() {
@@ -47,30 +57,48 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         return mensajeFactoryServiceMock
     }
 
-    private construirMensajes(puestosFaltantes, cantidadUsuarios, cantidadPuestos) {
+    private construirMensaje(puestosFaltantes, cantidadUsuarios, cantidadPuestos) {
         def mensajeEsperado = "Faltan $puestosFaltantes puestos: se necesitan $cantidadUsuarios " +
             "y solamente existen $cantidadPuestos. "
         def mensajeEsperadoDelMock = getRandomString(10, 100, false)
+        if (puestosFaltantes == 0) {
+            mensajeEsperado = "Se han asignado los puestos. La nueva organización es la siguiente: "
+        }
         def mensaje = mensajeEsperado + mensajeEsperadoDelMock
 
         return [mensaje: mensaje, mensajeMock: mensajeEsperadoDelMock]
     }
 
-    private obtenerMatrizMensajeEsperadoDestinatarios(cantidadUsuarios, cantidadPuestos, mensaje, asunto) {
-        def usuariosAdmin = []
+    private obtenerMatrizMensajeEsperadoDestinatarios(caso) {
+        def cantidadPuestos = getRandomInt(1, 10)
+        def puestosFaltantes = getRandomInt(1, 10)
+        def asunto = "ALERTA: puestos faltantes"
+        if (caso == CASO_EXITO) {
+            puestosFaltantes = 0
+            asunto = "Nueva organización de parqueaderos"
+        }
+        def cantidadUsuarios = cantidadPuestos + puestosFaltantes
+        def mensajes = construirMensaje(puestosFaltantes, cantidadUsuarios, cantidadPuestos)
+
+        def usuarios = []
         cantidadUsuarios.times {
-            usuariosAdmin += new UsuarioBuilder().crear()
+            usuarios += new UsuarioBuilder().crear()
         }
         GroovyMock(Puesto, global: true)
         Puesto.count() >> cantidadPuestos
         GroovyMock(Usuario, global: true)
         Usuario.countByEstaActivo(true) >> cantidadUsuarios
-        Usuario.findAllByEsAdmin(true) >> usuariosAdmin
+        if (caso == CASO_EXITO) {
+            Usuario.findAllByEstaActivo(true) >> usuarios
+        } else {
+            Usuario.findAllByEsAdmin(true) >> usuarios
+        }
 
         return [
-            destinatarios: usuariosAdmin,
+            destinatarios: usuarios,
             asunto       : asunto,
-            mensaje      : mensaje
+            mensaje      : mensajes.mensaje,
+            mensajeMock  : mensajes.mensajeMock
         ]
     }
 
