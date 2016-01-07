@@ -20,7 +20,7 @@ class GeneradorNotificacionesService {
             def asignacionesUsuariosNoSalen = AsignacionPuesto.findAllByAutoInList(autosNoSalen)
             def autosEnEspera = []
             if (usuariosNoSalen.size() > asignacionesUsuariosNoSalen.size()) {
-                autosEnEspera = asignadorPuestosService.asignarPuestosNoSalen()
+                autosEnEspera = asignadorPuestosService.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen)
             }
             asignadorPuestosService.asignarPuestosSalen(autosEnEspera)
 

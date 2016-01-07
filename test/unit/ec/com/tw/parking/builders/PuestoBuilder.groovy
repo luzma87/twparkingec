@@ -32,4 +32,8 @@ class PuestoBuilder {
         new Puesto(getParams())
     }
 
+    static Puesto crearDefault(){
+        return new PuestoBuilder().crear()
+    }
+
 }

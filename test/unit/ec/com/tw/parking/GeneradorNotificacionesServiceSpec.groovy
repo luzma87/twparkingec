@@ -66,7 +66,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         service.generarNotificacion()
 
         then:
-        1 * service.asignadorPuestosService.asignarPuestosNoSalen()
+        1 * service.asignadorPuestosService.asignarPuestosNoSalen(_, _)
     }
 
     def """Debe llamar a asignador puestos usuarios salen en el caso de exito
@@ -80,7 +80,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         service.generarNotificacion()
 
         then:
-        0 * service.asignadorPuestosService.asignarPuestosNoSalen()
+        0 * service.asignadorPuestosService.asignarPuestosNoSalen(_, _)
         1 * service.asignadorPuestosService.asignarPuestosSalen(_)
     }
 

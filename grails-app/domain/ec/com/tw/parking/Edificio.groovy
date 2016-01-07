@@ -1,7 +1,5 @@
 package ec.com.tw.parking
 
-import com.sun.org.apache.xpath.internal.operations.Bool
-
 class Edificio {
 
     String nombre
@@ -35,5 +33,9 @@ class Edificio {
 
     String toString() {
         return this.nombre
+    }
+
+    def getPuestosLibres() {
+        return this.puestos.findAll { it.fechaLiberacion <= new Date() }
     }
 }

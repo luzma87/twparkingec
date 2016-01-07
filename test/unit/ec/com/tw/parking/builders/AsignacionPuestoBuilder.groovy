@@ -13,7 +13,7 @@ class AsignacionPuestoBuilder {
     Auto auto = new AutoBuilder().crear()
     Puesto puesto = new PuestoBuilder().crear()
     Date fechaAsignacion = new Date()
-    Date fechaLiberacion = new Date() + getRandomInt(10)
+    Date fechaLiberacion = null
 
     public AsignacionPuestoBuilder() {
     }
