@@ -6,6 +6,7 @@ class Auto {
     String modelo
     String placa
     String tamanio
+    Boolean esDefault
 
     //TODO: prueba de integracion delete usuario => delete autos
     static belongsTo = [usuario: Usuario]
@@ -23,6 +24,7 @@ class Auto {
             placa column: 'placa'
             tamanio column: 'tamanio'
             usuario column: 'usuario_id'
+            esDefault column: 'es_default'
         }
     }
 
@@ -31,10 +33,11 @@ class Auto {
         modelo nullable: false, blank: false, minSize: 2, maxSize: 25
         placa nullable: false, blank: false, minSize: 7, maxSize: 8
         tamanio nullable: false, blank: false, maxSize: 1, inList: ["P", "G"]
+        esDefault nullable: false
     }
 
     String toString() {
-        return this.marca + " " + this.modelo
+        return this.marca + " " + this.modelo + (this.esDefault ? "*" : "")
     }
 
 }

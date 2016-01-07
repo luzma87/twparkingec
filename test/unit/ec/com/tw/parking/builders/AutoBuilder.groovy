@@ -3,6 +3,7 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Auto
 import ec.com.tw.parking.Usuario
 
+import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomBoolean
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomFromArray
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
@@ -14,6 +15,7 @@ class AutoBuilder {
     String modelo = getRandomString(2, 20, false)
     String placa = getRandomString(8)
     String tamanio = getRandomFromArray(["P", "G"])
+    Boolean esDefault = getRandomBoolean()
 
     Usuario usuario = new UsuarioBuilder().crear()
 
@@ -22,11 +24,12 @@ class AutoBuilder {
 
     def getParams() {
         return [
-            marca  : this.marca,
-            modelo : this.modelo,
-            placa  : this.placa,
-            tamanio: this.tamanio,
-            usuario: this.usuario
+            marca    : this.marca,
+            modelo   : this.modelo,
+            placa    : this.placa,
+            tamanio  : this.tamanio,
+            usuario  : this.usuario,
+            esDefault: this.esDefault
         ]
     }
 

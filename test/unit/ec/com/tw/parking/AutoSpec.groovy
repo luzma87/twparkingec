@@ -31,7 +31,7 @@ class AutoSpec extends Specification {
         auto.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["usuario", "marca", "modelo", "placa", "tamanio"]
+        campo << ["usuario", "marca", "modelo", "placa", "tamanio", "esDefault"]
     }
 
     void "Debe ser no blanco"(campo) {
@@ -104,11 +104,11 @@ class AutoSpec extends Specification {
         auto.errors["tamanio"]?.code == 'not.inList'
     }
 
-    void "Debe toString devolver la marca y el modelo"() {
+    void "Debe toString devolver la marca, el modelo y si es default"() {
         setup:
         def auto = new AutoBuilder().crear()
 
         expect:
-        auto.toString() == auto.marca + " " + auto.modelo
+        auto.toString() == auto.marca + " " + auto.modelo + (auto.esDefault ? "*" : "")
     }
 }
