@@ -27,7 +27,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta == usuariosSinAsignacion
     }
 
-    def "Debe crear asignacion de puesto a usuario"() {
+    def "Debe crear y retornar asignacion de puesto a usuario"() {
         setup:
         Puesto puesto = PuestoBuilder.crearDefault()
         Auto auto = AutoBuilder.crearDefault()
@@ -49,5 +49,30 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta.puesto.properties == asignacion.puesto.properties
         respuesta.auto.properties == asignacion.auto.properties
         respuesta.fechaAsignacion.format("dd-MM-yyyy HH:mm:ss") == asignacion.fechaAsignacion.format("dd-MM-yyyy HH:mm:ss")
+    }
+
+    def "Debe retornar null si no puede guardar la asignacion"() {
+        setup:
+        Puesto puesto = PuestoBuilder.crearDefault()
+        Auto auto = AutoBuilder.crearDefault()
+        Usuario usuario = auto.usuario
+        usuario.save()
+        auto.esDefault = true
+        auto.save()
+        puesto.save()
+
+        def builder = new AsignacionPuestoBuilder()
+        builder.puesto = puesto
+        builder.auto = auto
+        mockDomain(AsignacionPuesto, [builder.properties])
+        AsignacionPuesto.metaClass.save {
+            return null
+        }
+
+        when:
+        AsignacionPuesto respuesta = service.asignarPuestoAUsuario(puesto, usuario)
+
+        then:
+        respuesta == null
     }
 }

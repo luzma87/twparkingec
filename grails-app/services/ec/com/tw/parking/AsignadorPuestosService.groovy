@@ -35,10 +35,7 @@ class AsignadorPuestosService {
         asignacion.auto = auto
         asignacion.puesto = puesto
         asignacion.fechaAsignacion = new Date()
-        if (asignacion.save()) {
-            return asignacion
-        }
-        println asignacion.errors
+        return asignacion.save()
     }
 
     def obtenerUsuariosSinParqueadero(List<Usuario> usuariosNoSalen, List<AsignacionPuesto> asignacionesUsuariosNoSalen) {
