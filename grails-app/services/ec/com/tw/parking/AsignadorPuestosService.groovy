@@ -1,7 +1,12 @@
 package ec.com.tw.parking
 
-abstract class AsignadorPuestosService {
+class AsignadorPuestosService {
 
-    abstract asignarPuesto()
+    def asignarPuestosNoSalen() {
+        return null
+    }
 
+    def asignarPuestosSalen(autosEnEspera) {
+
+    }
 }

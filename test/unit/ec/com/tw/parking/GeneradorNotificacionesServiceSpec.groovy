@@ -11,7 +11,7 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
 
 @TestFor(GeneradorNotificacionesService)
-@Mock([CalculadorCuotaService, AsignadorPuestosNoSalenService, Edificio, TipoPreferencia, Usuario, Auto])
+@Mock([CalculadorCuotaService, AsignadorPuestosService, Edificio, TipoPreferencia, Usuario, Auto])
 class GeneradorNotificacionesServiceSpec extends Specification {
 
     static final CASO_MAS_USUARIOS_QUE_PUESTOS = 0
@@ -66,10 +66,10 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         service.generarNotificacion()
 
         then:
-        1 * service.asignadorPuestosNoSalenService.asignarPuesto()
+        1 * service.asignadorPuestosService.asignarPuestosNoSalen()
     }
 
-    def """Debe NO llamar a asignador puestos usuarios no salen en el caso de exito
+    def """Debe llamar a asignador puestos usuarios salen en el caso de exito
            si cantidad autos no salen NO es mayor que sus asignaciones"""() {
         given:
         def cantidadAsignaciones = getRandomInt(5, 15)
@@ -80,12 +80,13 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         service.generarNotificacion()
 
         then:
-        0 * service.asignadorPuestosNoSalenService.asignarPuesto()
+        0 * service.asignadorPuestosService.asignarPuestosNoSalen()
+        1 * service.asignadorPuestosService.asignarPuestosSalen(_)
     }
 
     private mocksUsuariosAutosAsignaciones(cantidadAsignaciones, cantidadAutos) {
-        AsignadorPuestosNoSalenService asignadorPuestosServiceMock = Mock(AsignadorPuestosNoSalenService)
-        service.asignadorPuestosNoSalenService = asignadorPuestosServiceMock
+        AsignadorPuestosService asignadorPuestosServiceMock = Mock(AsignadorPuestosService)
+        service.asignadorPuestosService = asignadorPuestosServiceMock
         def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
         def autosNoSalen = asignacionesUsuariosNoSalen.auto
         if (cantidadAutos > cantidadAsignaciones) {
