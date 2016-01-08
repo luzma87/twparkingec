@@ -34,7 +34,7 @@
                             <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
                                 <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
                                 <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-                                    <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "nombre")}</g:link></td>
+                                    <td>${fieldValue(bean: usuarioInstance, field: "nombre")}</td>
                                     <td>${auto}</td>
                                     <td>${AsignacionPuesto.findByAuto(auto)}</td>
                                 </tr>
