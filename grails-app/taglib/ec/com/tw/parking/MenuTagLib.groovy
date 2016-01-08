@@ -116,22 +116,6 @@ class MenuTagLib {
         out << raw(html)
     }
 
-    def footer = { attrs, body ->
-        def content = "Place sticky footer content here."
-        if (attrs.content) {
-            content = attrs.content
-        } else if (body()) {
-            content = body()
-        }
-
-        def html = "<footer class=\"footer\">\n" +
-            "        <div class=\"container\">\n" +
-            "            <p class=\"text-muted\">$content</p>\n" +
-            "        </div>\n" +
-            "    </footer>"
-        out << raw(html)
-    }
-
     private String renderNavbarItem(item) {
         def str = "", clase = ""
         if (session.cn == item.controller && session.an == item.action) {

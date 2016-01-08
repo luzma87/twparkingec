@@ -28,7 +28,5 @@
     <div class="container">
         <g:layoutBody/>
     </div>
-
-    <mn:footer>Footer aqui</mn:footer>
 </body>
 </html>
