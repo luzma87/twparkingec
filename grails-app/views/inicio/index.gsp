@@ -26,7 +26,6 @@
                         <thead>
                             <tr>
                                 <th>${message(code: 'usuario.nombre.label')}</th>
-                                <th>${message(code: 'usuario.email.label')}</th>
                                 <th>${message(code: 'auto.label')}</th>
                                 <th>${message(code: 'puesto.label')}</th>
                             </tr>
@@ -36,7 +35,6 @@
                                 <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
                                 <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
                                     <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "nombre")}</g:link></td>
-                                    <td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
                                     <td>${auto}</td>
                                     <td>${AsignacionPuesto.findByAuto(auto)}</td>
                                 </tr>

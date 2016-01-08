@@ -15,7 +15,7 @@ class CalculadorCuotaServiceSpec extends Specification {
     def precioTotal
 
     def setup() {
-        cantidad = getRandomInt(1, 10)
+        cantidad = getRandomInt(5, 15)
         puestos = []
         cantidad.times {
             puestos += new PuestoBuilder().crear()
