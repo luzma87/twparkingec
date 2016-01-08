@@ -1,4 +1,6 @@
 import ec.com.tw.parking.DistanciaEdificio
+import ec.com.tw.parking.Edificio
+import ec.com.tw.parking.Puesto
 import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.TipoTransicion
 import ec.com.tw.parking.Usuario
@@ -67,6 +69,23 @@ class BootStrap {
                 }
             }
         }
+
+        if (Edificio.count() == 0) {
+            listaEdificiosIniciales().each { datosEdificio ->
+                def edificio = new Edificio(datosEdificio.edificio)
+                if (!edificio.save()) {
+                    println "Error al crear edificio: " + edificio.errors
+                } else {
+                    datosEdificio.puestos.each { datosPuesto ->
+                        def puesto = new Puesto(datosPuesto)
+                        puesto.edificio = edificio
+                        if (!puesto.save()) {
+                            println "Error al crear puesto: " + puesto.errors
+                        }
+                    }
+                }
+            }
+        }
     }
     def destroy = {
     }
@@ -82,10 +101,11 @@ class BootStrap {
                     cedula     : "0721351797",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Renault",
-                          modelo : "Logan",
-                          placa  : "PBQ-8392",
-                          tamanio: "P"]
+                auto   : [marca    : "Renault",
+                          modelo   : "Logan",
+                          placa    : "PBQ-8392",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -96,10 +116,11 @@ class BootStrap {
                     cedula     : "1714579305",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Spark",
-                          placa  : "PBO-7783",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Spark",
+                          placa    : "PBO-7783",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -110,10 +131,11 @@ class BootStrap {
                     cedula     : "1710876275",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Kia",
-                          modelo : "Sportage",
-                          placa  : "PBJ-5195",
-                          tamanio: "P"]
+                auto   : [marca    : "Kia",
+                          modelo   : "Sportage",
+                          placa    : "PBJ-5195",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -124,10 +146,11 @@ class BootStrap {
                     cedula     : "1718198938",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Nissan",
-                          modelo : "Pathfinder",
-                          placa  : "PYM-347",
-                          tamanio: "P"]
+                auto   : [marca    : "Nissan",
+                          modelo   : "Pathfinder",
+                          placa    : "PYM-347",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -138,10 +161,11 @@ class BootStrap {
                     cedula     : "0703594747",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Grand Vitara",
-                          placa  : "PBF-9129",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Grand Vitara",
+                          placa    : "PBF-9129",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -152,10 +176,11 @@ class BootStrap {
                     cedula     : "1714060439",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Grand Vitara 5P",
-                          placa  : "PCO-5724",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Grand Vitara 5P",
+                          placa    : "PCO-5724",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -166,10 +191,11 @@ class BootStrap {
                     cedula     : "1717360281",
                     preferencia: TipoPreferencia.findByCodigo("N")
                 ],
-                auto   : [marca  : "Volkswagen",
-                          modelo : "Gol",
-                          placa  : "PPA-1608",
-                          tamanio: "P"]
+                auto   : [marca    : "Volkswagen",
+                          modelo   : "Gol",
+                          placa    : "PPA-1608",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -180,10 +206,11 @@ class BootStrap {
                     cedula     : "1707157093",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Vitara 3P",
-                          placa  : "PCF-4689",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Vitara 3P",
+                          placa    : "PCF-4689",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -194,10 +221,11 @@ class BootStrap {
                     cedula     : "1234567898",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Vitara 5P",
-                          placa  : "AAA-111",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Vitara 5P",
+                          placa    : "AAA-111",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -208,10 +236,11 @@ class BootStrap {
                     cedula     : "1716368251",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Grand Vitara SZ",
-                          placa  : "AAA-222",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Grand Vitara SZ",
+                          placa    : "AAA-222",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -222,10 +251,11 @@ class BootStrap {
                     cedula     : "0602772220",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Grand Vitara 5P",
-                          placa  : "PBI-2312",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Grand Vitara 5P",
+                          placa    : "PBI-2312",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -236,10 +266,11 @@ class BootStrap {
                     cedula     : "1720984630",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Hyundai",
-                          modelo : "Getz",
-                          placa  : "POU-102",
-                          tamanio: "P"]
+                auto   : [marca    : "Hyundai",
+                          modelo   : "Getz",
+                          placa    : "POU-102",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -250,10 +281,11 @@ class BootStrap {
                     cedula     : "1234567812",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Toyota",
-                          modelo : "Fortuner",
-                          placa  : "PBA-3793",
-                          tamanio: "P"]
+                auto   : [marca    : "Toyota",
+                          modelo   : "Fortuner",
+                          placa    : "PBA-3793",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -264,10 +296,11 @@ class BootStrap {
                     cedula     : "1715068159",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Aveo",
-                          placa  : "PCQ-8088",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Aveo",
+                          placa    : "PCQ-8088",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -278,10 +311,11 @@ class BootStrap {
                     cedula     : "1718642174",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Chevrolet",
-                          modelo : "Esteem",
-                          placa  : "PTE-0730",
-                          tamanio: "P"]
+                auto   : [marca    : "Chevrolet",
+                          modelo   : "Esteem",
+                          placa    : "PTE-0730",
+                          tamanio  : "P",
+                          esDefault: true]
             ],
             [
                 usuario: [
@@ -292,10 +326,11 @@ class BootStrap {
                     cedula     : "1234567815",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
-                auto   : [marca  : "Ford",
-                          modelo : "F150",
-                          placa  : "PBN-4713",
-                          tamanio: "P"]
+                auto   : [marca    : "Ford",
+                          modelo   : "F150",
+                          placa    : "PBN-4713",
+                          tamanio  : "P",
+                          esDefault: true]
             ]
         ]
     }

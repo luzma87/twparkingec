@@ -5,7 +5,7 @@
   Time: 12:43
 --%>
 
-<%@ page import="ec.com.tw.parking.Usuario" contentType="text/html;charset=UTF-8" %>
+<%@ page import="ec.com.tw.parking.AsignacionPuesto; ec.com.tw.parking.Usuario" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main"/>
@@ -13,7 +13,7 @@
 
     <body>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -25,15 +25,20 @@
                     <table class="table table-bordered table-condensed table-striped">
                         <thead>
                             <tr>
-                                <th>${message(code: 'usuario.nombre.label', default: 'Nombre')}</th>
-                                <th>${message(code: 'usuario.email.label', default: 'Email')}</th>
+                                <th>${message(code: 'usuario.nombre.label')}</th>
+                                <th>${message(code: 'usuario.email.label')}</th>
+                                <th>${message(code: 'auto.label')}</th>
+                                <th>${message(code: 'puesto.label')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
+                                <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
                                 <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
                                     <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "nombre")}</g:link></td>
                                     <td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
+                                    <td>${auto}</td>
+                                    <td>${AsignacionPuesto.findByAuto(auto)}</td>
                                 </tr>
                             </g:each>
                         </tbody>
