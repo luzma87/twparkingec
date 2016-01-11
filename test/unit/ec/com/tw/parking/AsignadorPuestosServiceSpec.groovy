@@ -33,7 +33,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def "Debe crear y retornar asignacion de puesto a usuario"() {
         setup:
-        Puesto puesto = PuestoBuilder.crearDefault()
+        Puesto puesto = PuestoBuilder.nuevo().crear()
         Auto auto = AutoBuilder.crearDefault()
         Usuario usuario = auto.usuario
         usuario.save()
@@ -57,7 +57,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def "Debe retornar null si no puede guardar la asignacion"() {
         setup:
-        Puesto puesto = PuestoBuilder.crearDefault()
+        Puesto puesto = PuestoBuilder.nuevo().crear()
         Auto auto = AutoBuilder.crearDefault()
         Usuario usuario = auto.usuario
         usuario.save()
@@ -87,9 +87,9 @@ class AsignadorPuestosServiceSpec extends Specification {
         def distancia = DistanciaEdificio.findByCodigo("M")
         List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
         List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
-        def edificio = EdificioBuilder.crearDefault()
+        def edificio = EdificioBuilder.nuevo().crear()
         def asignacionesLibres = AsignacionPuestoBuilder.crearLista(usuariosNoSalen.size() + getRandomInt(5, 20))
-        edificio.puestos = PuestoBuilder.crearLista(asignacionesLibres.size() + getRandomInt(5, 25))
+        edificio.puestos = PuestoBuilder.nuevo().crearLista(asignacionesLibres.size() + getRandomInt(5, 25))
         GroovyMock(Edificio, global: true)
         Edificio.findByDistancia(distancia) >> edificio
         GroovyMock(AsignacionPuesto, global: true)
@@ -112,10 +112,10 @@ class AsignadorPuestosServiceSpec extends Specification {
         def distancia = DistanciaEdificio.findByCodigo("M")
         List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
         List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
-        def edificio = EdificioBuilder.crearDefault()
+        def edificio = EdificioBuilder.nuevo().crear()
         def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
         def asignacionesLibres = AsignacionPuestoBuilder.crearLista(puestosNecesarios - 1)
-        edificio.puestos = PuestoBuilder.crearLista(asignacionesLibres.size())
+        edificio.puestos = PuestoBuilder.nuevo().crearLista(asignacionesLibres.size())
         def autosEnEspera = AutoBuilder.crearLista(cantidadUsuariosAdicionales)
         GroovyMock(Edificio, global: true)
         Edificio.findByDistancia(distancia) >> edificio

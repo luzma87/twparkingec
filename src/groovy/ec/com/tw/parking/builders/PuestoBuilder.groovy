@@ -3,6 +3,8 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Edificio
 import ec.com.tw.parking.Puesto
 
+import java.util.function.Consumer
+
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomFromArray
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
@@ -11,12 +13,13 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
  * Created by lmunda on 1/4/16 10:18.
  */
 class PuestoBuilder {
+    static PuestoBuilder builder
     String tamanio = getRandomFromArray(["P", "G"])
     String numero = getRandomInt(100)
     Edificio edificio = new EdificioBuilder().crear()
     Double precio = getRandomDouble(100)
 
-    public PuestoBuilder() {
+    private PuestoBuilder() {
     }
 
     def getParams() {
@@ -32,11 +35,7 @@ class PuestoBuilder {
         new Puesto(getParams())
     }
 
-    static Puesto crearDefault() {
-        return new PuestoBuilder().crear()
-    }
-
-    static List<Puesto> crearLista(int cantidad) {
+    public List<Puesto> crearLista(int cantidad) {
         def lista = []
         cantidad.times {
             lista += new PuestoBuilder().crear()
@@ -44,4 +43,17 @@ class PuestoBuilder {
         return lista
     }
 
+    public static PuestoBuilder nuevo() {
+        builder = new PuestoBuilder()
+        return builder
+    }
+
+    public PuestoBuilder con(Consumer<PuestoBuilder> consumer) {
+        consumer.accept(builder)
+        return builder
+    }
+
+    public Puesto guardar() {
+        return crear().save(failOnError: true)
+    }
 }
