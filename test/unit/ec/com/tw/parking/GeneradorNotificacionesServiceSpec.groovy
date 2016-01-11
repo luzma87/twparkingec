@@ -90,7 +90,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
         def autosNoSalen = asignacionesUsuariosNoSalen.auto
         if (cantidadAutos > cantidadAsignaciones) {
-            autosNoSalen += AutoBuilder.crearLista(cantidadAutos - cantidadAsignaciones)
+            autosNoSalen += AutoBuilder.nuevo().crearLista(cantidadAutos - cantidadAsignaciones)
         }
         def usuariosNoSalen = autosNoSalen.usuario
         GroovyMock(Usuario, global: true)

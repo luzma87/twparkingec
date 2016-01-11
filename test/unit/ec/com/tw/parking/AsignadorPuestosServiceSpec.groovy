@@ -34,7 +34,7 @@ class AsignadorPuestosServiceSpec extends Specification {
     def "Debe crear y retornar asignacion de puesto a usuario"() {
         setup:
         Puesto puesto = PuestoBuilder.nuevo().crear()
-        Auto auto = AutoBuilder.crearDefault()
+        Auto auto = AutoBuilder.nuevo().crear()
         Usuario usuario = auto.usuario
         usuario.save()
         auto.esDefault = true
@@ -58,7 +58,7 @@ class AsignadorPuestosServiceSpec extends Specification {
     def "Debe retornar null si no puede guardar la asignacion"() {
         setup:
         Puesto puesto = PuestoBuilder.nuevo().crear()
-        Auto auto = AutoBuilder.crearDefault()
+        Auto auto = AutoBuilder.nuevo().crear()
         Usuario usuario = auto.usuario
         usuario.save()
         auto.esDefault = true

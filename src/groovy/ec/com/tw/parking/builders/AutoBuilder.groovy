@@ -3,6 +3,8 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Auto
 import ec.com.tw.parking.Usuario
 
+import java.util.function.Consumer
+
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomBoolean
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomFromArray
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
@@ -11,6 +13,7 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
  * Created by lmunda on 12/29/15 16:43.
  */
 class AutoBuilder {
+    static AutoBuilder builder
     String marca = getRandomString(2, 20, false)
     String modelo = getRandomString(2, 20, false)
     String placa = getRandomString(8)
@@ -37,15 +40,28 @@ class AutoBuilder {
         new Auto(getParams())
     }
 
-    static Auto crearDefault(){
-        return new AutoBuilder().crear()
-    }
-
-    static List<Auto> crearLista(cantidad) {
+    public List<Auto> crearLista(cantidad) {
         def lista = []
         cantidad.times {
             lista += new AutoBuilder().crear()
         }
         return lista
+    }
+
+    public static AutoBuilder nuevo(){
+        builder = new AutoBuilder()
+        return builder
+    }
+
+    public AutoBuilder con (Consumer<AutoBuilder> consumer) {
+        consumer.accept(builder)
+        return builder
+    }
+
+    public Auto guardar() {
+        Auto auto = crear()
+        auto.usuario.preferencia.save(failOnError: true)
+        auto.usuario.save(failOnError: true)
+        return auto.save(failOnError: true)
     }
 }
