@@ -27,48 +27,40 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         edificio = EdificioBuilder.nuevo().con {
             ed -> ed.distancia = distanciaEdificio
         }.guardar()
-        def guardoPuestos = true
-        def puestos = PuestoBuilder.nuevo().crearLista(20)
-        puestos.eachWithIndex { puesto, index ->
-            if (index < 10) {
-                puesto.edificio = edificio
+        def puestos = []
+        10.times {
+            puestos += PuestoBuilder.nuevo().con { pb -> pb.edificio = edificio }.guardar()
+        }
+        10.times {
+            puestos += PuestoBuilder.nuevo().guardar()
+        }
+        def guardoUsuariosYautos = true
+        def autos = AutoBuilder.crearLista(20)
+        autos.eachWithIndex { auto, index ->
+            def usuario = auto.usuario
+            if (index < 5) {
+                usuario.preferencia = tipoPreferencia
             } else {
-                puesto.edificio.distancia.save()
-                puesto.edificio.save()
+                usuario.preferencia.save()
             }
-            if (!puesto.save()) {
-                guardoPuestos = false
+            if (!usuario.save()) {
+                guardoUsuariosYautos = false
+            }
+            if (!auto.save()) {
+                guardoUsuariosYautos = false
             }
         }
-        if (guardoPuestos) {
-            def guardoUsuariosYautos = true
-            def autos = AutoBuilder.crearLista(20)
-            autos.eachWithIndex { auto, index ->
-                def usuario = auto.usuario
-                if (index < 5) {
-                    usuario.preferencia = tipoPreferencia
+        if (guardoUsuariosYautos) {
+            def guardoAsignaciones = true
+            puestos.eachWithIndex { puesto, index ->
+                def asignacion = new AsignacionPuesto()
+                asignacion.puesto = puesto
+                asignacion.auto = autos[index]
+                asignacion.fechaAsignacion = new Date() - getRandomInt(1, 15)
+                if (asignacion.save() && index < 5) {
+                    asignacionesEsperadas += asignacion
                 } else {
-                    usuario.preferencia.save()
-                }
-                if (!usuario.save()) {
-                    guardoUsuariosYautos = false
-                }
-                if (!auto.save()) {
-                    guardoUsuariosYautos = false
-                }
-            }
-            if (guardoUsuariosYautos) {
-                def guardoAsignaciones = true
-                puestos.eachWithIndex { puesto, index ->
-                    def asignacion = new AsignacionPuesto()
-                    asignacion.puesto = puesto
-                    asignacion.auto = autos[index]
-                    asignacion.fechaAsignacion = new Date() - getRandomInt(1, 15)
-                    if (asignacion.save() && index < 5) {
-                        asignacionesEsperadas += asignacion
-                    } else {
-                        guardoAsignaciones = false
-                    }
+                    guardoAsignaciones = false
                 }
             }
         }

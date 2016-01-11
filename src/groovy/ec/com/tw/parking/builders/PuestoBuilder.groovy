@@ -54,6 +54,9 @@ class PuestoBuilder {
     }
 
     public Puesto guardar() {
-        return crear().save(failOnError: true)
+        def puesto = crear()
+        puesto.edificio.distancia.save(failOnError: true)
+        puesto.edificio.save(failOnError: true)
+        return puesto.save(failOnError: true)
     }
 }
