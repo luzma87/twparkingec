@@ -2,6 +2,7 @@ package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import ec.com.tw.parking.builders.AutoBuilder
+import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
@@ -78,7 +79,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta == null
     }
 
-    def "Debe retornar lista vacia de usuarios en espera cuando existen puestos disponibles"() {
+    def "Debe retornar lista vacia de usuarios en espera cuando existen puestos disponibles en edificio matriz"() {
         setup:
         def cantidadAsignaciones = getRandomInt(1, 15)
         def cantidadUsuariosAdicionales = getRandomInt(2, 5)
@@ -86,17 +87,19 @@ class AsignadorPuestosServiceSpec extends Specification {
         List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
         List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
         def edificio = EdificioBuilder.crearDefault()
-        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(getRandomInt(10, 20))
-        edificio.puestos = PuestoBuilder.crearLista(getRandomInt(10, 25))
-        def puestosLibresEdificioMatriz = asignacionesLibres.puesto
+        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(usuariosNoSalen.size() + getRandomInt(5, 20))
+        edificio.puestos = PuestoBuilder.crearLista(asignacionesLibres.size() + getRandomInt(5, 25))
         GroovyMock(Edificio, global: true)
         Edificio.findByDistancia(distancia) >> edificio
+        GroovyMock(AsignacionPuesto, global: true)
+        AsignacionPuesto.findAllByPuestoInList(edificio.puestos) >> asignacionesLibres
+        def myService = Spy(AsignadorPuestosService)
 
         when:
-        def respuesta = service.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen, puestosLibresEdificioMatriz)
+        def respuesta = myService.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen)
 
         then:
         respuesta == []
-        _ * service.asignarPuestoAUsuario(_, _)
+        (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 }

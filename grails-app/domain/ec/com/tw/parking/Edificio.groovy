@@ -36,6 +36,10 @@ class Edificio {
     }
 
     def getPuestosLibres() {
-        return this.puestos.findAll { it.fechaLiberacion <= new Date() }
+        if (this.puestos && this.puestos.size() > 0) {
+            def asignaciones = AsignacionPuesto.findAllByPuestoInList(this.puestos)
+            return asignaciones.findAll { it.fechaLiberacion <= new Date() }.puesto
+        }
+        return []
     }
 }

@@ -8,20 +8,19 @@ class AsignadorPuestosService {
         def edificioMatriz = Edificio.findByDistancia(distanciaMatriz)
         def puestosLibresEdificioMatriz = edificioMatriz.puestosLibres
 
-        if (puestosLibresEdificioMatriz >= puestosNecesarios) {
+        def autosEnEspera = []
+
+        if (puestosLibresEdificioMatriz.size() >= puestosNecesarios) {
             def usuariosSinAsignacion = obtenerUsuariosSinParqueadero(usuariosNoSalen, asignacionesUsuariosNoSalen)
             usuariosSinAsignacion.each { usuario ->
-
+                def puesto = puestosLibresEdificioMatriz.remove(0)
+                asignarPuestoAUsuario(puesto, usuario)
             }
-            /*
-                - obtener usuarios sin asignacion
-                - para cada usuario, asignarle un puesto
-             */
         } else {
 
         }
 
-        return null
+        return autosEnEspera
     }
 
     def asignarPuestosSalen(autosEnEspera) {
