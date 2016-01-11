@@ -1,5 +1,6 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import ec.com.tw.parking.builders.AutoBuilder
 import ec.com.tw.parking.builders.DistanciaEdificioBuilder
 import ec.com.tw.parking.builders.EdificioBuilder
@@ -31,16 +32,14 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         def autos = []
         5.times { autos += AutoBuilder.nuevo().con { ab -> ab.usuario.preferencia = tipoPreferencia }.guardar() }
         15.times { autos += AutoBuilder.nuevo().guardar() }
-        def guardoAsignaciones = true
         puestos.eachWithIndex { puesto, index ->
-            def asignacion = new AsignacionPuesto()
-            asignacion.puesto = puesto
-            asignacion.auto = autos[index]
-            asignacion.fechaAsignacion = new Date() - getRandomInt(1, 15)
+            def asignacion = AsignacionPuestoBuilder.nuevo()
+                . con { a -> a.puesto = puesto }
+                . con { a -> a.auto = autos[index] }
+                . con { a -> a.fechaAsignacion = new Date(-getRandomInt(1, 15))
+                }.crear()
             if (asignacion.save() && index < 5) {
                 asignacionesEsperadas += asignacion
-            } else {
-                guardoAsignaciones = false
             }
         }
 

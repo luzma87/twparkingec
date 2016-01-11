@@ -87,7 +87,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
     private mocksUsuariosAutosAsignaciones(cantidadAsignaciones, cantidadAutos) {
         AsignadorPuestosService asignadorPuestosServiceMock = Mock(AsignadorPuestosService)
         service.asignadorPuestosService = asignadorPuestosServiceMock
-        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
+        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.nuevo().crearLista(cantidadAsignaciones)
         def autosNoSalen = asignacionesUsuariosNoSalen.auto
         if (cantidadAutos > cantidadAsignaciones) {
             autosNoSalen += AutoBuilder.nuevo().crearLista(cantidadAutos - cantidadAsignaciones)

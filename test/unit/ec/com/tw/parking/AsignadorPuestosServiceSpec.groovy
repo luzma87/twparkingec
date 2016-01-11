@@ -21,7 +21,7 @@ class AsignadorPuestosServiceSpec extends Specification {
     def "Debe retonar los usuarios que no tienen asignacion"() {
         given:
         def usuariosSinAsignacion = UsuarioBuilder.crearLista(getRandomInt(3, 15))
-        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(getRandomInt(1, 15))
+        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.nuevo().crearLista(getRandomInt(1, 15))
         def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + usuariosSinAsignacion
 
         when:
@@ -85,10 +85,10 @@ class AsignadorPuestosServiceSpec extends Specification {
         def cantidadAsignaciones = getRandomInt(1, 15)
         def cantidadUsuariosAdicionales = getRandomInt(2, 5)
         def distancia = DistanciaEdificio.findByCodigo("M")
-        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
+        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.nuevo().crearLista(cantidadAsignaciones)
         List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
         def edificio = EdificioBuilder.nuevo().crear()
-        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(usuariosNoSalen.size() + getRandomInt(5, 20))
+        def asignacionesLibres = AsignacionPuestoBuilder.nuevo().crearLista(usuariosNoSalen.size() + getRandomInt(5, 20))
         edificio.puestos = PuestoBuilder.nuevo().crearLista(asignacionesLibres.size() + getRandomInt(5, 25))
         GroovyMock(Edificio, global: true)
         Edificio.findByDistancia(distancia) >> edificio
