@@ -14,6 +14,8 @@ import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
 @Mock([AsignacionPuesto, Auto, Puesto, Usuario])
 class AsignadorPuestosServiceSpec extends Specification {
 
+    public static final String FORMATO_FECHA = "dd-MM-yyyy HH:mm:ss"
+
     def "Debe retonar los usuarios que no tienen asignacion"() {
         given:
         def usuariosSinAsignacion = UsuarioBuilder.crearLista(getRandomInt(3, 15))
@@ -48,7 +50,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         then:
         respuesta.puesto.properties == asignacion.puesto.properties
         respuesta.auto.properties == asignacion.auto.properties
-        respuesta.fechaAsignacion.format("dd-MM-yyyy HH:mm:ss") == asignacion.fechaAsignacion.format("dd-MM-yyyy HH:mm:ss")
+        respuesta.fechaAsignacion.format(FORMATO_FECHA) == asignacion.fechaAsignacion.format(FORMATO_FECHA)
     }
 
     def "Debe retornar null si no puede guardar la asignacion"() {
@@ -74,5 +76,27 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         then:
         respuesta == null
+    }
+
+    def "Debe retornar lista vacia de usuarios en espera cuando existen puestos disponibles"() {
+        setup:
+        def cantidadAsignaciones = getRandomInt(1, 15)
+        def cantidadUsuariosAdicionales = getRandomInt(2, 5)
+        def distancia = DistanciaEdificio.findByCodigo("M")
+        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
+        List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
+        def edificio = EdificioBuilder.crearDefault()
+        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(getRandomInt(10, 20))
+        edificio.puestos = PuestoBuilder.crearLista(getRandomInt(10, 25))
+        def puestosLibresEdificioMatriz = asignacionesLibres.puesto
+        GroovyMock(Edificio, global: true)
+        Edificio.findByDistancia(distancia) >> edificio
+
+        when:
+        def respuesta = service.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen, puestosLibresEdificioMatriz)
+
+        then:
+        respuesta == []
+        _ * service.asignarPuestoAUsuario(_, _)
     }
 }

@@ -32,8 +32,16 @@ class PuestoBuilder {
         new Puesto(getParams())
     }
 
-    static Puesto crearDefault(){
+    static Puesto crearDefault() {
         return new PuestoBuilder().crear()
+    }
+
+    static List<Puesto> crearLista(int cantidad) {
+        def lista = []
+        cantidad.times {
+            lista += new PuestoBuilder().crear()
+        }
+        return lista
     }
 
 }

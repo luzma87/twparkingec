@@ -30,4 +30,8 @@ class EdificioBuilder {
     public Edificio crear() {
         new Edificio(getParams())
     }
+
+    public static Edificio crearDefault() {
+        return new EdificioBuilder().crear()
+    }
 }
