@@ -7,9 +7,10 @@ import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import spock.lang.Ignore
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
+import static RandomUtilsHelpers.getRandomInt
 
 @TestFor(AsignadorPuestosService)
 @Mock([AsignacionPuesto, Auto, Puesto, Usuario])
@@ -100,6 +101,34 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         then:
         respuesta == []
+        (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
+    }
+
+    @Ignore()
+    def """Debe remover usuarios sin preferencia de sus asignaciones en edificio matriz y retornar lista de espera
+           al asignar usuarios con preferencia no salen"""() {
+        def cantidadAsignaciones = getRandomInt(1, 15)
+        def cantidadUsuariosAdicionales = getRandomInt(2, 5)
+        def distancia = DistanciaEdificio.findByCodigo("M")
+        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
+        List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
+        def edificio = EdificioBuilder.crearDefault()
+        def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
+        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(puestosNecesarios - 1)
+        edificio.puestos = PuestoBuilder.crearLista(asignacionesLibres.size())
+        def autosEnEspera = AutoBuilder.crearLista(cantidadUsuariosAdicionales)
+        GroovyMock(Edificio, global: true)
+        Edificio.findByDistancia(distancia) >> edificio
+        GroovyMock(AsignacionPuesto, global: true)
+        AsignacionPuesto.findAllByPuestoInList(edificio.puestos) >> asignacionesLibres
+        AsignacionPuesto.withCriteria { Map params } >> []
+        def myService = Spy(AsignadorPuestosService)
+
+        when:
+        def respuesta = myService.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen)
+
+        then:
+        respuesta == autosEnEspera
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 }

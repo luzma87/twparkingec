@@ -2,7 +2,6 @@ package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.AutoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
-import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification

@@ -3,9 +3,9 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Edificio
 import ec.com.tw.parking.Puesto
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomFromArray
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomFromArray
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 
 /**
  * Created by lmunda on 1/4/16 10:18.

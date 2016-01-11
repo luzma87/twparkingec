@@ -3,9 +3,9 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.Usuario
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomBoolean
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomMail
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomBoolean
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomMail
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 /**
  * Created by lmunda on 12/29/15 15:39.

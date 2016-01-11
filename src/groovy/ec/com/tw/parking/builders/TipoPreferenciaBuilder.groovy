@@ -2,7 +2,7 @@ package ec.com.tw.parking.builders
 
 import ec.com.tw.parking.TipoPreferencia
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 /**
  * Created by lmunda on 01/4/15 17:46.
@@ -23,5 +23,9 @@ class TipoPreferenciaBuilder {
 
     public TipoPreferencia crear() {
         new TipoPreferencia(getParams())
+    }
+
+    public static TipoPreferencia crearDefault() {
+        return new TipoPreferenciaBuilder().crear()
     }
 }

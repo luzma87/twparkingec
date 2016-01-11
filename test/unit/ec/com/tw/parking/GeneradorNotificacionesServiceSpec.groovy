@@ -7,8 +7,8 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static RandomUtilsHelpers.getRandomInt
+import static RandomUtilsHelpers.getRandomString
 
 @TestFor(GeneradorNotificacionesService)
 @Mock([CalculadorCuotaService, AsignadorPuestosService, Edificio, TipoPreferencia, Usuario, Auto])

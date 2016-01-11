@@ -4,8 +4,6 @@ import ec.com.tw.parking.AsignacionPuesto
 import ec.com.tw.parking.Auto
 import ec.com.tw.parking.Puesto
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
-
 /**
  * Created by lmunda on 05/01/2016
  */

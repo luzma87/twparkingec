@@ -1,7 +1,6 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.TipoPreferenciaBuilder
-import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

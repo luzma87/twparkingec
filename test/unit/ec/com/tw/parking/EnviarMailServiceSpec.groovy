@@ -4,8 +4,8 @@ import grails.plugin.mail.MailService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomMail
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static RandomUtilsHelpers.getRandomMail
+import static RandomUtilsHelpers.getRandomString
 
 @TestFor(EnviarMailService)
 class EnviarMailServiceSpec extends Specification {

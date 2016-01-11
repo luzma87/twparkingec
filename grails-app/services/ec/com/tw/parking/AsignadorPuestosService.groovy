@@ -10,14 +10,41 @@ class AsignadorPuestosService {
 
         def autosEnEspera = []
 
-        if (puestosLibresEdificioMatriz.size() >= puestosNecesarios) {
-            def usuariosSinAsignacion = obtenerUsuariosSinParqueadero(usuariosNoSalen, asignacionesUsuariosNoSalen)
-            usuariosSinAsignacion.each { usuario ->
-                def puesto = puestosLibresEdificioMatriz.remove(0)
-                asignarPuestoAUsuario(puesto, usuario)
+        if (puestosLibresEdificioMatriz.size() < puestosNecesarios) {
+            def preferenciaSale = TipoPreferencia.findByCodigo("S")
+            def asignacionesUsuariosPreferenciaSaleEdificioMatriz = AsignacionPuesto.withCriteria {
+                puesto {
+                    eq("edificio", edificioMatriz)
+                }
+                auto {
+                    usuario {
+                        eq("tipoPreferencia", preferenciaSale)
+                    }
+                }
+                isNull("fechaLiberacion")
             }
-        } else {
 
+            def max = asignacionesUsuariosPreferenciaSaleEdificioMatriz.size() - 1
+            def random = new Random()
+            puestosNecesarios.times {
+                def posicion = random.nextInt(max)
+                def asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz[posicion]
+
+                while (asignacion.fechaLiberacion != null) {
+                    posicion = random.nextInt(max)
+                    asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz[posicion]
+                }
+
+                asignacion.fechaLiberacion = new Date()
+                autosEnEspera += asignacion.auto
+            }
+
+            puestosLibresEdificioMatriz = edificioMatriz.puestosLibres
+        }
+        def usuariosSinAsignacion = obtenerUsuariosSinParqueadero(usuariosNoSalen, asignacionesUsuariosNoSalen)
+        usuariosSinAsignacion.each { usuario ->
+            def puesto = puestosLibresEdificioMatriz.remove(0)
+            asignarPuestoAUsuario(puesto, usuario)
         }
 
         return autosEnEspera

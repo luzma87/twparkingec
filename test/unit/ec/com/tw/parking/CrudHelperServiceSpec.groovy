@@ -9,7 +9,7 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 import org.springframework.dao.DataIntegrityViolationException
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static RandomUtilsHelpers.getRandomString
 
 @TestFor(CrudHelperService)
 @Mock([Usuario, Auto, Edificio, MensajesBuilderTagLib, ValidationTagLib])

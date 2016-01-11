@@ -3,8 +3,8 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.TipoTransicion
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 /**
  * Created by lmunda on 01/4/15 17:46.

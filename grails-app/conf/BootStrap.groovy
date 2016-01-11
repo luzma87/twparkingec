@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.Edificio
 import ec.com.tw.parking.Puesto
@@ -10,77 +12,79 @@ class BootStrap {
 
     def init = { servletContext ->
 
-        if (DistanciaEdificio.count() == 0) {
-            listaDistanciasEdificioIniciales().each { datosDistancia ->
-                def distanciaEdificio = new DistanciaEdificio(datosDistancia)
-                if (!distanciaEdificio.save()) {
-                    println "Error al crear distancia edificio: " + distanciaEdificio.errors
-                }
-            }
-        }
-
-        if (TipoPreferencia.count() == 0) {
-            listaTiposPreferenciaIniciales().each { datosPreferencia ->
-                def preferencia = new TipoPreferencia(datosPreferencia)
-                if (!preferencia.save()) {
-                    println "Error al crear tipo preferencia: " + preferencia.errors
-                }
-            }
-        }
-
-        if (TipoTransicion.count() == 0) {
-            def tipoTransicion1 = new TipoTransicion([
-                nombre          : "Lejos a Matriz",
-                distanciaOrigen : DistanciaEdificio.findByCodigo("L"),
-                distanciaDestino: DistanciaEdificio.findByCodigo("M"),
-                prioridad       : 1
-            ])
-            def tipoTransicion2 = new TipoTransicion([
-                nombre          : "Cerca a Lejos",
-                distanciaOrigen : DistanciaEdificio.findByCodigo("C"),
-                distanciaDestino: DistanciaEdificio.findByCodigo("L"),
-                prioridad       : 2
-            ])
-            def tipoTransicion3 = new TipoTransicion([
-                nombre          : "Matriz a Cerca",
-                distanciaOrigen : DistanciaEdificio.findByCodigo("M"),
-                distanciaDestino: DistanciaEdificio.findByCodigo("C"),
-                prioridad       : 3
-            ])
-            if (!tipoTransicion1.save() || !tipoTransicion2.save() || !tipoTransicion3.save()) {
-                println "Error al crear tipo transicion: "
-                println "1: " + tipoTransicion1.errors
-                println "2: " + tipoTransicion2.errors
-                println "3: " + tipoTransicion3.errors
-            }
-        }
-
-        if (Usuario.count() == 0) {
-            listaUsuariosIniciales().each { datosUsuario ->
-                def usuario = new Usuario(datosUsuario.usuario)
-                if (!usuario.save()) {
-                    println "Error al crear usuario: " + usuario.errors
-                } else {
-                    def auto = new Auto(datosUsuario.auto)
-                    auto.usuario = usuario
-                    if (!auto.save()) {
-                        println "Error al crear auto: " + auto.errors
+        if (Environment.current != Environment.TEST) {
+            if (DistanciaEdificio.count() == 0) {
+                listaDistanciasEdificioIniciales().each { datosDistancia ->
+                    def distanciaEdificio = new DistanciaEdificio(datosDistancia)
+                    if (!distanciaEdificio.save()) {
+                        println "Error al crear distancia edificio: " + distanciaEdificio.errors
                     }
                 }
             }
-        }
 
-        if (Edificio.count() == 0) {
-            listaEdificiosIniciales().each { datosEdificio ->
-                def edificio = new Edificio(datosEdificio.edificio)
-                if (!edificio.save()) {
-                    println "Error al crear edificio: " + edificio.errors
-                } else {
-                    datosEdificio.puestos.each { datosPuesto ->
-                        def puesto = new Puesto(datosPuesto)
-                        puesto.edificio = edificio
-                        if (!puesto.save()) {
-                            println "Error al crear puesto: " + puesto.errors
+            if (TipoPreferencia.count() == 0) {
+                listaTiposPreferenciaIniciales().each { datosPreferencia ->
+                    def preferencia = new TipoPreferencia(datosPreferencia)
+                    if (!preferencia.save()) {
+                        println "Error al crear tipo preferencia: " + preferencia.errors
+                    }
+                }
+            }
+
+            if (TipoTransicion.count() == 0) {
+                def tipoTransicion1 = new TipoTransicion([
+                    nombre          : "Lejos a Matriz",
+                    distanciaOrigen : DistanciaEdificio.findByCodigo("L"),
+                    distanciaDestino: DistanciaEdificio.findByCodigo("M"),
+                    prioridad       : 1
+                ])
+                def tipoTransicion2 = new TipoTransicion([
+                    nombre          : "Cerca a Lejos",
+                    distanciaOrigen : DistanciaEdificio.findByCodigo("C"),
+                    distanciaDestino: DistanciaEdificio.findByCodigo("L"),
+                    prioridad       : 2
+                ])
+                def tipoTransicion3 = new TipoTransicion([
+                    nombre          : "Matriz a Cerca",
+                    distanciaOrigen : DistanciaEdificio.findByCodigo("M"),
+                    distanciaDestino: DistanciaEdificio.findByCodigo("C"),
+                    prioridad       : 3
+                ])
+                if (!tipoTransicion1.save() || !tipoTransicion2.save() || !tipoTransicion3.save()) {
+                    println "Error al crear tipo transicion: "
+                    println "1: " + tipoTransicion1.errors
+                    println "2: " + tipoTransicion2.errors
+                    println "3: " + tipoTransicion3.errors
+                }
+            }
+
+            if (Usuario.count() == 0) {
+                listaUsuariosIniciales().each { datosUsuario ->
+                    def usuario = new Usuario(datosUsuario.usuario)
+                    if (!usuario.save()) {
+                        println "Error al crear usuario: " + usuario.errors
+                    } else {
+                        def auto = new Auto(datosUsuario.auto)
+                        auto.usuario = usuario
+                        if (!auto.save()) {
+                            println "Error al crear auto: " + auto.errors
+                        }
+                    }
+                }
+            }
+
+            if (Edificio.count() == 0) {
+                listaEdificiosIniciales().each { datosEdificio ->
+                    def edificio = new Edificio(datosEdificio.edificio)
+                    if (!edificio.save()) {
+                        println "Error al crear edificio: " + edificio.errors
+                    } else {
+                        datosEdificio.puestos.each { datosPuesto ->
+                            def puesto = new Puesto(datosPuesto)
+                            puesto.edificio = edificio
+                            if (!puesto.save()) {
+                                println "Error al crear puesto: " + puesto.errors
+                            }
                         }
                     }
                 }
@@ -149,7 +153,7 @@ class BootStrap {
                 auto   : [marca    : "Nissan",
                           modelo   : "Pathfinder",
                           placa    : "PYM-347",
-                          tamanio  : "P",
+                          tamanio  : "M",
                           esDefault: true]
             ],
             [
@@ -284,7 +288,7 @@ class BootStrap {
                 auto   : [marca    : "Toyota",
                           modelo   : "Fortuner",
                           placa    : "PBA-3793",
-                          tamanio  : "P",
+                          tamanio  : "G",
                           esDefault: true]
             ],
             [
@@ -329,7 +333,7 @@ class BootStrap {
                 auto   : [marca    : "Ford",
                           modelo   : "F150",
                           placa    : "PBN-4713",
-                          tamanio  : "P",
+                          tamanio  : "G",
                           esDefault: true]
             ]
         ]

@@ -1,4 +1,4 @@
-package ec.com.tw.parking.helpers
+package ec.com.tw.parking
 
 import com.mifmif.common.regex.Generex
 import org.apache.commons.lang.RandomStringUtils

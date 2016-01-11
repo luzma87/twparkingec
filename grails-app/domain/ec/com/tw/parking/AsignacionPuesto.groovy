@@ -29,6 +29,20 @@ class AsignacionPuesto {
         fechaLiberacion nullable: true
     }
 
+    static List<AsignacionPuesto> obtenerPorPreferenciaYedificio(TipoPreferencia preferencia, Edificio edificio) {
+        return AsignacionPuesto.withCriteria {
+            puesto {
+                eq("edificio", edificio)
+            }
+            auto {
+                usuario {
+                    eq("preferencia", preferencia)
+                }
+            }
+            isNull("fechaLiberacion")
+        }
+    }
+
     String toString() {
         def persona = this.auto.usuario.nombre
         def placa = this.auto.placa

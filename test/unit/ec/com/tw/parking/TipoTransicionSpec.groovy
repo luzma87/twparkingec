@@ -1,11 +1,10 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.TipoTransicionBuilder
-import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
+import static RandomUtilsHelpers.getRandomInt
 
 @TestFor(TipoTransicion)
 class TipoTransicionSpec extends Specification {

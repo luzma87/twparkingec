@@ -4,8 +4,8 @@ import ec.com.tw.parking.builders.PuestoBuilder
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomInt
+import static RandomUtilsHelpers.getRandomDouble
+import static RandomUtilsHelpers.getRandomInt
 
 @TestFor(CalculadorCuotaService)
 class CalculadorCuotaServiceSpec extends Specification {

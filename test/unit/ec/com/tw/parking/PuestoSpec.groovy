@@ -1,12 +1,11 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.PuestoBuilder
-import ec.com.tw.parking.helpers.RandomUtilsHelpers
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomDouble
+import static RandomUtilsHelpers.getRandomDouble
 
 @TestFor(Puesto)
 @Mock([Edificio])

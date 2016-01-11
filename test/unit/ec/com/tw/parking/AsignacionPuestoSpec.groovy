@@ -6,7 +6,7 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 @TestFor(AsignacionPuesto)
-@Mock([Auto, Puesto])
+@Mock([Auto, Puesto, TipoPreferencia, Edificio, DistanciaEdificio])
 class AsignacionPuestoSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
@@ -58,5 +58,7 @@ class AsignacionPuestoSpec extends Specification {
         def numero = asignacionPuesto.puesto.numero
         asignacionPuesto.toString() == persona + " (" + placa + ") → " + edificio + " " + numero
     }
+
+
 
 }

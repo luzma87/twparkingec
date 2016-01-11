@@ -2,7 +2,7 @@ package ec.com.tw.parking.builders
 
 import ec.com.tw.parking.DistanciaEdificio
 
-import static ec.com.tw.parking.helpers.RandomUtilsHelpers.getRandomString
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 /**
  * Created by lmunda on 01/4/15 17:46.
@@ -12,6 +12,10 @@ class DistanciaEdificioBuilder {
     String descripcion = getRandomString(3, 10, false)
 
     public DistanciaEdificioBuilder() {
+    }
+
+    public static DistanciaEdificio crearDefault() {
+        return new DistanciaEdificioBuilder().crear()
     }
 
     def getParams() {
