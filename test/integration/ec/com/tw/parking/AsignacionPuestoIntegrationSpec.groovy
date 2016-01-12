@@ -34,17 +34,17 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         15.times { autos += AutoBuilder.nuevo().guardar() }
         puestos.eachWithIndex { puesto, index ->
             def asignacion = AsignacionPuestoBuilder.nuevo()
-                . con { a -> a.puesto = puesto }
-                . con { a -> a.auto = autos[index] }
-                . con { a -> a.fechaAsignacion = new Date(-getRandomInt(1, 15))
-                }.crear()
+                .con { a -> a.puesto = puesto }
+                .con { a -> a.auto = autos[index] }
+                .con { a -> a.fechaAsignacion = new Date() - getRandomInt(1, 15)
+            }.crear()
             if (asignacion.save() && index < 5) {
                 asignacionesEsperadas += asignacion
             }
         }
 
         when:
-        List<AsignacionPuesto> respuesta = AsignacionPuesto.obtenerPorPreferenciaYedificio(tipoPreferencia, edificio)
+        List<AsignacionPuesto> respuesta = AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(tipoPreferencia, edificio)
 
         then:
         respuesta == asignacionesEsperadas

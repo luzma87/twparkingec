@@ -16,7 +16,7 @@ class AsignacionPuestoBuilder {
     Date fechaAsignacion = new Date()
     Date fechaLiberacion = null
 
-    public AsignacionPuestoBuilder() {
+    private AsignacionPuestoBuilder() {
     }
 
     def getParams() {
@@ -35,7 +35,7 @@ class AsignacionPuestoBuilder {
     public List<AsignacionPuesto> crearLista(cantidad) {
         def lista = []
         cantidad.times {
-            lista += new AsignacionPuestoBuilder().crear()
+            lista += crear()
         }
         return lista
     }

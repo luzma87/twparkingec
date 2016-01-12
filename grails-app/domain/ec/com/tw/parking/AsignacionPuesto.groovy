@@ -29,7 +29,7 @@ class AsignacionPuesto {
         fechaLiberacion nullable: true
     }
 
-    static List<AsignacionPuesto> obtenerPorPreferenciaYedificio(TipoPreferencia preferencia, Edificio edificio) {
+    static List<AsignacionPuesto> obtenerOcupadosPorPreferenciaYedificio(TipoPreferencia preferencia, Edificio edificio) {
         return AsignacionPuesto.withCriteria {
             puesto {
                 eq("edificio", edificio)

@@ -7,10 +7,10 @@ import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import static RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 @TestFor(AsignadorPuestosService)
 @Mock([AsignacionPuesto, Auto, Puesto, Usuario])
@@ -104,24 +104,32 @@ class AsignadorPuestosServiceSpec extends Specification {
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 
-    @Ignore()
     def """Debe remover usuarios sin preferencia de sus asignaciones en edificio matriz y retornar lista de espera
            al asignar usuarios con preferencia no salen"""() {
         def cantidadAsignaciones = getRandomInt(1, 15)
         def cantidadUsuariosAdicionales = getRandomInt(2, 5)
         def distancia = DistanciaEdificio.findByCodigo("M")
-        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.crearLista(cantidadAsignaciones)
+        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.nuevo().crearLista(cantidadAsignaciones)
         List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.crearLista(cantidadUsuariosAdicionales)
         def edificio = EdificioBuilder.nuevo().crear()
         def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
-        def asignacionesLibres = AsignacionPuestoBuilder.crearLista(puestosNecesarios - 1)
+        def asignacionesLibres = []
+        (puestosNecesarios - 1).times {
+            asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
+        }
+        def asignacionesNoLibres = []
+        (puestosNecesarios + getRandomInt(5, 15)).times {
+            asignacionesNoLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
+        }
         edificio.puestos = PuestoBuilder.nuevo().crearLista(asignacionesLibres.size())
-        def autosEnEspera = AutoBuilder.crearLista(cantidadUsuariosAdicionales)
+        def asignacionesNoLibres2 = asignacionesNoLibres.clone().sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
+        asignacionesNoLibres2 = asignacionesNoLibres2[0..puestosNecesarios - 1]
+        def autosEnEspera = asignacionesNoLibres2.auto
         GroovyMock(Edificio, global: true)
         Edificio.findByDistancia(distancia) >> edificio
         GroovyMock(AsignacionPuesto, global: true)
         AsignacionPuesto.findAllByPuestoInList(edificio.puestos) >> asignacionesLibres
-        AsignacionPuesto.withCriteria { Map params } >> []
+        AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(_, edificio) >> asignacionesNoLibres
         def myService = Spy(AsignadorPuestosService)
 
         when:
@@ -131,4 +139,5 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta == autosEnEspera
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
+
 }

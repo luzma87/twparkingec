@@ -12,41 +12,25 @@ class AsignadorPuestosService {
 
         if (puestosLibresEdificioMatriz.size() < puestosNecesarios) {
             def preferenciaSale = TipoPreferencia.findByCodigo("S")
-            def asignacionesUsuariosPreferenciaSaleEdificioMatriz = AsignacionPuesto.withCriteria {
-                puesto {
-                    eq("edificio", edificioMatriz)
-                }
-                auto {
-                    usuario {
-                        eq("tipoPreferencia", preferenciaSale)
-                    }
-                }
-                isNull("fechaLiberacion")
-            }
+            def asignacionesUsuariosPreferenciaSaleEdificioMatriz =
+                AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(preferenciaSale, edificioMatriz)
+                    .sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
 
-            def max = asignacionesUsuariosPreferenciaSaleEdificioMatriz.size() - 1
-            def random = new Random()
             puestosNecesarios.times {
-                def posicion = random.nextInt(max)
-                def asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz[posicion]
-
-                while (asignacion.fechaLiberacion != null) {
-                    posicion = random.nextInt(max)
-                    asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz[posicion]
-                }
-
+                def asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz.remove(0)
                 asignacion.fechaLiberacion = new Date()
+                if (!asignacion.save()) {
+                    println asignacion.errors
+                }
                 autosEnEspera += asignacion.auto
+                puestosLibresEdificioMatriz += asignacion.puesto
             }
-
-            puestosLibresEdificioMatriz = edificioMatriz.puestosLibres
         }
         def usuariosSinAsignacion = obtenerUsuariosSinParqueadero(usuariosNoSalen, asignacionesUsuariosNoSalen)
         usuariosSinAsignacion.each { usuario ->
             def puesto = puestosLibresEdificioMatriz.remove(0)
             asignarPuestoAUsuario(puesto, usuario)
         }
-
         return autosEnEspera
     }
 
