@@ -14,7 +14,7 @@ class TipoPreferenciaBuilder {
     String codigo = getRandomString(1)
     String descripcion = getRandomString(3, 10, false)
 
-    public TipoPreferenciaBuilder() {
+    private TipoPreferenciaBuilder() {
     }
 
     def getParams() {

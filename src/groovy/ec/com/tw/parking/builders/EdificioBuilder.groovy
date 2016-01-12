@@ -18,7 +18,7 @@ class EdificioBuilder {
     String datosPago = getRandomString(300, 1050, false)
     Boolean esAmpliable = getRandomBoolean()
 
-    public EdificioBuilder() {
+    private EdificioBuilder() {
     }
 
     def getParams() {

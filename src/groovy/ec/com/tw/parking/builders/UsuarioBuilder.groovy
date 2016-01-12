@@ -3,6 +3,8 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.Usuario
 
+import java.util.function.Consumer
+
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomBoolean
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomMail
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
@@ -11,6 +13,7 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
  * Created by lmunda on 12/29/15 15:39.
  */
 class UsuarioBuilder {
+    static UsuarioBuilder builder
     String nombre = getRandomString(3, 50, false)
     String email = getRandomMail()
     String password = getRandomString(3, 512, false)
@@ -19,7 +22,7 @@ class UsuarioBuilder {
     Boolean estaActivo = getRandomBoolean()
     TipoPreferencia preferencia = new TipoPreferenciaBuilder().crear()
 
-    public UsuarioBuilder() {
+    private UsuarioBuilder() {
     }
 
     def getParams() {
@@ -38,15 +41,21 @@ class UsuarioBuilder {
         new Usuario(getParams())
     }
 
-    static Usuario crearDefault(){
-        return new UsuarioBuilder().crear()
-    }
-
-    static List<Usuario> crearLista(cantidad){
+    static List<Usuario> lista(cantidad){
         def lista = []
         cantidad.times {
-            lista += new UsuarioBuilder().crear()
+            lista += nuevo().crear()
         }
         return lista
+    }
+
+    public static UsuarioBuilder nuevo() {
+        builder = new UsuarioBuilder()
+        return builder
+    }
+
+    public UsuarioBuilder con(Consumer<UsuarioBuilder> consumer){
+        consumer.accept(builder)
+        return builder
     }
 }

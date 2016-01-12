@@ -10,7 +10,6 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 import static RandomUtilsHelpers.getRandomInt
-import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
 @TestFor(AsignadorPuestosService)
 @Mock([AsignacionPuesto, Auto, Puesto, Usuario])

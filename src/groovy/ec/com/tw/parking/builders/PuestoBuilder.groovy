@@ -35,10 +35,10 @@ class PuestoBuilder {
         new Puesto(getParams())
     }
 
-    public List<Puesto> crearLista(int cantidad) {
+    public static List<Puesto> lista(int cantidad) {
         def lista = []
         cantidad.times {
-            lista += new PuestoBuilder().crear()
+            lista += nuevo().crear()
         }
         return lista
     }

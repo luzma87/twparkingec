@@ -14,11 +14,7 @@ class DistanciaEdificioBuilder {
     String codigo = getRandomString(1)
     String descripcion = getRandomString(3, 10, false)
 
-    public DistanciaEdificioBuilder() {
-    }
-
-    public static DistanciaEdificio crearDefault() {
-        return new DistanciaEdificioBuilder().crear()
+    private DistanciaEdificioBuilder() {
     }
 
     def getParams() {

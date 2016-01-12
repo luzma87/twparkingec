@@ -3,6 +3,8 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.DistanciaEdificio
 import ec.com.tw.parking.TipoTransicion
 
+import java.util.function.Consumer
+
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 
@@ -10,12 +12,13 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
  * Created by lmunda on 01/4/15 17:46.
  */
 class TipoTransicionBuilder {
+    static TipoPreferenciaBuilder builder
     String nombre = getRandomString(3, 30, false)
     DistanciaEdificio distanciaOrigen = new DistanciaEdificioBuilder().crear()
     DistanciaEdificio distanciaDestino = new DistanciaEdificioBuilder().crear()
     Integer prioridad = getRandomInt(1, 10)
 
-    public TipoTransicionBuilder() {
+    private TipoTransicionBuilder() {
     }
 
     def getParams() {
@@ -29,5 +32,15 @@ class TipoTransicionBuilder {
 
     public TipoTransicion crear() {
         new TipoTransicion(getParams())
+    }
+
+    public static TipoPreferenciaBuilder nuevo() {
+        builder = new TipoPreferenciaBuilder()
+        return builder
+    }
+
+    public TipoPreferenciaBuilder con(Consumer<TipoPreferenciaBuilder> consumer) {
+        consumer.accept(builder)
+        return builder
     }
 }

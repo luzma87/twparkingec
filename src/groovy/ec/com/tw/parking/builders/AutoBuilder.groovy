@@ -22,7 +22,7 @@ class AutoBuilder {
 
     Usuario usuario = new UsuarioBuilder().crear()
 
-    public AutoBuilder() {
+    private AutoBuilder() {
     }
 
     def getParams() {
@@ -40,10 +40,10 @@ class AutoBuilder {
         new Auto(getParams())
     }
 
-    public List<Auto> crearLista(cantidad) {
+    public static List<Auto> lista(cantidad) {
         def lista = []
         cantidad.times {
-            lista += new AutoBuilder().crear()
+            lista += nuevo().crear()
         }
         return lista
     }
