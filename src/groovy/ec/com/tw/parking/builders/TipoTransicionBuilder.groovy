@@ -12,7 +12,7 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
  * Created by lmunda on 01/4/15 17:46.
  */
 class TipoTransicionBuilder {
-    static TipoPreferenciaBuilder builder
+    static TipoTransicionBuilder builder
     String nombre = getRandomString(3, 30, false)
     DistanciaEdificio distanciaOrigen = new DistanciaEdificioBuilder().crear()
     DistanciaEdificio distanciaDestino = new DistanciaEdificioBuilder().crear()
@@ -34,12 +34,12 @@ class TipoTransicionBuilder {
         new TipoTransicion(getParams())
     }
 
-    public static TipoPreferenciaBuilder nuevo() {
-        builder = new TipoPreferenciaBuilder()
+    public static TipoTransicionBuilder nuevo() {
+        builder = new TipoTransicionBuilder()
         return builder
     }
 
-    public TipoPreferenciaBuilder con(Consumer<TipoPreferenciaBuilder> consumer) {
+    public TipoTransicionBuilder con(Consumer<TipoTransicionBuilder> consumer) {
         consumer.accept(builder)
         return builder
     }

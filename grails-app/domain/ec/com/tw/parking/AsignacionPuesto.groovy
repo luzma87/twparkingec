@@ -53,12 +53,18 @@ class AsignacionPuesto {
         }
     }
 
-
     String toString() {
         def persona = this.auto.usuario.nombre
         def placa = this.auto.placa
         def edificio = this.puesto.edificio.nombre
         def numero = this.puesto.numero
         return persona + " (" + placa + ") → " + edificio + " " + numero
+    }
+
+    def liberar() {
+        this.fechaLiberacion = new Date()
+        if (!this.save()) {
+            println this.errors
+        }
     }
 }

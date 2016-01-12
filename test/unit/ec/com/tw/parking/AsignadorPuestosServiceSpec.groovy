@@ -2,8 +2,10 @@ package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import ec.com.tw.parking.builders.AutoBuilder
+import ec.com.tw.parking.builders.DistanciaEdificioBuilder
 import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.PuestoBuilder
+import ec.com.tw.parking.builders.TipoTransicionBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -132,6 +134,45 @@ class AsignadorPuestosServiceSpec extends Specification {
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 
+    def "Debe liberar puestos de los todos usuarios de mayor prioridad y ponerlos en lista de espera"() {
+        setup:
+        def autosEnEsperaRecibida = obtenerAutosEnEsperaRecibida()
+
+        def transicionMayorPrioridad = TipoTransicionBuilder.nuevo().con { t -> t.prioridad = 1 }.crear()
+
+        GroovyMock(TipoTransicion, global: true)
+        TipoTransicion.findByPrioridad(1) >> transicionMayorPrioridad
+
+        def distanciaOrigenMayorPrioridad = transicionMayorPrioridad.distanciaOrigen
+        def edificio = EdificioBuilder.nuevo().con { e -> e.distancia = distanciaOrigenMayorPrioridad }.crear()
+        def puestos = []
+        10.times { puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificio }.crear() }
+        def asignacionesMayorPrioridad = []
+        puestos.each { puesto ->
+            asignacionesMayorPrioridad += AsignacionPuestoBuilder.nuevo()
+                .con { a -> a.puesto = puesto }
+                .crear()
+        }
+        GroovyMock(AsignacionPuesto, global: true)
+        AsignacionPuesto.obtenerPorDistancia(distanciaOrigenMayorPrioridad) >> asignacionesMayorPrioridad
+
+        def autosMayorPrioridad = []
+        asignacionesMayorPrioridad.each { asignacion ->
+            autosMayorPrioridad += [
+                auto           : asignacion.auto,
+                distanciaOrigen: asignacion.puesto.edificio.distancia
+            ]
+        }
+
+        def autosEnEsperaEsperada = autosEnEsperaRecibida + autosMayorPrioridad
+
+        when:
+        def autosEnEsperaObtenida = service.liberarPuestosMayorPrioridad(autosEnEsperaRecibida)
+
+        then:
+        autosEnEsperaObtenida == autosEnEsperaEsperada
+    }
+
     private establecerRespuesta(opciones) {
         def autosEnEspera = null
         def cantidadPuestos = opciones.hayPuestosLibres ? getRandomInt(5, 15) : 0
@@ -157,5 +198,17 @@ class AsignadorPuestosServiceSpec extends Specification {
             asignacionesUsuariosNoSalen: asignacionesUsuariosNoSalen,
             autosEnEspera              : autosEnEspera
         ]
+    }
+
+    private obtenerAutosEnEsperaRecibida() {
+        def autosEnEsperaRecibida = []
+        def distanciaOrigen = DistanciaEdificioBuilder.nuevo().crear()
+        getRandomInt(1, 10).times {
+            autosEnEsperaRecibida += [
+                auto           : AutoBuilder.nuevo().crear(),
+                distanciaOrigen: distanciaOrigen
+            ]
+        }
+        return autosEnEsperaRecibida
     }
 }

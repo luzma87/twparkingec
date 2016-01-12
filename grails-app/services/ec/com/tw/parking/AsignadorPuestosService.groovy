@@ -18,10 +18,8 @@ class AsignadorPuestosService {
 
             puestosNecesarios.times {
                 def asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz.remove(0)
-                asignacion.fechaLiberacion = new Date()
-                if (!asignacion.save()) {
-                    println asignacion.errors
-                }
+                // TODO: prueba de integracion: debe correr liberar al correr esta funcion
+                asignacion.liberar()
                 autosEnEspera += [
                     auto           : asignacion.auto,
                     distanciaOrigen: asignacion.puesto.edificio.distancia
@@ -57,5 +55,21 @@ class AsignadorPuestosService {
         def usuariosSinAsignacion = usuariosConAsignacion.plus(usuariosNoSalen)
         usuariosSinAsignacion.removeAll(usuariosEnAmbasListas)
         return usuariosSinAsignacion
+    }
+
+    def liberarPuestosMayorPrioridad(autosEnEspera) {
+        def transicionMayorPrioridad = TipoTransicion.findByPrioridad(1)
+        def distanciaOrigenMayorPrioridad = transicionMayorPrioridad.distanciaOrigen
+        def asignacionesMayorPrioridad = AsignacionPuesto.obtenerPorDistancia(distanciaOrigenMayorPrioridad)
+
+        asignacionesMayorPrioridad.each { asignacion ->
+            // TODO: prueba de integracion: debe correr liberar al correr esta funcion
+            asignacion.liberar()
+            autosEnEspera += [
+                auto           : asignacion.auto,
+                distanciaOrigen: distanciaOrigenMayorPrioridad
+            ]
+        }
+        return autosEnEspera
     }
 }
