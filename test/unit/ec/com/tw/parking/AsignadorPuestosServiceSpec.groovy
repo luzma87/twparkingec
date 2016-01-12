@@ -80,21 +80,17 @@ class AsignadorPuestosServiceSpec extends Specification {
     }
 
     private establecerRespuesta(opciones) {
+        def autosEnEspera = null
+        def cantidadPuestos = opciones.hayPuestosLibres ? getRandomInt(5, 15) : 0
+        def edificio = EdificioBuilder.nuevo().crear()
         def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(getRandomInt(1, 15))
         def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(getRandomInt(2, 5))
-        def edificio = EdificioBuilder.nuevo().crear()
-        def asignacionesLibres = []
-        def cantidadAsignacionesLibres = usuariosNoSalen.size()
-        def cantidadPuestos = 0
-        def autosEnEspera = null
-        if (opciones.hayPuestosLibres) {
-            cantidadAsignacionesLibres += getRandomInt(5, 20)
-            cantidadPuestos = getRandomInt(5, 15)
-        } else {
-            cantidadAsignacionesLibres -= asignacionesUsuariosNoSalen.size()
+        def cantidadAsignacionesLibres = usuariosNoSalen.size() + (opciones.hayPuestosLibres ? getRandomInt(5, 20) : -asignacionesUsuariosNoSalen.size())
+        if (!opciones.hayPuestosLibres) {
             def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
             autosEnEspera = obtenerAutosEnEspera(puestosNecesarios, edificio)
         }
+        def asignacionesLibres = []
         (cantidadAsignacionesLibres - 1).times {
             asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
         }
