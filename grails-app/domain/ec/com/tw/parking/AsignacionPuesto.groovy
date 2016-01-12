@@ -43,6 +43,17 @@ class AsignacionPuesto {
         }
     }
 
+    static List<AsignacionPuesto> obtenerPorDistancia(DistanciaEdificio distancia) {
+        return AsignacionPuesto.withCriteria {
+            puesto {
+                edificio {
+                    eq("distancia", distancia)
+                }
+            }
+        }
+    }
+
+
     String toString() {
         def persona = this.auto.usuario.nombre
         def placa = this.auto.placa
