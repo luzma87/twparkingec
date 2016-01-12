@@ -79,24 +79,62 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta == null
     }
 
-    def "Debe retornar lista vacia de usuarios en espera cuando existen puestos disponibles en edificio matriz"() {
-        setup:
-        def cantidadAsignaciones = getRandomInt(1, 15)
-        def cantidadUsuariosAdicionales = getRandomInt(2, 5)
-        def distancia = DistanciaEdificio.findByCodigo("M")
-        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(cantidadAsignaciones)
-        List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(cantidadUsuariosAdicionales)
+    private establecerRespuesta(opciones) {
+        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(getRandomInt(1, 15))
+        def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(getRandomInt(2, 5))
         def edificio = EdificioBuilder.nuevo().crear()
-        def asignacionesLibres = AsignacionPuestoBuilder.lista(usuariosNoSalen.size() + getRandomInt(5, 20))
-        edificio.puestos = PuestoBuilder.lista(asignacionesLibres.size() + getRandomInt(5, 25))
+        def asignacionesLibres = []
+        def cantidadAsignacionesLibres = usuariosNoSalen.size()
+        def cantidadPuestos = 0
+        def autosEnEspera = null
+        if (opciones.hayPuestosLibres) {
+            cantidadAsignacionesLibres += getRandomInt(5, 20)
+            cantidadPuestos = getRandomInt(5, 15)
+        } else {
+            cantidadAsignacionesLibres -= asignacionesUsuariosNoSalen.size()
+            def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
+            autosEnEspera = obtenerAutosEnEspera(puestosNecesarios, edificio)
+        }
+        (cantidadAsignacionesLibres - 1).times {
+            asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
+        }
+        cantidadPuestos += asignacionesLibres.size()
+        edificio.puestos = PuestoBuilder.lista(cantidadPuestos)
+
+        mockEdificioYasignacion(edificio, asignacionesLibres)
+
+        return [
+            usuariosNoSalen            : usuariosNoSalen,
+            asignacionesUsuariosNoSalen: asignacionesUsuariosNoSalen,
+            autosEnEspera              : autosEnEspera
+        ]
+    }
+
+    def obtenerAutosEnEspera(puestosNecesarios, Edificio edificio) {
+        def asignacionesNoLibres = []
+        (puestosNecesarios + getRandomInt(5, 15)).times {
+            asignacionesNoLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
+        }
+        def asignacionesNoLibres2 = asignacionesNoLibres.clone().sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
+        asignacionesNoLibres2 = asignacionesNoLibres2[0..puestosNecesarios - 1]
+        AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(_, edificio) >> asignacionesNoLibres
+        return asignacionesNoLibres2.auto
+    }
+
+    def mockEdificioYasignacion(edificio, asignacionesLibres) {
         GroovyMock(Edificio, global: true)
-        Edificio.findByDistancia(distancia) >> edificio
+        Edificio.findByDistancia(DistanciaEdificio.findByCodigo("M")) >> edificio
         GroovyMock(AsignacionPuesto, global: true)
         AsignacionPuesto.findAllByPuestoInList(edificio.puestos) >> asignacionesLibres
+    }
+
+    def "Debe retornar lista vacia de usuarios en espera cuando existen puestos disponibles en edificio matriz"() {
+        setup:
+        def objetoRespuesta = establecerRespuesta(hayPuestosLibres: true)
         def myService = Spy(AsignadorPuestosService)
 
         when:
-        def respuesta = myService.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen)
+        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen, objetoRespuesta.asignacionesUsuariosNoSalen)
 
         then:
         respuesta == []
@@ -105,37 +143,14 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def """Debe remover usuarios sin preferencia de sus asignaciones en edificio matriz y retornar lista de espera
            al asignar usuarios con preferencia no salen"""() {
-        def cantidadAsignaciones = getRandomInt(1, 15)
-        def cantidadUsuariosAdicionales = getRandomInt(2, 5)
-        def distancia = DistanciaEdificio.findByCodigo("M")
-        List<AsignacionPuesto> asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(cantidadAsignaciones)
-        List<Usuario> usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(cantidadUsuariosAdicionales)
-        def edificio = EdificioBuilder.nuevo().crear()
-        def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
-        def asignacionesLibres = []
-        (puestosNecesarios - 1).times {
-            asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
-        }
-        def asignacionesNoLibres = []
-        (puestosNecesarios + getRandomInt(5, 15)).times {
-            asignacionesNoLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
-        }
-        edificio.puestos = PuestoBuilder.lista(asignacionesLibres.size())
-        def asignacionesNoLibres2 = asignacionesNoLibres.clone().sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
-        asignacionesNoLibres2 = asignacionesNoLibres2[0..puestosNecesarios - 1]
-        def autosEnEspera = asignacionesNoLibres2.auto
-        GroovyMock(Edificio, global: true)
-        Edificio.findByDistancia(distancia) >> edificio
-        GroovyMock(AsignacionPuesto, global: true)
-        AsignacionPuesto.findAllByPuestoInList(edificio.puestos) >> asignacionesLibres
-        AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(_, edificio) >> asignacionesNoLibres
+        def objetoRespuesta = establecerRespuesta(hayPuestosLibres: false)
         def myService = Spy(AsignadorPuestosService)
 
         when:
-        def respuesta = myService.asignarPuestosNoSalen(usuariosNoSalen, asignacionesUsuariosNoSalen)
+        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen, objetoRespuesta.asignacionesUsuariosNoSalen)
 
         then:
-        respuesta == autosEnEspera
+        respuesta == objetoRespuesta.autosEnEspera
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 
