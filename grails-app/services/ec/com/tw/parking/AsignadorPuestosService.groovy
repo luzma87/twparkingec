@@ -22,7 +22,10 @@ class AsignadorPuestosService {
                 if (!asignacion.save()) {
                     println asignacion.errors
                 }
-                autosEnEspera += asignacion.auto
+                autosEnEspera += [
+                    auto           : asignacion.auto,
+                    distanciaOrigen: asignacion.puesto.edificio.distancia
+                ]
                 puestosLibresEdificioMatriz += asignacion.puesto
             }
         }

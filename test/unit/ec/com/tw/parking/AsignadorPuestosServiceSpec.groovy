@@ -79,33 +79,6 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta == null
     }
 
-    private establecerRespuesta(opciones) {
-        def autosEnEspera = null
-        def cantidadPuestos = opciones.hayPuestosLibres ? getRandomInt(5, 15) : 0
-        def edificio = EdificioBuilder.nuevo().crear()
-        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(getRandomInt(1, 15))
-        def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(getRandomInt(2, 5))
-        def cantidadAsignacionesLibres = usuariosNoSalen.size() + (opciones.hayPuestosLibres ? getRandomInt(5, 20) : -asignacionesUsuariosNoSalen.size())
-        if (!opciones.hayPuestosLibres) {
-            def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
-            autosEnEspera = obtenerAutosEnEspera(puestosNecesarios, edificio)
-        }
-        def asignacionesLibres = []
-        (cantidadAsignacionesLibres - 1).times {
-            asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
-        }
-        cantidadPuestos += asignacionesLibres.size()
-        edificio.puestos = PuestoBuilder.lista(cantidadPuestos)
-
-        mockEdificioYasignacion(edificio, asignacionesLibres)
-
-        return [
-            usuariosNoSalen            : usuariosNoSalen,
-            asignacionesUsuariosNoSalen: asignacionesUsuariosNoSalen,
-            autosEnEspera              : autosEnEspera
-        ]
-    }
-
     def obtenerAutosEnEspera(puestosNecesarios, Edificio edificio) {
         def asignacionesNoLibres = []
         (puestosNecesarios + getRandomInt(5, 15)).times {
@@ -114,7 +87,16 @@ class AsignadorPuestosServiceSpec extends Specification {
         def asignacionesNoLibres2 = asignacionesNoLibres.clone().sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
         asignacionesNoLibres2 = asignacionesNoLibres2[0..puestosNecesarios - 1]
         AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(_, edificio) >> asignacionesNoLibres
-        return asignacionesNoLibres2.auto
+        def respuestaEsperada = []
+
+        asignacionesNoLibres2.eachWithIndex { asignacion, index ->
+            respuestaEsperada[index] = [
+                distanciaOrigen: asignacion.puesto.edificio.distancia,
+                auto           : asignacion.auto
+            ]
+        }
+
+        return respuestaEsperada
     }
 
     def mockEdificioYasignacion(edificio, asignacionesLibres) {
@@ -150,4 +132,30 @@ class AsignadorPuestosServiceSpec extends Specification {
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 
+    private establecerRespuesta(opciones) {
+        def autosEnEspera = null
+        def cantidadPuestos = opciones.hayPuestosLibres ? getRandomInt(5, 15) : 0
+        def edificio = EdificioBuilder.nuevo().crear()
+        def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(getRandomInt(1, 15))
+        def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(getRandomInt(2, 5))
+        def cantidadAsignacionesLibres = usuariosNoSalen.size() + (opciones.hayPuestosLibres ? getRandomInt(5, 20) : -asignacionesUsuariosNoSalen.size())
+        if (!opciones.hayPuestosLibres) {
+            def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
+            autosEnEspera = obtenerAutosEnEspera(puestosNecesarios, edificio)
+        }
+        def asignacionesLibres = []
+        (cantidadAsignacionesLibres - 1).times {
+            asignacionesLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
+        }
+        cantidadPuestos += asignacionesLibres.size()
+        edificio.puestos = PuestoBuilder.lista(cantidadPuestos)
+
+        mockEdificioYasignacion(edificio, asignacionesLibres)
+
+        return [
+            usuariosNoSalen            : usuariosNoSalen,
+            asignacionesUsuariosNoSalen: asignacionesUsuariosNoSalen,
+            autosEnEspera              : autosEnEspera
+        ]
+    }
 }
