@@ -158,7 +158,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         def autosPrioridad = []
         cantidadAliberar.times {
-           def asignacion = asignacionesPrioridad[it]
+            def asignacion = asignacionesPrioridad[it]
             autosPrioridad += [
                 auto           : asignacion.auto,
                 distanciaOrigen: asignacion.puesto.edificio.distancia
@@ -172,6 +172,111 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         then:
         autosEnEsperaObtenida == autosEnEsperaEsperada
+    }
+
+    def """Debe retornar aLiberar cuando
+                totalPuestos es mayor que aLiberar y
+                liberadosAnterior es igual que aLiberar o es -1"""() {
+        setup:
+        def aLiberar = getRandomInt(1, 10)
+        def liberadosAnterior = aLiberar
+        def totalPuestos = aLiberar + getRandomInt(1, 10)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar
+    }
+
+    def """Debe retornar totalPuestos cuando
+                totalPuestos es menor que aLiberar y
+                liberadosAnterior es igual que aLiberar o es -1"""() {
+        setup:
+        def aLiberar = getRandomInt(6, 10)
+        def liberadosAnterior = aLiberar
+        def totalPuestos = aLiberar - getRandomInt(1, 5)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == totalPuestos
+    }
+
+    def """Debe retornar aLiberar + los q faltaron en liberadosAnterior cuando
+                totalPuestos es mayor que aLiberar + los faltantes y
+                liberadosAnterior es menor que aLiberar"""() {
+        setup:
+        def aLiberar = getRandomInt(6, 10)
+        def liberadosAnterior = aLiberar - getRandomInt(1, 5)
+        def totalPuestos = aLiberar + liberadosAnterior + getRandomInt(10)
+        def faltantes = aLiberar - liberadosAnterior
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar + faltantes
+    }
+
+    def """Debe retornar una matriz con las prioridades y la cantidad de puestos a liberar para cada una
+            diferentes casos"""() {
+        setup:
+        inicializarDatosYmocks(caso.puestos1, caso.puestos2, caso.puestos3)
+
+        when:
+        def matrizObtenida = service.obtenerCantidadPuestosAliberarPorPrioridad()
+
+        then:
+        matrizObtenida == caso.matrizEsperada
+
+        where:
+        caso << [
+            [
+                puestos1      : [ocupados: 2, libres: 0],
+                puestos2      : [ocupados: 3, libres: 0],
+                puestos3      : [ocupados: 6, libres: 0],
+                matrizEsperada: [1: 2, 2: 2, 3: 2]
+            ],
+            [
+                puestos1      : [ocupados: 3, libres: 0],
+                puestos2      : [ocupados: 2, libres: 0],
+                puestos3      : [ocupados: 6, libres: 0],
+                matrizEsperada: [1: 3, 2: 2, 3: 4]
+            ]
+        ]
+    }
+
+    private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
+        def distancia1 = DistanciaEdificioBuilder.nuevo().crear()
+        def distancia2 = DistanciaEdificioBuilder.nuevo().crear()
+        def distancia3 = DistanciaEdificioBuilder.nuevo().crear()
+
+        def tipoTransicion1 = TipoTransicionBuilder.nuevo()
+            .con { tt -> tt.distanciaOrigen = distancia1 }
+            .con { tt -> tt.distanciaDestino = distancia2 }
+            .con { tt -> tt.prioridad = 1 }.crear()
+        def tipoTransicion2 = TipoTransicionBuilder.nuevo()
+            .con { tt -> tt.distanciaOrigen = distancia2 }
+            .con { tt -> tt.distanciaDestino = distancia3 }
+            .con { tt -> tt.prioridad = 2 }.crear()
+        def tipoTransicion3 = TipoTransicionBuilder.nuevo()
+            .con { tt -> tt.distanciaOrigen = distancia3 }
+            .con { tt -> tt.distanciaDestino = distancia1 }
+            .con { tt -> tt.prioridad = 3 }.crear()
+
+        def asignacionesPrioridad1 = [], asignacionesPrioridad2 = [], asignacionesPrioridad3 = []
+        (cantidadPrioridad1.libres + cantidadPrioridad1.ocupados).times {
+            asignacionesPrioridad1 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia1 }
+        }
+        (cantidadPrioridad2.libres + cantidadPrioridad2.ocupados).times {
+            asignacionesPrioridad2 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia2 }
+        }
+        (cantidadPrioridad3.libres + cantidadPrioridad3.ocupados).times {
+            asignacionesPrioridad3 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia3 }
+        }
+
+        GroovyMock(TipoTransicion, global: true)
+        TipoTransicion.list(_) >> [tipoTransicion1, tipoTransicion2, tipoTransicion3]
+        GroovyMock(AsignacionPuesto, global: true)
+        AsignacionPuesto.contarOcupadosPorPrioridad(1) >> cantidadPrioridad1.libres
+        AsignacionPuesto.contarLibresPorPrioridad(1) >> cantidadPrioridad1.ocupados
+        AsignacionPuesto.contarOcupadosPorPrioridad(2) >> cantidadPrioridad2.libres
+        AsignacionPuesto.contarLibresPorPrioridad(2) >> cantidadPrioridad2.ocupados
+        AsignacionPuesto.contarOcupadosPorPrioridad(3) >> cantidadPrioridad3.libres
+        AsignacionPuesto.contarLibresPorPrioridad(3) >> cantidadPrioridad3.ocupados
     }
 
     private establecerRespuesta(opciones) {

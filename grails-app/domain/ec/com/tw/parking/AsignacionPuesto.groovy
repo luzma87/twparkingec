@@ -53,6 +53,10 @@ class AsignacionPuesto {
         }
     }
 
+    static int contarOcupadosPorPrioridad(int prioridad) {}
+
+    static int contarLibresPorPrioridad(int prioridad) {}
+
     String toString() {
         def persona = this.auto.usuario.nombre
         def placa = this.auto.placa
@@ -62,9 +66,11 @@ class AsignacionPuesto {
     }
 
     def liberar() {
-        this.fechaLiberacion = new Date()
-        if (!this.save()) {
-            println this.errors
+        if (this.fechaLiberacion == null) {
+            this.fechaLiberacion = new Date()
+            if (!this.save()) {
+                println this.errors
+            }
         }
     }
 }
