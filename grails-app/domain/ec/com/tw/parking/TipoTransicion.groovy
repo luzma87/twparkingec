@@ -12,7 +12,7 @@ class TipoTransicion {
         cache usage: 'read-write', include: 'lazy'
         version false
         id generator: 'identity'
-        sort codigo: "asc"
+        sort prioridad: "asc"
         columns {
             id column: 'id'
             nombre column: 'nombre'
