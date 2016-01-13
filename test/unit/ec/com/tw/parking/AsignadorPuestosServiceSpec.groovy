@@ -134,40 +134,41 @@ class AsignadorPuestosServiceSpec extends Specification {
         (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
     }
 
-    def "Debe liberar puestos de los todos usuarios de mayor prioridad y ponerlos en lista de espera"() {
+    def "Debe liberar puestos de una cantidad de usuarios de una prioridad y ponerlos en lista de espera"() {
         setup:
+        def cantidadAliberar = getRandomInt(1, 10)
         def autosEnEsperaRecibida = obtenerAutosEnEsperaRecibida()
-
-        def transicionMayorPrioridad = TipoTransicionBuilder.nuevo().con { t -> t.prioridad = 1 }.crear()
+        def transicionPrioridad = TipoTransicionBuilder.nuevo().crear()
 
         GroovyMock(TipoTransicion, global: true)
-        TipoTransicion.findByPrioridad(1) >> transicionMayorPrioridad
+        TipoTransicion.findByPrioridad(transicionPrioridad.prioridad) >> transicionPrioridad
 
-        def distanciaOrigenMayorPrioridad = transicionMayorPrioridad.distanciaOrigen
-        def edificio = EdificioBuilder.nuevo().con { e -> e.distancia = distanciaOrigenMayorPrioridad }.crear()
+        def distanciaOrigenPrioridad = transicionPrioridad.distanciaOrigen
+        def edificio = EdificioBuilder.nuevo().con { e -> e.distancia = distanciaOrigenPrioridad }.crear()
         def puestos = []
         10.times { puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificio }.crear() }
-        def asignacionesMayorPrioridad = []
+        def asignacionesPrioridad = []
         puestos.each { puesto ->
-            asignacionesMayorPrioridad += AsignacionPuestoBuilder.nuevo()
+            asignacionesPrioridad += AsignacionPuestoBuilder.nuevo()
                 .con { a -> a.puesto = puesto }
                 .crear()
         }
         GroovyMock(AsignacionPuesto, global: true)
-        AsignacionPuesto.obtenerPorDistancia(distanciaOrigenMayorPrioridad) >> asignacionesMayorPrioridad
+        AsignacionPuesto.obtenerPorDistancia(distanciaOrigenPrioridad) >> asignacionesPrioridad
 
-        def autosMayorPrioridad = []
-        asignacionesMayorPrioridad.each { asignacion ->
-            autosMayorPrioridad += [
+        def autosPrioridad = []
+        cantidadAliberar.times {
+           def asignacion = asignacionesPrioridad[it]
+            autosPrioridad += [
                 auto           : asignacion.auto,
                 distanciaOrigen: asignacion.puesto.edificio.distancia
             ]
         }
 
-        def autosEnEsperaEsperada = autosEnEsperaRecibida + autosMayorPrioridad
+        def autosEnEsperaEsperada = autosEnEsperaRecibida + autosPrioridad
 
         when:
-        def autosEnEsperaObtenida = service.liberarPuestosMayorPrioridad(autosEnEsperaRecibida)
+        def autosEnEsperaObtenida = service.liberarPuestosPrioridad(autosEnEsperaRecibida, transicionPrioridad.prioridad, cantidadAliberar)
 
         then:
         autosEnEsperaObtenida == autosEnEsperaEsperada

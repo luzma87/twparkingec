@@ -57,17 +57,18 @@ class AsignadorPuestosService {
         return usuariosSinAsignacion
     }
 
-    def liberarPuestosMayorPrioridad(autosEnEspera) {
-        def transicionMayorPrioridad = TipoTransicion.findByPrioridad(1)
-        def distanciaOrigenMayorPrioridad = transicionMayorPrioridad.distanciaOrigen
-        def asignacionesMayorPrioridad = AsignacionPuesto.obtenerPorDistancia(distanciaOrigenMayorPrioridad)
+    def liberarPuestosPrioridad(autosEnEspera, prioridad, cantidadAliberar) {
+        def transicionPrioridad = TipoTransicion.findByPrioridad(prioridad)
+        def distanciaOrigenPrioridad = transicionPrioridad.distanciaOrigen
+        def asignacionesPrioridad = AsignacionPuesto.obtenerPorDistancia(distanciaOrigenPrioridad)
 
-        asignacionesMayorPrioridad.each { asignacion ->
+        cantidadAliberar.times {
+            def asignacion = asignacionesPrioridad[it]
             // TODO: prueba de integracion: debe correr liberar al correr esta funcion
             asignacion.liberar()
             autosEnEspera += [
                 auto           : asignacion.auto,
-                distanciaOrigen: distanciaOrigenMayorPrioridad
+                distanciaOrigen: distanciaOrigenPrioridad
             ]
         }
         return autosEnEspera
