@@ -9,7 +9,10 @@ import ec.com.tw.parking.builders.TipoTransicionBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import spock.lang.Ignore
+import spock.lang.IgnoreRest
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static RandomUtilsHelpers.getRandomInt
 
@@ -176,10 +179,10 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def """Debe retornar aLiberar cuando
                 totalPuestos es mayor que aLiberar y
-                liberadosAnterior es igual que aLiberar o es -1"""() {
+                liberadosAnterior es 0"""() {
         setup:
         def aLiberar = getRandomInt(1, 10)
-        def liberadosAnterior = aLiberar
+        def liberadosAnterior = 0
         def totalPuestos = aLiberar + getRandomInt(1, 10)
 
         expect:
@@ -188,7 +191,31 @@ class AsignadorPuestosServiceSpec extends Specification {
 
     def """Debe retornar totalPuestos cuando
                 totalPuestos es menor que aLiberar y
-                liberadosAnterior es igual que aLiberar o es -1"""() {
+                liberadosAnterior es 0"""() {
+        setup:
+        def aLiberar = getRandomInt(6, 10)
+        def liberadosAnterior = 0
+        def totalPuestos = aLiberar - getRandomInt(1, 5)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == totalPuestos
+    }
+
+    def """Debe retornar totalPuestos cuando
+                totalPuestos es igual que aLiberar y
+                liberadosAnterior es 0"""() {
+        setup:
+        def aLiberar = getRandomInt(6, 10)
+        def liberadosAnterior = 0
+        def totalPuestos = aLiberar
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == totalPuestos
+    }
+
+    def """Debe retornar totalPuestos cuando
+                totalPuestos es menor que aLiberar y
+                liberadosAnterior es igual que aLiberar"""() {
         setup:
         def aLiberar = getRandomInt(6, 10)
         def liberadosAnterior = aLiberar
@@ -196,6 +223,43 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         expect:
         service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == totalPuestos
+    }
+
+    def """Debe retornar totalPuestos cuando
+                totalPuestos es menor que aLiberar y
+                liberadosAnterior es mayor que aLiberar"""() {
+        setup:
+        def aLiberar = getRandomInt(1, 10)
+        def liberadosAnterior = aLiberar + getRandomInt(1, 5)
+        def totalPuestos = aLiberar - getRandomInt(1, 5)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == totalPuestos
+    }
+
+
+    def """Debe retornar aLiberar cuando
+                totalPuestos es mayor que aLiberar y
+                liberadosAnterior es igual que aLiberar"""() {
+        setup:
+        def aLiberar = getRandomInt(1, 10)
+        def liberadosAnterior = aLiberar
+        def totalPuestos = aLiberar + getRandomInt(1, 5)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar
+    }
+
+    def """Debe retornar aLiberar cuando
+                totalPuestos es mayor que aLiberar y
+                liberadosAnterior es mayor que aLiberar"""() {
+        setup:
+        def aLiberar = getRandomInt(1, 10)
+        def liberadosAnterior = aLiberar + getRandomInt(1, 5)
+        def totalPuestos = aLiberar + getRandomInt(1, 5)
+
+        expect:
+        service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar
     }
 
     def """Debe retornar aLiberar + los q faltaron en liberadosAnterior cuando
@@ -211,32 +275,24 @@ class AsignadorPuestosServiceSpec extends Specification {
         service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar + faltantes
     }
 
+    @Unroll
     def """Debe retornar una matriz con las prioridades y la cantidad de puestos a liberar para cada una
-            diferentes casos"""() {
+            puestos1: #puestos1, puestos2: #puestos2, puestos3: #puestos3, matriz: #matrizEsperada"""() {
         setup:
-        inicializarDatosYmocks(caso.puestos1, caso.puestos2, caso.puestos3)
+        inicializarDatosYmocks(puestos1, puestos2, puestos3)
 
         when:
         def matrizObtenida = service.obtenerCantidadPuestosAliberarPorPrioridad()
 
         then:
-        matrizObtenida == caso.matrizEsperada
+        matrizObtenida == matrizEsperada
 
         where:
-        caso << [
-            [
-                puestos1      : [ocupados: 2, libres: 0],
-                puestos2      : [ocupados: 3, libres: 0],
-                puestos3      : [ocupados: 6, libres: 0],
-                matrizEsperada: [1: 2, 2: 2, 3: 2]
-            ],
-            [
-                puestos1      : [ocupados: 3, libres: 0],
-                puestos2      : [ocupados: 2, libres: 0],
-                puestos3      : [ocupados: 6, libres: 0],
-                matrizEsperada: [1: 3, 2: 2, 3: 4]
-            ]
-        ]
+        puestos1                 | puestos2                 | puestos3                 || matrizEsperada
+        [ocupados: 2, libres: 0] | [ocupados: 3, libres: 0] | [ocupados: 6, libres: 0] || [1: 2, 2: 2, 3: 2]
+        [ocupados: 3, libres: 0] | [ocupados: 2, libres: 0] | [ocupados: 6, libres: 0] || [1: 3, 2: 2, 3: 4]
+        [ocupados: 2, libres: 1] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 0] || [1: 2, 2: 3, 3: 3]
+        [ocupados: 3, libres: 0] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 0] || [1: 3, 2: 2, 3: 3]
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
@@ -271,12 +327,12 @@ class AsignadorPuestosServiceSpec extends Specification {
         GroovyMock(TipoTransicion, global: true)
         TipoTransicion.list(_) >> [tipoTransicion1, tipoTransicion2, tipoTransicion3]
         GroovyMock(AsignacionPuesto, global: true)
-        AsignacionPuesto.contarOcupadosPorPrioridad(1) >> cantidadPrioridad1.libres
-        AsignacionPuesto.contarLibresPorPrioridad(1) >> cantidadPrioridad1.ocupados
-        AsignacionPuesto.contarOcupadosPorPrioridad(2) >> cantidadPrioridad2.libres
-        AsignacionPuesto.contarLibresPorPrioridad(2) >> cantidadPrioridad2.ocupados
-        AsignacionPuesto.contarOcupadosPorPrioridad(3) >> cantidadPrioridad3.libres
-        AsignacionPuesto.contarLibresPorPrioridad(3) >> cantidadPrioridad3.ocupados
+        AsignacionPuesto.contarOcupadosPorPrioridad(1) >> cantidadPrioridad1.ocupados
+        AsignacionPuesto.contarLibresPorPrioridad(1) >> cantidadPrioridad1.libres
+        AsignacionPuesto.contarOcupadosPorPrioridad(2) >> cantidadPrioridad2.ocupados
+        AsignacionPuesto.contarLibresPorPrioridad(2) >> cantidadPrioridad2.libres
+        AsignacionPuesto.contarOcupadosPorPrioridad(3) >> cantidadPrioridad3.ocupados
+        AsignacionPuesto.contarLibresPorPrioridad(3) >> cantidadPrioridad3.libres
     }
 
     private establecerRespuesta(opciones) {

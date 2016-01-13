@@ -79,18 +79,22 @@ class AsignadorPuestosService {
         def transiciones = TipoTransicion.list([sort: "prioridad"])
 
         def liberadosAnterior = 0
-        def aLiberar = -1
-        transiciones.each { transicion ->
+        def objetivoLiberar = -1
+        transiciones.eachWithIndex { transicion, index ->
             def prioridad = transicion.prioridad
             def totalOcupadosPrioridad = AsignacionPuesto.contarOcupadosPorPrioridad(prioridad)
             def totalLibresPrioridad = AsignacionPuesto.contarLibresPorPrioridad(prioridad)
             def totalPuestosPrioridad = totalOcupadosPrioridad + totalLibresPrioridad
-            if (aLiberar == -1) {
-                aLiberar = totalPuestosPrioridad
-                liberadosAnterior = totalPuestosPrioridad
+            if (index == 0) {
+                objetivoLiberar = totalPuestosPrioridad
+                liberadosAnterior = 0
+            }
+            def aLiberar = objetivoLiberar
+            if (totalLibresPrioridad > 0) {
+                aLiberar = index == 0 ? totalOcupadosPrioridad : (aLiberar - totalLibresPrioridad)
             }
             def puestosLiberados = calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestosPrioridad)
-            liberadosAnterior = puestosLiberados
+            liberadosAnterior = puestosLiberados + totalLibresPrioridad
             cantidadPuestosAliberarPorPrioridad.put(prioridad, puestosLiberados)
         }
 
@@ -98,10 +102,10 @@ class AsignadorPuestosService {
     }
 
     def calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) {
-        def faltantes = aLiberar - liberadosAnterior
-        if (faltantes == 0) {
+        if (liberadosAnterior == 0 || liberadosAnterior >= aLiberar) {
             return (totalPuestos > aLiberar) ? aLiberar : totalPuestos
         } else {
+            def faltantes = aLiberar - liberadosAnterior
             return aLiberar + faltantes
         }
     }
