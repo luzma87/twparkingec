@@ -222,7 +222,7 @@ class BootStrap {
                     email      : "ipazmino@thoughtworks.com",
                     password   : "123".encodeAsSHA256(),
                     esAdmin    : false,
-                    cedula     : "1234567898",
+                    cedula     : "1713411278",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca    : "Chevrolet",
@@ -282,7 +282,7 @@ class BootStrap {
                     email      : "fcoronel@thoughtworks.com",
                     password   : "123".encodeAsSHA256(),
                     esAdmin    : false,
-                    cedula     : "1234567812",
+                    cedula     : "1712498847",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca    : "Toyota",
@@ -327,13 +327,28 @@ class BootStrap {
                     email      : "dalcocer@thoughtworks.com",
                     password   : "123".encodeAsSHA256(),
                     esAdmin    : false,
-                    cedula     : "1234567815",
+                    cedula     : "1715629778",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
                 auto   : [marca    : "Ford",
                           modelo   : "F150",
                           placa    : "PBN-4713",
                           tamanio  : "G",
+                          esDefault: true]
+            ],
+            [
+                usuario: [
+                    nombre     : "Elena Echeverría",
+                    email      : "iecheve@thoughtworks.com",
+                    password   : "123".encodeAsSHA256(),
+                    esAdmin    : false,
+                    cedula     : "1802847440",
+                    preferencia: TipoPreferencia.findByCodigo("S")
+                ],
+                auto   : [marca    : "Nissan",
+                          modelo   : "XTrail",
+                          placa    : "PCL-5696",
+                          tamanio  : "P",
                           esDefault: true]
             ]
         ]
