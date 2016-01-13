@@ -293,6 +293,10 @@ class AsignadorPuestosServiceSpec extends Specification {
         [ocupados: 3, libres: 0] | [ocupados: 2, libres: 0] | [ocupados: 6, libres: 0] || [1: 3, 2: 2, 3: 4]
         [ocupados: 2, libres: 1] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 0] || [1: 2, 2: 3, 3: 3]
         [ocupados: 3, libres: 0] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 0] || [1: 3, 2: 2, 3: 3]
+        [ocupados: 3, libres: 0] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 1] || [1: 3, 2: 3, 3: 2]
+        [ocupados: 0, libres: 3] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 0] || [1: 0, 2: 3, 3: 3]
+        [ocupados: 0, libres: 3] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 1] || [1: 0, 2: 3, 3: 2]
+        [ocupados: 2, libres: 1] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 1] || [1: 2, 2: 2, 3: 2]
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
