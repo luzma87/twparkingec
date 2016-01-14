@@ -21,9 +21,9 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:postgresql://localhost:5432/twparking_integration"
-            username = "postgres"
-            password = "postgres"
+            url = "jdbc:postgresql://localhost:5432/app_test"
+            username = "go"
+            password = "go"
         }
     }
     production {
