@@ -40,7 +40,7 @@ class AsignadorPuestosService {
         puestosAliberarPorPrioridad.each { prioridad, puestosAliberar ->
             autosEnEspera = liberarPuestosPrioridad(autosEnEspera, prioridad, puestosAliberar)
         }
-
+        autosEnEspera = ordenarAutosPorTamanio(autosEnEspera)
         autosEnEspera.each { autoEnEspera ->
             Auto auto = autoEnEspera.auto
             DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
@@ -48,11 +48,11 @@ class AsignadorPuestosService {
             def puestosLibres = distanciaDestino.obtenerPuestosLibres()
             Puesto puestoAdecuado = obtenerPuestoAdecuado(puestosLibres, auto)
             asignarPuestoAUsuario(puestoAdecuado, auto.usuario)
-            //segun la distancia de origen determinar la distancia de destino
-            //buscar los puestos libres de esa distancia
-            //verificar q el auto entra
-            //crear asignacion
         }
+    }
+
+    def ordenarAutosPorTamanio(autosEnEspera) {
+        return autosEnEspera.sort { -it.auto.tamanio.valor }
     }
 
     Puesto obtenerPuestoAdecuado(ArrayList<Puesto> puestos, Auto auto) {

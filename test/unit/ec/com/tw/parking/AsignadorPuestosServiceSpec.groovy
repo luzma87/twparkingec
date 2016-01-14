@@ -344,19 +344,20 @@ class AsignadorPuestosServiceSpec extends Specification {
         Tamanio.GRANDE  | Tamanio.MEDIANO
     }
 
-    @Ignore
+    @IgnoreRest
     def "Debe ordenar los autos en espera en orden de tamanio decreciente"() {
         setup:
-        def autosP = []
-        getRandomInt(1, 10).times {
+        def cantAutosP = getRandomInt(1, 10)
+        def cantAutosM = getRandomInt(1, 10)
+        def cantAutosG = getRandomInt(1, 10)
+        def autosP = [], autosM = [], autosG = []
+        cantAutosP.times {
             autosP += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.PEQUENIO }.crear()
         }
-        def autosM = []
-        getRandomInt(1, 10).times {
+        cantAutosM.times {
             autosM += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.MEDIANO }.crear()
         }
-        def autosG = []
-        getRandomInt(1, 10).times {
+        cantAutosG.times {
             autosG += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.GRANDE }.crear()
         }
 
@@ -368,10 +369,23 @@ class AsignadorPuestosServiceSpec extends Specification {
                 distanciaOrigen: DistanciaEdificioBuilder.nuevo().crear()
             ]
         }
-        def autosInput = Collections.shuffle(autos)
+        def autosInput = autosEsperados.clone()
+        Collections.shuffle(autosInput)
+        def inicioG = 0
+        def finG = inicioG + cantAutosG - 1
+        def inicioM = finG + 1
+        def finM = inicioM + cantAutosM - 1
+        def inicioP = finM + 1
+        def finP = inicioP + cantAutosP - 1
 
-        expect:
-        service.ordenarAutosPorTamanio(autosInput) == autos
+        when:
+        def respuesta = service.ordenarAutosPorTamanio(autosInput)
+        def tamanios = respuesta.auto.tamanio
+
+        then:
+        tamanios[inicioG..finG] == [Tamanio.GRANDE] * autosG.size()
+        tamanios[inicioM..finM] == [Tamanio.MEDIANO] * autosM.size()
+        tamanios[inicioP..finP] == [Tamanio.PEQUENIO] * autosP.size()
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
