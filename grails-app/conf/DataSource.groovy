@@ -21,7 +21,7 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            uri = new URI(System.env.DATABASE_URL ?: "jdbc:postgresql://localhost:5432/app_test?user=go&password=go")
+            uri = new URI(System.env.SNAP_DB_PG_JDBC_URL ?: "jdbc:postgresql://localhost:5432/app_test?user=go&password=go")
             url = "jdbc:postgresql://" + uri.host + ":" + uri.port + uri.path
             username = uri.userInfo.split(":")[0]
             password = uri.userInfo.split(":")[1]
