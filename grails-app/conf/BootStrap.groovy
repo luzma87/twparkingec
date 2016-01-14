@@ -1,3 +1,4 @@
+import ec.com.tw.parking.Tamanio
 import grails.util.Environment
 
 import ec.com.tw.parking.DistanciaEdificio
@@ -108,7 +109,7 @@ class BootStrap {
                 auto   : [marca    : "Renault",
                           modelo   : "Logan",
                           placa    : "PBQ-8392",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -123,7 +124,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Spark",
                           placa    : "PBO-7783",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -138,7 +139,7 @@ class BootStrap {
                 auto   : [marca    : "Kia",
                           modelo   : "Sportage",
                           placa    : "PBJ-5195",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -153,7 +154,7 @@ class BootStrap {
                 auto   : [marca    : "Nissan",
                           modelo   : "Pathfinder",
                           placa    : "PYM-347",
-                          tamanio  : "M",
+                          tamanio  : Tamanio.MEDIANO,
                           esDefault: true]
             ],
             [
@@ -168,7 +169,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Grand Vitara",
                           placa    : "PBF-9129",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -183,7 +184,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Grand Vitara 5P",
                           placa    : "PCO-5724",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -198,7 +199,7 @@ class BootStrap {
                 auto   : [marca    : "Volkswagen",
                           modelo   : "Gol",
                           placa    : "PPA-1608",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -213,7 +214,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Vitara 3P",
                           placa    : "PCF-4689",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -228,7 +229,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Vitara 5P",
                           placa    : "AAA-111",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -243,7 +244,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Grand Vitara SZ",
                           placa    : "AAA-222",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -258,7 +259,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Grand Vitara 5P",
                           placa    : "PBI-2312",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -273,7 +274,7 @@ class BootStrap {
                 auto   : [marca    : "Hyundai",
                           modelo   : "Getz",
                           placa    : "POU-102",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -288,7 +289,7 @@ class BootStrap {
                 auto   : [marca    : "Toyota",
                           modelo   : "Fortuner",
                           placa    : "PBA-3793",
-                          tamanio  : "G",
+                          tamanio  : Tamanio.GRANDE,
                           esDefault: true]
             ],
             [
@@ -303,7 +304,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Aveo",
                           placa    : "PCQ-8088",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -318,7 +319,7 @@ class BootStrap {
                 auto   : [marca    : "Chevrolet",
                           modelo   : "Esteem",
                           placa    : "PTE-0730",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ],
             [
@@ -333,7 +334,7 @@ class BootStrap {
                 auto   : [marca    : "Ford",
                           modelo   : "F150",
                           placa    : "PBN-4713",
-                          tamanio  : "G",
+                          tamanio  : Tamanio.GRANDE,
                           esDefault: true]
             ],
             [
@@ -348,7 +349,7 @@ class BootStrap {
                 auto   : [marca    : "Nissan",
                           modelo   : "XTrail",
                           placa    : "PCL-5696",
-                          tamanio  : "P",
+                          tamanio  : Tamanio.PEQUENIO,
                           esDefault: true]
             ]
         ]
@@ -378,14 +379,14 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "P", numero: "26", precio: 0],
-                    [tamanio: "P", numero: "37", precio: 0],
-                    [tamanio: "P", numero: "44", precio: 0],
-                    [tamanio: "P", numero: "38", precio: 0],
-                    [tamanio: "P", numero: "25", precio: 0],
-                    [tamanio: "P", numero: "27", precio: 0],
-                    [tamanio: "P", numero: "18", precio: 0],
-                    [tamanio: "P", numero: "39", precio: 0]
+                    [tamanio: Tamanio.PEQUENIO, numero: "26", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "37", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "44", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "38", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "25", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "27", precio: 0],
+                    [tamanio: Tamanio.MEDIANO, numero: "18", precio: 0],
+                    [tamanio: Tamanio.PEQUENIO, numero: "39", precio: 0]
                 ]
             ],
             [
@@ -395,7 +396,7 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "6", precio: 0]
+                    [tamanio: Tamanio.GRANDE, numero: "6", precio: 0]
                 ]
             ],
             [
@@ -405,7 +406,7 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "9", precio: 0]
+                    [tamanio: Tamanio.GRANDE, numero: "9", precio: 0]
                 ]
             ],
             [
@@ -415,7 +416,7 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "22", precio: 0]
+                    [tamanio: Tamanio.GRANDE, numero: "22", precio: 0]
                 ]
             ],
             [
@@ -430,9 +431,9 @@ class BootStrap {
                         "Cuenta corriente Pacífico: 05265673"
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "s/n", precio: 70],
-                    [tamanio: "G", numero: "s/n", precio: 70],
-                    [tamanio: "G", numero: "s/n", precio: 70]
+                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70],
+                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70],
+                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70]
                 ]
             ],
             [
@@ -442,7 +443,7 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "50", precio: 0]
+                    [tamanio: Tamanio.GRANDE, numero: "50", precio: 0]
                 ]
             ],
             [
@@ -452,7 +453,7 @@ class BootStrap {
                     esAmpliable: false
                 ],
                 puestos : [
-                    [tamanio: "G", numero: "57", precio: 0]
+                    [tamanio: Tamanio.GRANDE, numero: "57", precio: 0]
                 ]
             ]
         ]
