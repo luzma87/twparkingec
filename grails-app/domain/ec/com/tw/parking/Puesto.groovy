@@ -2,7 +2,7 @@ package ec.com.tw.parking
 
 class Puesto {
 
-    String tamanio
+    Tamanio tamanio
     String numero
     Double precio = 0.0
 
@@ -25,7 +25,7 @@ class Puesto {
     }
 
     static constraints = {
-        tamanio nullable: false, blank: false, inList: ["P", "G"]
+        tamanio nullable: false, blank: false
         numero nullable: false, blank: false, minSize: 1, maxSize: 6
         precio nullable: false, min: 0d
     }

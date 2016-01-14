@@ -2,6 +2,7 @@ package ec.com.tw.parking.builders
 
 import ec.com.tw.parking.Edificio
 import ec.com.tw.parking.Puesto
+import ec.com.tw.parking.Tamanio
 
 import java.util.function.Consumer
 
@@ -14,9 +15,9 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
  */
 class PuestoBuilder {
     static PuestoBuilder builder
-    String tamanio = getRandomFromArray(["P", "G"])
+    String tamanio = getRandomFromArray(Tamanio.values())
     String numero = getRandomInt(100)
-    Edificio edificio = new EdificioBuilder().crear()
+    Edificio edificio = EdificioBuilder.nuevo().crear()
     Double precio = getRandomDouble(100)
 
     private PuestoBuilder() {

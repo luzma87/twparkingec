@@ -5,7 +5,7 @@ class Auto {
     String marca
     String modelo
     String placa
-    String tamanio
+    Tamanio tamanio
     Boolean esDefault
 
     //TODO: prueba de integracion delete usuario => delete autos
@@ -32,7 +32,7 @@ class Auto {
         marca nullable: false, blank: false, minSize: 2, maxSize: 20
         modelo nullable: false, blank: false, minSize: 2, maxSize: 25
         placa nullable: false, blank: false, minSize: 7, maxSize: 8
-        tamanio nullable: false, blank: false, maxSize: 1, inList: ["P", "G"]
+        tamanio nullable: false, blank: false, maxSize: 1
         esDefault nullable: false
     }
 

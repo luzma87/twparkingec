@@ -3,7 +3,9 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.PuestoBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import spock.lang.IgnoreRest
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static RandomUtilsHelpers.getRandomDouble
 
@@ -12,18 +14,17 @@ import static RandomUtilsHelpers.getRandomDouble
 class PuestoSpec extends Specification {
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def puesto = new PuestoBuilder().crear()
+        def puesto = PuestoBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         puesto.validate()
         !puesto.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo no ser nulo"() {
         setup:
-        def puestoBuilder = new PuestoBuilder()
-        puestoBuilder[campo] = null
-        def puesto = puestoBuilder.crear()
+        def puesto = PuestoBuilder.nuevo().con { p -> p[campo] = null }.crear()
 
         expect:
         !puesto.validate()
@@ -34,10 +35,10 @@ class PuestoSpec extends Specification {
         campo << ["tamanio", "numero", "edificio", "precio"]
     }
 
-    void "Debe ser no blanco"(campo) {
+    @Unroll
+    void "Debe #campo no ser blanco"() {
         setup:
-        def puestoBuilder = new PuestoBuilder()
-        def puesto = puestoBuilder.crear()
+        def puesto = PuestoBuilder.nuevo().crear()
         puesto[campo] = ""
 
         expect:
@@ -46,16 +47,13 @@ class PuestoSpec extends Specification {
         puesto.errors[campo]?.code == 'blank'
 
         where:
-        campo << ["tamanio", "numero"]
+        campo << ["numero"]
     }
 
-
-    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
+    void "Debe tener menos o igual que el maximo de caracteres"() {
         setup:
         def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def puestoBuilder = new PuestoBuilder()
-        puestoBuilder[campo.nombre] = valor
-        def puesto = puestoBuilder.crear()
+        def puesto = PuestoBuilder.nuevo().con { p -> p[campo.nombre] = valor }.crear()
 
         expect:
         !puesto.validate()
@@ -68,26 +66,10 @@ class PuestoSpec extends Specification {
         ]
     }
 
-    void "Debe el tamanio ser P o G"() {
-        setup:
-        def regex = /[A-FH-OQ-Z]/
-        def tamanio = RandomUtilsHelpers.getRandomString(regex, 1, 1)
-        def puestoBuilder = new PuestoBuilder()
-        puestoBuilder.tamanio = tamanio
-        def puesto = puestoBuilder.crear()
-
-        expect:
-        !puesto.validate()
-        puesto.hasErrors()
-        puesto.errors["tamanio"]?.code == 'not.inList'
-    }
-
     void "Debe el precio ser positivo"() {
         setup:
         def negativo = getRandomDouble(100) * -1
-        def puestoBuilder = new PuestoBuilder()
-        puestoBuilder.precio = negativo
-        def puesto = puestoBuilder.crear()
+        def puesto = PuestoBuilder.nuevo().con { p -> p.precio = negativo }.crear()
 
         expect:
         !puesto.validate()
@@ -97,7 +79,7 @@ class PuestoSpec extends Specification {
 
     void "Debe toString devolver el nombre del edificio y el numero"() {
         setup:
-        def puesto = new PuestoBuilder().crear()
+        def puesto = PuestoBuilder.nuevo().crear()
 
         expect:
         puesto.toString() == puesto.edificio.nombre + " " + puesto.numero

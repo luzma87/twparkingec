@@ -1,6 +1,7 @@
 package ec.com.tw.parking.builders
 
 import ec.com.tw.parking.Auto
+import ec.com.tw.parking.Tamanio
 import ec.com.tw.parking.Usuario
 
 import java.util.function.Consumer
@@ -17,7 +18,7 @@ class AutoBuilder {
     String marca = getRandomString(2, 20, false)
     String modelo = getRandomString(2, 20, false)
     String placa = getRandomString(8)
-    String tamanio = getRandomFromArray(["P", "G"])
+    String tamanio = getRandomFromArray(Tamanio.values())
     Boolean esDefault = getRandomBoolean()
 
     Usuario usuario = new UsuarioBuilder().crear()
