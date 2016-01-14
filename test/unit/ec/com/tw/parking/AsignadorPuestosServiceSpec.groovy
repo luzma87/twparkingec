@@ -344,6 +344,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         Tamanio.GRANDE  | Tamanio.MEDIANO
     }
 
+    @Ignore
     def "Debe ordenar los autos en espera en orden de tamanio decreciente"() {
         setup:
         def autosP = []
@@ -359,14 +360,18 @@ class AsignadorPuestosServiceSpec extends Specification {
             autosG += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.GRANDE }.crear()
         }
 
-        def autosEsperados = autosG + autosM + autosP
-        def puestos = Collections.shuffle(autosEsperados.clone())
-        println autosEsperados
-        println puestos
+        def autos = autosG + autosM + autosP
+        def autosEsperados = []
+        autos.each { auto ->
+            autosEsperados += [
+                auto           : auto,
+                distanciaOrigen: DistanciaEdificioBuilder.nuevo().crear()
+            ]
+        }
+        def autosInput = Collections.shuffle(autos)
 
         expect:
-        service.ordenarAutosPorTamanio()
-
+        service.ordenarAutosPorTamanio(autosInput) == autos
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
