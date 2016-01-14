@@ -299,6 +299,10 @@ class AsignadorPuestosServiceSpec extends Specification {
         [ocupados: 2, libres: 1] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 1] || [1: 2, 2: 2, 3: 2]
     }
 
+    def "Debe"() {
+
+    }
+
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
         def distancia1 = DistanciaEdificioBuilder.nuevo().crear()
         def distancia2 = DistanciaEdificioBuilder.nuevo().crear()
