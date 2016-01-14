@@ -7,6 +7,7 @@ import spock.lang.Specification
 
 import static RandomUtilsHelpers.getRandomDouble
 import static RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 
 @TestFor(MensajeFactoryService)
 class MensajeFactoryServiceSpec extends Specification {
@@ -34,7 +35,7 @@ class MensajeFactoryServiceSpec extends Specification {
         def cantEdificios = getRandomInt(2, 15)
         def edificios = []
         cantEdificios.times {
-            edificios += new EdificioBuilder().crear()
+            edificios += EdificioBuilder.nuevo().crear()
         }
         GroovyMock(Edificio, global: true)
         Edificio.findAllByEsAmpliable(true) >> edificios
@@ -61,7 +62,7 @@ class MensajeFactoryServiceSpec extends Specification {
     }
 
     private obtenerEdificios() {
-        def edificios = [new EdificioBuilder().crear()]
+        def edificios = [EdificioBuilder.nuevo().crear()]
         GroovyMock(Edificio, global: true)
         Edificio.findAllByEsAmpliable(true) >> edificios
         return edificios

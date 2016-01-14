@@ -13,7 +13,7 @@ class MensajeFactoryService {
                 break
             case 1:
                 def edificioAmpliable = edificiosAmpliables.first()
-                def precio = Puesto.findByEdificioAndPrecioGreaterThan(edificioAmpliable, 0).precio
+                def precio = Puesto.findByEdificioAndPrecioGreaterThan(edificioAmpliable, 0)?.precio
                 def nuevaCuota = calculadorCuotaService.calcularCuota(puestosFaltantes, precio)
                 mensaje = "Si se asume que los puestos faltantes se ubican en ${edificioAmpliable.nombre} (\$${precio}), " +
                     "la nueva cuota sería \$${nuevaCuota}"
