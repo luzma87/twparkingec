@@ -27,6 +27,6 @@ class DistanciaEdificioIntegrationSpec extends IntegrationSpec {
         }
 
         expect:
-        distanciaEdificio.puestosLibres == puestosEsperados
+        distanciaEdificio.obtenerPuestosLibres() == puestosEsperados
     }
 }

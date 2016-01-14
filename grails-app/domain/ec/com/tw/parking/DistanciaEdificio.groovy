@@ -27,11 +27,11 @@ class DistanciaEdificio {
         return this.descripcion
     }
 
-    def getDestino() {
-        return TipoTransicion.findByDistanciaOrigen(this).distanciaDestino
+    def obtenerDestino() {
+        return TipoTransicion.findByDistanciaOrigen(this)?.distanciaDestino
     }
 
-    def getPuestosLibres() {
+    def obtenerPuestosLibres() {
         return AsignacionPuesto.withCriteria {
             puesto {
                 edificio {

@@ -31,7 +31,7 @@ class ${className}ControllerSpec extends Specification {
                               ${modelName}Count: 1]
 
         where:
-        ${modelName} = new ${className}Builder().crear()
+        ${modelName} = ${className}Builder.nuevo().crear()
     }
 
     void "Debe devolver una instancia de ${classNameLower}"() {
@@ -43,7 +43,7 @@ class ${className}ControllerSpec extends Specification {
         ${modelName}Returned.properties == ${modelName}.properties
 
         where:
-        ${modelName} << [new ${className}(), new ${className}Builder().crear()]
+        ${modelName} << [new ${className}(), ${className}Builder.nuevo().crear()]
     }
 
     void "Debe guardar un ${classNameLower} valido"() {
@@ -78,7 +78,7 @@ class ${className}ControllerSpec extends Specification {
     void "Debe mostrar error al actualizar un ${classNameLower} con datos invalidos"() {
         setup:
         def expectedMessage = "ERROR*default.not.saved.message"
-        def ${modelName} = new ${className}Builder().crear()
+        def ${modelName} = ${className}Builder.nuevo().crear()
 
         when:
         request.method = "POST"
@@ -93,7 +93,7 @@ class ${className}ControllerSpec extends Specification {
     void "Debe eliminar un ${classNameLower} valido"() {
         setup:
         def expectedMessage = "SUCCESS*default.deleted.message"
-        def ${modelName} = new ${className}Builder().crear()
+        def ${modelName} = ${className}Builder.nuevo().crear()
         def random = new Random()
         ${modelName}.id = random.nextInt()
 

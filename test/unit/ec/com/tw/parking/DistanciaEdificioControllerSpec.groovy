@@ -7,7 +7,7 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(DistanciaEdificioController)
-@Mock([DistanciaEdificio, MensajesBuilderTagLib])
+@Mock([DistanciaEdificio, MensajesBuilderTagLib, AsignacionPuesto, TipoTransicion])
 class DistanciaEdificioControllerSpec extends Specification {
 
     CrudHelperService crudHelperServiceMock
@@ -33,7 +33,7 @@ class DistanciaEdificioControllerSpec extends Specification {
                               distanciaEdificioInstanceCount: 1]
 
         where:
-        distanciaEdificioInstance = new DistanciaEdificioBuilder().crear()
+        distanciaEdificioInstance = DistanciaEdificioBuilder.nuevo().crear()
     }
 
     void "Debe devolver una instancia de distanciaEdificio"() {
@@ -45,7 +45,7 @@ class DistanciaEdificioControllerSpec extends Specification {
         distanciaEdificioInstanceReturned.properties == distanciaEdificioInstance.properties
 
         where:
-        distanciaEdificioInstance << [new DistanciaEdificio(), new DistanciaEdificioBuilder().crear()]
+        distanciaEdificioInstance << [new DistanciaEdificio(), DistanciaEdificioBuilder.nuevo().crear()]
     }
 
     void "Debe guardar un distanciaEdificio valido"() {
@@ -80,7 +80,7 @@ class DistanciaEdificioControllerSpec extends Specification {
     void "Debe mostrar error al actualizar un distanciaEdificio con datos invalidos"() {
         setup:
         def expectedMessage = "ERROR*default.not.saved.message"
-        def distanciaEdificioInstance = new DistanciaEdificioBuilder().crear()
+        def distanciaEdificioInstance = DistanciaEdificioBuilder.nuevo().crear()
 
         when:
         request.method = "POST"
@@ -95,7 +95,7 @@ class DistanciaEdificioControllerSpec extends Specification {
     void "Debe eliminar un distanciaEdificio valido"() {
         setup:
         def expectedMessage = "SUCCESS*default.deleted.message"
-        def distanciaEdificioInstance = new DistanciaEdificioBuilder().crear()
+        def distanciaEdificioInstance = DistanciaEdificioBuilder.nuevo().crear()
         def random = new Random()
         distanciaEdificioInstance.id = random.nextInt()
 

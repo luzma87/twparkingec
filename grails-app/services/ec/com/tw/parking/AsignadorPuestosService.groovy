@@ -44,8 +44,8 @@ class AsignadorPuestosService {
         autosEnEspera.each { autoEnEspera ->
             Auto auto = autoEnEspera.auto
             DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
-            DistanciaEdificio distanciaDestino = distanciaOrigen.destino
-            def puestosLibres = distanciaDestino.puestosLibres
+            DistanciaEdificio distanciaDestino = distanciaOrigen.obtenerDestino()
+            def puestosLibres = distanciaDestino.obtenerPuestosLibres()
             Puesto puestoAdecuado = obtenerPuestoAdecuado(puestosLibres, auto)
             asignarPuestoAUsuario(puestoAdecuado, auto.usuario)
             //segun la distancia de origen determinar la distancia de destino
