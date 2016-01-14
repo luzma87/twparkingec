@@ -46,11 +46,17 @@ class AsignadorPuestosService {
             DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
             DistanciaEdificio distanciaDestino = distanciaOrigen.destino
             def puestosLibres = distanciaDestino.puestosLibres
+            Puesto puestoAdecuado = obtenerPuestoAdecuado(puestosLibres, auto)
+            asignarPuestoAUsuario(puestoAdecuado, auto.usuario)
             //segun la distancia de origen determinar la distancia de destino
             //buscar los puestos libres de esa distancia
             //verificar q el auto entra
             //crear asignacion
         }
+    }
+
+    Puesto obtenerPuestoAdecuado(ArrayList<Puesto> puestos, Auto auto) {
+        return puestos.find { it.tamanio.valor >= auto.tamanio.valor }
     }
 
     def asignarPuestoAUsuario(Puesto puesto, Usuario usuario) {

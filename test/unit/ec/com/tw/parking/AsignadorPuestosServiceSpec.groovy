@@ -299,8 +299,45 @@ class AsignadorPuestosServiceSpec extends Specification {
         [ocupados: 2, libres: 1] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 1] || [1: 2, 2: 2, 3: 2]
     }
 
-    def "Debe "() {
+    @Unroll
+    def "Debe obtener un puesto adecuado para un auto #tamanioValido"() {
+        setup:
+        ArrayList<Puesto> puestosValidos = []
+        getRandomInt(1, 10).times {
+            puestosValidos += PuestoBuilder.nuevo().con { p -> p.tamanio = tamanioValido }.crear()
+        }
+        Auto auto = AutoBuilder.nuevo().con { a -> a.tamanio = tamanioAuto }.crear()
 
+        expect:
+        puestosValidos.contains(service.obtenerPuestoAdecuado(puestosValidos, auto))
+
+        where:
+        tamanioAuto      | tamanioValido
+        Tamanio.PEQUENIO | Tamanio.PEQUENIO
+        Tamanio.MEDIANO  | Tamanio.MEDIANO
+        Tamanio.GRANDE   | Tamanio.GRANDE
+        Tamanio.PEQUENIO | Tamanio.MEDIANO
+        Tamanio.PEQUENIO | Tamanio.GRANDE
+        Tamanio.MEDIANO  | Tamanio.GRANDE
+    }
+
+    @Unroll
+    def "Debe retornar null al intentar obtener un puesto no encontrado para un auto #tamanioInvalido"() {
+        setup:
+        ArrayList<Puesto> puestosInvalidos = []
+        getRandomInt(1, 10).times {
+            puestosInvalidos += PuestoBuilder.nuevo().con { p -> p.tamanio = tamanioInvalido }.crear()
+        }
+        Auto auto = AutoBuilder.nuevo().con { a -> a.tamanio = tamanioAuto }.crear()
+
+        expect:
+        service.obtenerPuestoAdecuado(puestosInvalidos, auto) == null
+
+        where:
+        tamanioAuto     | tamanioInvalido
+        Tamanio.MEDIANO | Tamanio.PEQUENIO
+        Tamanio.GRANDE  | Tamanio.PEQUENIO
+        Tamanio.GRANDE  | Tamanio.MEDIANO
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
