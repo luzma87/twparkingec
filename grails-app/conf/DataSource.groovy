@@ -21,17 +21,17 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:" + new URI(System.env.SNAP_DB_PG_URL ?: "postgresql://go:go@localhost:5432/app_test")
-            username = new URI(System.env.SNAP_DB_PG_USER?: "go")
-            password = new URI(System.env.SNAP_DB_PG_PASSWORD ?: "go")
+            url = "jdbc:postgresql://localhost:5432/app_test"
+            username = "go"
+            password = "go"
         }
     }
     production {
         dataSource {
-            dbCreate = "update"
+          dbCreate = "update"
             driverClassName = "org.postgresql.Driver"
             dialect = org.hibernate.dialect.PostgreSQLDialect
-            uri = new URI(System.env.DATABASE_URL ?: "postgres://test:test@localhost/test")
+            uri = new URI(System.env.DATABASE_URL?:"postgres://test:test@localhost/test")
             url = "jdbc:postgresql://" + uri.host + ":" + uri.port + uri.path
             username = uri.userInfo.split(":")[0]
             password = uri.userInfo.split(":")[1]
