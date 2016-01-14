@@ -85,27 +85,16 @@ class AsignadorPuestosService {
             def totalOcupadosPrioridad = AsignacionPuesto.contarOcupadosPorPrioridad(prioridad)
             def totalLibresPrioridad = AsignacionPuesto.contarLibresPorPrioridad(prioridad)
             def totalPuestosPrioridad = totalOcupadosPrioridad + totalLibresPrioridad
-            println "*************dd******* Prioridad $prioridad *****************************"
-            println "objetivo liberar: " + objetivoLiberar
-            println "total ocupados: " + totalOcupadosPrioridad
-            println "total libres: " + totalLibresPrioridad
-            println "total puestos: " + totalPuestosPrioridad
             if (index == 0) {
                 objetivoLiberar = totalPuestosPrioridad
                 liberadosAnterior = 0
-                println "\tobjetivo liberar: " + objetivoLiberar
-                println "\tliberados anterior: " + liberadosAnterior
             }
             def aLiberar = objetivoLiberar
-            println "a liberar: " + aLiberar
             if (totalLibresPrioridad > 0) {
                 aLiberar = index == 0 ? totalOcupadosPrioridad : (aLiberar - totalLibresPrioridad)
-                println "\ta liberar: " + aLiberar
             }
             def puestosLiberados = calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestosPrioridad)
             liberadosAnterior = puestosLiberados + totalLibresPrioridad
-            println "puestos liberados: " + puestosLiberados
-            println "liberados anterior: " + liberadosAnterior
             cantidadPuestosAliberarPorPrioridad.put(prioridad, puestosLiberados)
         }
 
@@ -113,7 +102,6 @@ class AsignadorPuestosService {
     }
 
     def calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) {
-        println "\t\taLiberar: $aLiberar, liberadosAnterior: $liberadosAnterior, totalPuestos: $totalPuestos"
         if (liberadosAnterior == 0 || liberadosAnterior >= aLiberar) {
             return (totalPuestos > aLiberar) ? aLiberar : totalPuestos
         } else {
