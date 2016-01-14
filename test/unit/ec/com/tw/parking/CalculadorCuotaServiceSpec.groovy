@@ -18,7 +18,7 @@ class CalculadorCuotaServiceSpec extends Specification {
         cantidad = getRandomInt(5, 15)
         puestos = []
         cantidad.times {
-            puestos += new PuestoBuilder().crear()
+            puestos += PuestoBuilder.nuevo().crear()
         }
 
         GroovyMock(Puesto, global: true)
