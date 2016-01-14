@@ -21,10 +21,9 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            uri = new URI(System.env.SNAP_DB_PG_JDBC_URL ?: "jdbc:postgresql://localhost:5432/app_test?user=go&password=go")
-            url = "jdbc:postgresql://" + uri.host + ":" + uri.port + uri.path
-            username = uri.userInfo.split(":")[0]
-            password = uri.userInfo.split(":")[1]
+            url = "jdbc:" + new URI(System.env.SNAP_DB_PG_URL ?: "postgres://go:go@localhost:5432/app_test")
+            username = new URI(System.env.SNAP_DB_PG_USER?: "go")
+            password = new URI(System.env.SNAP_DB_PG_PASSWORD ?: "go")
         }
     }
     production {
