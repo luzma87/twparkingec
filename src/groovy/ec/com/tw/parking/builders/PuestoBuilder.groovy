@@ -18,7 +18,7 @@ class PuestoBuilder {
     String tamanio = getRandomFromArray(Tamanio.values())
     String numero = getRandomInt(100)
     Edificio edificio = EdificioBuilder.nuevo().crear()
-    Double precio = getRandomDouble(100)
+    Double precio = getRandomDouble(1, 100)
 
     private PuestoBuilder() {
     }

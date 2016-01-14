@@ -89,7 +89,8 @@ class AsignadorPuestosServiceSpec extends Specification {
         (puestosNecesarios + getRandomInt(5, 15)).times {
             asignacionesNoLibres += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio = edificio }.crear()
         }
-        def asignacionesNoLibres2 = asignacionesNoLibres.clone().sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
+        def asignacionesNoLibres2 = asignacionesNoLibres.clone()
+            .sort { a, b -> b.fechaAsignacion <=> a.fechaAsignacion }
         asignacionesNoLibres2 = asignacionesNoLibres2[0..puestosNecesarios - 1]
         AsignacionPuesto.obtenerOcupadosPorPreferenciaYedificio(_, edificio) >> asignacionesNoLibres
         def respuestaEsperada = []
@@ -117,7 +118,8 @@ class AsignadorPuestosServiceSpec extends Specification {
         def myService = Spy(AsignadorPuestosService)
 
         when:
-        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen, objetoRespuesta.asignacionesUsuariosNoSalen)
+        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen,
+            objetoRespuesta.asignacionesUsuariosNoSalen)
 
         then:
         respuesta == []
@@ -130,7 +132,8 @@ class AsignadorPuestosServiceSpec extends Specification {
         def myService = Spy(AsignadorPuestosService)
 
         when:
-        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen, objetoRespuesta.asignacionesUsuariosNoSalen)
+        def respuesta = myService.asignarPuestosNoSalen(objetoRespuesta.usuariosNoSalen,
+            objetoRespuesta.asignacionesUsuariosNoSalen)
 
         then:
         respuesta == objetoRespuesta.autosEnEspera
@@ -171,7 +174,8 @@ class AsignadorPuestosServiceSpec extends Specification {
         def autosEnEsperaEsperada = autosEnEsperaRecibida + autosPrioridad
 
         when:
-        def autosEnEsperaObtenida = service.liberarPuestosPrioridad(autosEnEsperaRecibida, transicionPrioridad.prioridad, cantidadAliberar)
+        def autosEnEsperaObtenida = service.liberarPuestosPrioridad(autosEnEsperaRecibida,
+            transicionPrioridad.prioridad, cantidadAliberar)
 
         then:
         autosEnEsperaObtenida == autosEnEsperaEsperada
@@ -340,6 +344,31 @@ class AsignadorPuestosServiceSpec extends Specification {
         Tamanio.GRANDE  | Tamanio.MEDIANO
     }
 
+    def "Debe ordenar los autos en espera en orden de tamanio decreciente"() {
+        setup:
+        def autosP = []
+        getRandomInt(1, 10).times {
+            autosP += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.PEQUENIO }.crear()
+        }
+        def autosM = []
+        getRandomInt(1, 10).times {
+            autosM += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.MEDIANO }.crear()
+        }
+        def autosG = []
+        getRandomInt(1, 10).times {
+            autosG += AutoBuilder.nuevo().con { a -> a.tamanio = Tamanio.GRANDE }.crear()
+        }
+
+        def autosEsperados = autosG + autosM + autosP
+        def puestos = Collections.shuffle(autosEsperados.clone())
+        println autosEsperados
+        println puestos
+
+        expect:
+        service.ordenarAutosPorTamanio()
+
+    }
+
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
         def distancia1 = DistanciaEdificioBuilder.nuevo().crear()
         def distancia2 = DistanciaEdificioBuilder.nuevo().crear()
@@ -360,13 +389,16 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         def asignacionesPrioridad1 = [], asignacionesPrioridad2 = [], asignacionesPrioridad3 = []
         (cantidadPrioridad1.libres + cantidadPrioridad1.ocupados).times {
-            asignacionesPrioridad1 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia1 }
+            asignacionesPrioridad1 += AsignacionPuestoBuilder.nuevo()
+                .con { a -> a.puesto.edificio.distancia = distancia1 }
         }
         (cantidadPrioridad2.libres + cantidadPrioridad2.ocupados).times {
-            asignacionesPrioridad2 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia2 }
+            asignacionesPrioridad2 += AsignacionPuestoBuilder.nuevo()
+                .con { a -> a.puesto.edificio.distancia = distancia2 }
         }
         (cantidadPrioridad3.libres + cantidadPrioridad3.ocupados).times {
-            asignacionesPrioridad3 += AsignacionPuestoBuilder.nuevo().con { a -> a.puesto.edificio.distancia = distancia3 }
+            asignacionesPrioridad3 += AsignacionPuestoBuilder.nuevo()
+                .con { a -> a.puesto.edificio.distancia = distancia3 }
         }
 
         GroovyMock(TipoTransicion, global: true)
@@ -386,7 +418,9 @@ class AsignadorPuestosServiceSpec extends Specification {
         def edificio = EdificioBuilder.nuevo().crear()
         def asignacionesUsuariosNoSalen = AsignacionPuestoBuilder.lista(getRandomInt(1, 15))
         def usuariosNoSalen = asignacionesUsuariosNoSalen.auto.usuario + UsuarioBuilder.lista(getRandomInt(2, 5))
-        def cantidadAsignacionesLibres = usuariosNoSalen.size() + (opciones.hayPuestosLibres ? getRandomInt(5, 20) : -asignacionesUsuariosNoSalen.size())
+        def cantidadAsignacionesLibres = usuariosNoSalen.size() + (opciones.hayPuestosLibres ?
+            getRandomInt(5, 20) :
+            -asignacionesUsuariosNoSalen.size())
         if (!opciones.hayPuestosLibres) {
             def puestosNecesarios = usuariosNoSalen.size() - asignacionesUsuariosNoSalen.size()
             autosEnEspera = obtenerAutosEnEspera(puestosNecesarios, edificio)
