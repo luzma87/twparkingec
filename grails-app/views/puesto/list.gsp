@@ -1,5 +1,5 @@
-
 <%@ page import="ec.com.tw.parking.Puesto" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,6 +8,7 @@
             <g:message code="default.list.label" args="[message(code: 'puesto.label')]"/>
         </title>
     </head>
+
     <body>
 
         <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
@@ -20,6 +21,7 @@
                     <g:message code="default.button.create.label"/>
                 </a>
             </div>
+
             <div class="btn-group pull-right col-md-3">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
@@ -35,14 +37,16 @@
         <table class="table table-condensed table-bordered table-striped table-hover margin-top">
             <thead>
                 <tr>
-                    
+
                     <g:sortableColumn property="tamanio" title="${message(code: 'puesto.tamanio.label')}"/>
-                    
+
                     <g:sortableColumn property="numero" title="${message(code: 'puesto.numero.label')}"/>
-                    
-                    <th><g:message code="puesto.edificio.label" /></th>
-                    
-                    <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
+
+                    <g:sortableColumn property="precio" title="${message(code: 'puesto.precio.label')}"/>
+
+                    <th><g:message code="puesto.edificio.label"/></th>
+
+                    <th style="width: 76px"><g:message code="default.button.actions.label"/></th>
                 </tr>
             </thead>
             <tbody>
@@ -51,21 +55,23 @@
                         <tr data-id="${puestoInstance.id}">
 
                             <td>
-                                <g:message code="tamanio.${puestoInstance.tamanio}" />
+                                <g:message code="tamanio.${puestoInstance.tamanio}"/>
                             </td>
-                            
+
                             <td><g:fieldValue bean="${puestoInstance}" field="numero"/></td>
-                                
+
+                            <td><g:formatNumber number="${puestoInstance.precio}" type="currency" currencySymbol="\$"/></td>
+
                             <td><g:fieldValue bean="${puestoInstance}" field="edificio"/></td>
-                                
+
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" class="btnEditar btn btn-info"
-                                       title="${message(code:'default.button.edit.label')}">
+                                       title="${message(code: 'default.button.edit.label')}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                     <a href="#" class="btnEliminar btn btn-danger"
-                                       title="${message(code:'default.button.delete.label')}">
+                                       title="${message(code: 'default.button.delete.label')}">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
@@ -75,7 +81,7 @@
                 </g:if>
                 <g:else>
                     <tr class="info">
-                        <td class="text-center text-shadow" colspan="4">
+                        <td class="text-center text-shadow" colspan="5">
                             <i class="fa fa-2x icon-ghost"></i>
                             <g:message code="default.no.records.found"/>
                         </td>
@@ -93,24 +99,24 @@
                     $.ajax({
                         type    : "POST",
                         url     : $form.attr("action"),
-                            data    : $form.serialize(),
-                            success : function (msg) {
-                        var parts = msg.split("*");
-                        log(parts[1], parts[0]); // log(msg, type, title, hide)
-                        setTimeout(function() {
-                            if (parts[0] == "SUCCESS") {
-                                location.reload(true);
-                            } else {
-                                closeLoader();
-                                return false;
-                            }
-                        }, 1000);
-                    },
-                    error: function() {
-                        log("${message(code: 'default.internal.error')}", "Error");
-                        closeLoader();
-                    }
-                });
+                        data    : $form.serialize(),
+                        success : function (msg) {
+                            var parts = msg.split("*");
+                            log(parts[1], parts[0]); // log(msg, type, title, hide)
+                            setTimeout(function () {
+                                if (parts[0] == "SUCCESS") {
+                                    location.reload(true);
+                                } else {
+                                    closeLoader();
+                                    return false;
+                                }
+                            }, 1000);
+                        },
+                        error   : function () {
+                            log("${message(code: 'default.internal.error')}", "Error");
+                            closeLoader();
+                        }
+                    });
                 } else {
                     return false;
                 } //else
@@ -142,14 +148,14 @@
                                         var parts = msg.split("*");
                                         log(parts[1], parts[0]); // log(msg, type, title, hide)
                                         if (parts[0] == "SUCCESS") {
-                                            setTimeout(function() {
+                                            setTimeout(function () {
                                                 location.reload(true);
                                             }, 1000);
                                         } else {
                                             closeLoader();
                                         }
                                     },
-                                    error: function() {
+                                    error   : function () {
                                         log("${message(code: 'default.internal.error')}", "Error");
                                         closeLoader();
                                     }
@@ -163,7 +169,7 @@
                 var title = id ?
                             "${message(code: 'default.edit.label', args:[message(code: 'puesto.label')])}" :
                             "${message(code: 'default.create.label', args:[message(code: 'puesto.label')])}";
-                var data = id ? { id: id } : {};
+                var data = id ? {id : id} : {};
                 $.ajax({
                     type    : "POST",
                     url     : "${createLink(controller:'puesto', action:'form_ajax')}",
@@ -197,15 +203,15 @@
                 }); //ajax
             } //createEdit
             $(function () {
-                $(".btnCrear").click(function() {
+                $(".btnCrear").click(function () {
                     crearEditarPuesto();
                     return false;
                 });
-                $(".btnEditar").click(function() {
+                $(".btnEditar").click(function () {
                     crearEditarPuesto($(this).parents("tr").data("id"));
                     return false;
                 });
-                $(".btnEliminar").click(function() {
+                $(".btnEliminar").click(function () {
                     eliminarPuesto($(this).parents("tr").data("id"));
                     return false;
                 });

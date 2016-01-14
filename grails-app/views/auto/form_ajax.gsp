@@ -57,9 +57,25 @@
                     </label>
 
                     <div class="col-md-8">
-                        <g:select name="tamanio" from="${autoInstance.constraints.tamanio.inList}" required=""
-                                  class="form-control  required" value="${autoInstance?.tamanio}"
+                        <g:select name="tamanio" class="form-control"
+                                  from="${ec.com.tw.parking.Tamanio?.values()}"
+                                  keys="${ec.com.tw.parking.Tamanio.values()*.name()}"
+                                  required="" value="${autoInstance?.tamanio?.name()}"
                                   valueMessagePrefix="tamanio"/>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: autoInstance, field: 'esDefault', 'error')} ">
+                    <label for="esDefault" class="col-md-4 control-label">
+                        <g:message code="auto.esDefault.label"/>
+
+                    </label>
+
+                    <div class="col-md-8">
+                        <g:checkBox name="esDefault" value="${autoInstance?.esDefault}"/>
 
                     </div>
                 </div>
@@ -73,9 +89,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}"
-                                  optionKey="id" required="" value="${autoInstance?.usuario?.id}"
-                                  class="many-to-one form-control"/>
+                        <g:select id="usuario" name="usuario.id" from="${ec.com.tw.parking.Usuario.list()}" optionKey="id" required="" value="${autoInstance?.usuario?.id}" class="many-to-one form-control"/>
 
                     </div>
                 </div>
