@@ -299,7 +299,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         [ocupados: 2, libres: 1] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 1] || [1: 2, 2: 2, 3: 2]
     }
 
-    def "Debe"() {
+    def "Debe "() {
 
     }
 

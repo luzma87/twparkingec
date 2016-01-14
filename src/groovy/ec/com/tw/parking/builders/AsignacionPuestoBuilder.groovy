@@ -11,8 +11,8 @@ import java.util.function.Consumer
  */
 class AsignacionPuestoBuilder {
     static AsignacionPuestoBuilder builder
-    Auto auto = new AutoBuilder().crear()
-    Puesto puesto = new PuestoBuilder().crear()
+    Auto auto = AutoBuilder.nuevo().crear()
+    Puesto puesto = PuestoBuilder.nuevo().crear()
     Date fechaAsignacion = new Date()
     Date fechaLiberacion = null
 
@@ -41,7 +41,14 @@ class AsignacionPuestoBuilder {
     }
 
     public AsignacionPuesto guardar() {
-        return crear().save(failOnError: true)
+        def asignacion = crear()
+        asignacion.auto.usuario.preferencia.save(failOnError: true)
+        asignacion.auto.usuario.save(failOnError: true)
+        asignacion.auto.save(failOnError: true)
+        asignacion.puesto.edificio.distancia.save(failOnError: true)
+        asignacion.puesto.edificio.save(failOnError: true)
+        asignacion.puesto.save(failOnError: true)
+        return asignacion.save(failOnError: true)
     }
 
     public static AsignacionPuestoBuilder nuevo() {

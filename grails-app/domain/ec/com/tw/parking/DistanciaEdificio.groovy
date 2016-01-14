@@ -26,4 +26,19 @@ class DistanciaEdificio {
     String toString() {
         return this.descripcion
     }
+
+    def getDestino() {
+        return TipoTransicion.findByDistanciaOrigen(this).distanciaDestino
+    }
+
+    def getPuestosLibres() {
+        return AsignacionPuesto.withCriteria {
+            puesto {
+                edificio {
+                    eq("distancia", this)
+                }
+            }
+            le("fechaLiberacion", new Date())
+        }.puesto
+    }
 }

@@ -41,17 +41,16 @@ class AsignadorPuestosService {
             autosEnEspera = liberarPuestosPrioridad(autosEnEspera, prioridad, puestosAliberar)
         }
 
-        //sacar el mapa de transiciones
-
         autosEnEspera.each { autoEnEspera ->
-            autoEnEspera.auto
-            autoEnEspera.distanciaOrigen
+            Auto auto = autoEnEspera.auto
+            DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
+            DistanciaEdificio distanciaDestino = distanciaOrigen.destino
+            def puestosLibres = distanciaDestino.puestosLibres
             //segun la distancia de origen determinar la distancia de destino
             //buscar los puestos libres de esa distancia
             //verificar q el auto entra
             //crear asignacion
         }
-
     }
 
     def asignarPuestoAUsuario(Puesto puesto, Usuario usuario) {

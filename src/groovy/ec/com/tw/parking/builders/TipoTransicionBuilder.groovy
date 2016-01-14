@@ -14,8 +14,8 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 class TipoTransicionBuilder {
     static TipoTransicionBuilder builder
     String nombre = getRandomString(3, 30, false)
-    DistanciaEdificio distanciaOrigen = new DistanciaEdificioBuilder().crear()
-    DistanciaEdificio distanciaDestino = new DistanciaEdificioBuilder().crear()
+    DistanciaEdificio distanciaOrigen = DistanciaEdificioBuilder.nuevo().crear()
+    DistanciaEdificio distanciaDestino = DistanciaEdificioBuilder.nuevo().crear()
     Integer prioridad = getRandomInt(1, 10)
 
     private TipoTransicionBuilder() {
@@ -42,5 +42,12 @@ class TipoTransicionBuilder {
     public TipoTransicionBuilder con(Consumer<TipoTransicionBuilder> consumer) {
         consumer.accept(builder)
         return builder
+    }
+
+    public TipoTransicion guardar() {
+        def tipoTransicion = crear()
+        tipoTransicion.distanciaOrigen.save(failOnError: true)
+        tipoTransicion.distanciaDestino.save(failOnError: true)
+        return tipoTransicion.save(failOnError: true)
     }
 }
