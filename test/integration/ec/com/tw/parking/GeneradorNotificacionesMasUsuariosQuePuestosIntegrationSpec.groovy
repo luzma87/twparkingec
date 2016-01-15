@@ -10,7 +10,7 @@ import grails.test.spock.IntegrationSpec
 
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 
-class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
+class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends IntegrationSpec {
 
     def autos = [], puestos = [], asignaciones = [], usuarios = []
     def edificioMatriz
