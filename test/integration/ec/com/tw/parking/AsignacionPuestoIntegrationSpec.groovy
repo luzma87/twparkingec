@@ -57,9 +57,9 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         5.times { puestosDistanciaCorrecta += PuestoBuilder.nuevo().con { pb -> pb.edificio = edificio }.guardar() }
         5.times { otrosPuestos += PuestoBuilder.nuevo().guardar() }
         10.times { autos += AutoBuilder.nuevo().guardar() }
-        List<AsignacionPuesto> asignacioneEsperadas = []
+        List<AsignacionPuesto> asignacionesEsperadas = []
         5.times {
-            asignacioneEsperadas += AsignacionPuestoBuilder.nuevo()
+            asignacionesEsperadas += AsignacionPuestoBuilder.nuevo()
                 .con { a -> a.auto = autos[it] }
                 .con { a -> a.puesto = puestosDistanciaCorrecta[it] }.guardar()
             AsignacionPuestoBuilder.nuevo()
@@ -67,10 +67,7 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
                 .con { a -> a.puesto = otrosPuestos[it] }.guardar()
         }
 
-        when:
-        List<AsignacionPuesto> asignacionesObtenidas = AsignacionPuesto.obtenerPorDistancia(distancia)
-
-        then:
-        asignacionesObtenidas == asignacioneEsperadas
+        expect:
+        AsignacionPuesto.obtenerPorDistancia(distancia) == asignacionesEsperadas
     }
 }

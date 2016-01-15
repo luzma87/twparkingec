@@ -9,7 +9,6 @@ import ec.com.tw.parking.builders.TipoTransicionBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.Ignore
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -51,7 +50,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         def asignacion = builder.crear()
 
         when:
-        AsignacionPuesto respuesta = service.asignarPuestoAUsuario(puesto, usuario)
+        AsignacionPuesto respuesta = service.asignarPuestoAusuario(puesto, usuario)
 
         then:
         respuesta.puesto.properties == asignacion.puesto.properties
@@ -78,7 +77,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         }
 
         when:
-        AsignacionPuesto respuesta = service.asignarPuestoAUsuario(puesto, usuario)
+        AsignacionPuesto respuesta = service.asignarPuestoAusuario(puesto, usuario)
 
         then:
         respuesta == null
@@ -123,7 +122,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         then:
         respuesta == []
-        (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
+        (1.._) * myService.asignarPuestoAusuario(_, _) >> null
     }
 
     def """Debe remover usuarios sin preferencia de sus asignaciones en edificio matriz y retornar lista de espera
@@ -137,7 +136,7 @@ class AsignadorPuestosServiceSpec extends Specification {
 
         then:
         respuesta == objetoRespuesta.autosEnEspera
-        (1.._) * myService.asignarPuestoAUsuario(_, _) >> null
+        (1.._) * myService.asignarPuestoAusuario(_, _) >> null
     }
 
     def "Debe liberar puestos de una cantidad de usuarios de una prioridad y ponerlos en lista de espera"() {
@@ -386,6 +385,14 @@ class AsignadorPuestosServiceSpec extends Specification {
         tamanios[inicioG..finG] == [Tamanio.GRANDE] * autosG.size()
         tamanios[inicioM..finM] == [Tamanio.MEDIANO] * autosM.size()
         tamanios[inicioP..finP] == [Tamanio.PEQUENIO] * autosP.size()
+    }
+
+    def "Debe asignar un puesto del tamanio correcto"() {
+        setup:
+        def auto = AutoBuilder.nuevo().crear()
+
+        when:
+        service.asignarPuestosFaltantes(auto)
     }
 
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {

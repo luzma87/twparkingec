@@ -30,7 +30,7 @@ class AsignadorPuestosService {
         def usuariosSinAsignacion = obtenerUsuariosSinParqueadero(usuariosNoSalen, asignacionesUsuariosNoSalen)
         usuariosSinAsignacion.each { usuario ->
             def puesto = puestosLibresEdificioMatriz.remove(0)
-            asignarPuestoAUsuario(puesto, usuario)
+            asignarPuestoAusuario(puesto, usuario)
         }
         return autosEnEspera
     }
@@ -41,14 +41,34 @@ class AsignadorPuestosService {
             autosEnEspera = liberarPuestosPrioridad(autosEnEspera, prioridad, puestosAliberar)
         }
         autosEnEspera = ordenarAutosPorTamanio(autosEnEspera)
+        def autosSinPuesto = []
         autosEnEspera.each { autoEnEspera ->
             Auto auto = autoEnEspera.auto
             DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
             DistanciaEdificio distanciaDestino = distanciaOrigen.obtenerDestino()
             def puestosLibres = distanciaDestino.obtenerPuestosLibres()
             Puesto puestoAdecuado = obtenerPuestoAdecuado(puestosLibres, auto)
-            asignarPuestoAUsuario(puestoAdecuado, auto.usuario)
+            if (puestoAdecuado) {
+                asignarPuestoAauto(puestoAdecuado, auto)
+            } else {
+                autosSinPuesto += autoEnEspera
+            }
         }
+        autosSinPuesto.each { autoSinPuesto ->
+            asignarPuestosFaltantes(autoSinPuesto)
+        }
+    }
+
+    def asignarPuestosFaltantes(autoSinPuesto) {
+        def puestos = Puesto.obtenerLibresPorTamanio(autoSinPuesto.auto.tamanio)
+        DistanciaEdificio distanciaOrigen = autoSinPuesto.distanciaOrigen
+        DistanciaEdificio distanciaDestino = distanciaOrigen.obtenerDestino()
+        DistanciaEdificio nuevaDistanciaDestino = distanciaDestino.obtenerDestino()
+        def puestoPosible = puestos.find { it.edificio.distancia == nuevaDistanciaDestino }
+        if (!puestoPosible) {
+            puestoPosible = puestos.first()
+        }
+        asignarPuestoAauto(puestoPosible, autoSinPuesto.auto)
     }
 
     def ordenarAutosPorTamanio(autosEnEspera) {
@@ -59,9 +79,12 @@ class AsignadorPuestosService {
         return puestos.find { it.tamanio.valor >= auto.tamanio.valor }
     }
 
-    def asignarPuestoAUsuario(Puesto puesto, Usuario usuario) {
+    def asignarPuestoAusuario(Puesto puesto, Usuario usuario) {
         def auto = usuario.autos.find { it.esDefault }
+        return asignarPuestoAauto(puesto, auto)
+    }
 
+    def asignarPuestoAauto(Puesto puesto, Auto auto) {
         def asignacion = new AsignacionPuesto()
         asignacion.auto = auto
         asignacion.puesto = puesto
