@@ -8,8 +8,6 @@ import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.spock.IntegrationSpec
 
-import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
-
 class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends IntegrationSpec {
 
     def autos = [], puestos = [], asignaciones = [], usuarios = []
