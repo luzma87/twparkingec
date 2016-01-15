@@ -36,42 +36,18 @@ class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
 
     def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y 1 edificio ampliable"() {
         setup:
-        def notificacionEsperada = [
-            destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
-            asunto       : "ALERTA: puestos faltantes",
-            mensaje      : /Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Si se asume que los puestos faltantes se ubican en \w+ \(\$\d+\.\d+\), la nueva cuota sería \$\d+\.\d+/
-        ]
-        5.times {
-            autos += AutoBuilder.nuevo()
-                .con { a -> a.usuario.esAdmin = false }
-                .con { a -> a.usuario.estaActivo = true }
-                .guardar()
-        }
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Si se asume que los puestos faltantes se ubican en \w+ \(\$\d+\.\d+\), la nueva cuota sería \$\d+\.\d+/)
 
         when:
         def notificacion = generadorNotificacionesService.generarNotificacion()
 
         then:
-        notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size()
-        notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort()
-        notificacion.asunto == notificacionEsperada.asunto
-        notificacion.mensaje =~ notificacionEsperada.mensaje
-        AsignacionPuesto.count() == 10
+        expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada)
     }
 
     def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y 0 edificios ampliables"() {
         setup:
-        def notificacionEsperada = [
-            destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
-            asunto       : "ALERTA: puestos faltantes",
-            mensaje      : /Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. No se encontraron edificios ampliables, no se pudo recalcular la cuota/
-        ]
-        5.times {
-            autos += AutoBuilder.nuevo()
-                .con { a -> a.usuario.esAdmin = false }
-                .con { a -> a.usuario.estaActivo = true }
-                .guardar()
-        }
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. No se encontraron edificios ampliables, no se pudo recalcular la cuota/)
         edificioMatriz.esAmpliable = false
         edificioMatriz.save()
 
@@ -79,6 +55,25 @@ class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
         def notificacion = generadorNotificacionesService.generarNotificacion()
 
         then:
+        expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada)
+    }
+
+    def setupMasUsuariosQuePuestos(mensajeEsperado) {
+        def notificacionEsperada = [
+            destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
+            asunto       : "ALERTA: puestos faltantes",
+            mensaje      : mensajeEsperado
+        ]
+        5.times {
+            autos += AutoBuilder.nuevo()
+                .con { a -> a.usuario.esAdmin = false }
+                .con { a -> a.usuario.estaActivo = true }
+                .guardar()
+        }
+        return notificacionEsperada
+    }
+
+    def expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada) {
         notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size()
         notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort()
         notificacion.asunto == notificacionEsperada.asunto
