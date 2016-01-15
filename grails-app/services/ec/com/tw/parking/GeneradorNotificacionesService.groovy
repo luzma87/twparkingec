@@ -28,19 +28,6 @@ class GeneradorNotificacionesService {
         }
     }
 
-//    def obtenerMapaAsignacionPorDistanciaEdificio(List<AsignacionPuesto> asignaciones) {
-//        def mapa = [:]
-//
-//        asignaciones.each { asignacion ->
-//            def distancia = asignacion.puesto.edificio.distancia.codigo
-//            if (!mapa[distancia]) {
-//                mapa[distancia] = []
-//            }
-//            mapa[distancia] += asignacion
-//        }
-//        return mapa
-//    }
-//
     private generadorNotificacionExito() {
         def usuarios = Usuario.findAllByEstaActivo(true)
         def mensaje = "Se han asignado los puestos. La nueva organización es la siguiente: "
@@ -55,7 +42,7 @@ class GeneradorNotificacionesService {
 
     private generarNotificacionMasUsuariosQuePuestos(totalUsuariosActivos, totalPuestos) {
         def puestosFaltantes = totalUsuariosActivos - totalPuestos
-        def usuariosAdmin = Usuario.findAllByEsAdmin(true)
+        def usuariosAdmin = Usuario.findAllByEsAdminAndEstaActivo(true, true)
         def mensaje = "Faltan $puestosFaltantes puestos: se necesitan $totalUsuariosActivos y solamente existen $totalPuestos. "
         mensaje += mensajeFactoryService.construirMensajePuestosFaltantes(puestosFaltantes)
 

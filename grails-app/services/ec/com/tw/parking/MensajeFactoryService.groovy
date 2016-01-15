@@ -24,5 +24,8 @@ class MensajeFactoryService {
         return mensaje
     }
 
-    String construirMensajeExito() {}
+    String construirMensajeExito() {
+        //TODO implementar esto
+        return "OK"
+    }
 }

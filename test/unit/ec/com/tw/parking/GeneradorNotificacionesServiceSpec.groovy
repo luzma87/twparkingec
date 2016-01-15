@@ -32,7 +32,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
 
         then:
         1 * mensajeFactoryServiceMock.construirMensajePuestosFaltantes(_) >> mapaEsperado.mensajeMock
-        respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
+        respuesta.destinatarios.nombre == mapaEsperado.destinatarios.nombre
         respuesta.asunto == mapaEsperado.asunto
         respuesta.mensaje == mapaEsperado.mensaje
     }
@@ -143,7 +143,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
     private ArrayList mockPuestoUsuario(cantidadUsuarios, cantidadPuestos, caso) {
         def usuarios = []
         cantidadUsuarios.times {
-            usuarios += new UsuarioBuilder().crear()
+            usuarios += UsuarioBuilder.nuevo().crear()
         }
         GroovyMock(Puesto, global: true)
         Puesto.count() >> cantidadPuestos
@@ -152,101 +152,8 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         if (caso == CASO_EXITO) {
             Usuario.findAllByEstaActivo(true) >> usuarios
         } else {
-            Usuario.findAllByEsAdmin(true) >> usuarios
+            Usuario.findAllByEsAdminAndEstaActivo(true, true) >> usuarios
         }
         return usuarios
     }
-
-//    @Ignore
-//    def "Debe devolver una lista con todas las asignaciones de puesto"() {
-//        when:
-//        GroovyMock(AsignacionPuesto, global: true)
-//        AsignacionPuesto.list() >> listaAsignaciones
-//        def respuesta = service.obtenerTodasAsignaciones()
-//
-//        then:
-//        respuesta == listaAsignaciones
-//    }
-//
-//    def "Debe retornar un mapa con claves de distancia edificio"() {
-//        setup:
-//        def distancia1 = new DistanciaEdificioBuilder()
-//        def distancia2 = new DistanciaEdificioBuilder()
-//        def distancia3 = new DistanciaEdificioBuilder()
-//        def mapa = [:]
-//        def lista1 = crearListaPorDistanciaEdificio(getRandomInt(1, 15), distancia1.crear())
-//        def lista2 = crearListaPorDistanciaEdificio(getRandomInt(1, 15), distancia2.crear())
-//        def lista3 = crearListaPorDistanciaEdificio(getRandomInt(1, 15), distancia3.crear())
-//        mapa.put(distancia1.params.codigo, lista1)
-//        mapa.put(distancia2.params.codigo, lista2)
-//        mapa.put(distancia3.params.codigo, lista3)
-//
-//        expect:
-//        service.obtenerMapaAsignacionPorDistanciaEdificio(lista1 + lista2 + lista3) == mapa
-//    }
-//
-//    def "Debe retornar la asignacion con fecha minima de una lista de asignaciones"() {
-//        setup:
-//        def asignacionConFechaMinima = listaAsignaciones.min { it.fechaAsignacion }
-//
-//        expect:
-//        service.obtenerAsignacionConFechaMinima(listaAsignaciones) == asignacionConFechaMinima
-//    }
-//
-//    @Ignore
-//    def "Debe devolver una lista de tipo transicion"() {
-//        setup:
-//        def listaTipoTransiciones = []
-//        3.times {
-//            listaTipoTransiciones.add(new TipoTransicionBuilder().crear())
-//        }
-//
-//        when:
-//        GroovyMock(TipoTransicion, global: true)
-//        TipoTransicion.list() >> listaTipoTransiciones
-//        def respuesta = service.obtenerTodosTiposTransicion()
-//
-//        then:
-//        respuesta == listaTipoTransiciones
-//    }
-//
-//    @Ignore
-//    def "Debe retornar la cantidad total de puestos"() {
-//        setup:
-//        def cant = getRandomInt(100)
-//
-//        when:
-//        GroovyMock(Puesto, global: true)
-//        Puesto.count() >> cant
-//        def respuesta = service.obtenerCantidadTotalPuestos()
-//
-//        then:
-//        respuesta == cant
-//    }
-//
-//    @Ignore
-//    def "Debe retornar la cantidad de usuarios activos"() {
-//        setup:
-//        def cant = getRandomInt(100)
-//
-//        when:
-//        GroovyMock(Usuario, global: true)
-//        Usuario.countByEstaActivo(true) >> cant
-//        def respuesta = service.obtenerCantidadTotalUsuarios()
-//
-//        then:
-//        respuesta == cant
-//    }
-//
-//    private List<AsignacionPuesto> crearListaPorDistanciaEdificio(cantidad, distancia) {
-//        def lista = []
-//        cantidad.times {
-//            def asignacionPuestoBuilder = new AsignacionPuestoBuilder()
-//            asignacionPuestoBuilder.puesto.edificio.distancia = distancia
-//            def asignacion = asignacionPuestoBuilder.crear()
-//            lista += asignacion
-//        }
-//        return lista
-//    }
-
 }

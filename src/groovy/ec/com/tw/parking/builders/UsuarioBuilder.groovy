@@ -20,7 +20,7 @@ class UsuarioBuilder {
     Boolean esAdmin = getRandomBoolean()
     String cedula = getRandomString(10)
     Boolean estaActivo = getRandomBoolean()
-    TipoPreferencia preferencia = new TipoPreferenciaBuilder().crear()
+    TipoPreferencia preferencia = TipoPreferenciaBuilder.nuevo().crear()
 
     private UsuarioBuilder() {
     }

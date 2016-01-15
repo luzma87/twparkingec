@@ -387,14 +387,6 @@ class AsignadorPuestosServiceSpec extends Specification {
         tamanios[inicioP..finP] == [Tamanio.PEQUENIO] * autosP.size()
     }
 
-    def "Debe asignar un puesto del tamanio correcto"() {
-        setup:
-        def auto = AutoBuilder.nuevo().crear()
-
-        when:
-        service.asignarPuestosFaltantes(auto)
-    }
-
     private inicializarDatosYmocks(cantidadPrioridad1, cantidadPrioridad2, cantidadPrioridad3) {
         def distancia1 = DistanciaEdificioBuilder.nuevo().crear()
         def distancia2 = DistanciaEdificioBuilder.nuevo().crear()
