@@ -55,11 +55,11 @@ class AsignadorPuestosService {
             }
         }
         autosSinPuesto.each { autoSinPuesto ->
-            asignarPuestosFaltantes(autoSinPuesto)
+            asignarPuestoFaltante(autoSinPuesto)
         }
     }
 
-    def asignarPuestosFaltantes(autoSinPuesto) {
+    def asignarPuestoFaltante(autoSinPuesto) {
         def puestos = Puesto.obtenerLibresPorTamanio(autoSinPuesto.auto.tamanio)
         DistanciaEdificio distanciaOrigen = autoSinPuesto.distanciaOrigen
         DistanciaEdificio distanciaDestino = distanciaOrigen.obtenerDestino()
