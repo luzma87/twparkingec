@@ -11,11 +11,12 @@ import grails.test.spock.IntegrationSpec
 class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
 
     def autos = [], puestos = [], asignaciones = [], usuarios = []
+    def edificioMatriz
     def generadorNotificacionesService
 
     def setup() {
         def distanciaMatriz = DistanciaEdificioBuilder.nuevo().con { d -> d.codigo = "M" }.guardar()
-        def edificioMatriz = EdificioBuilder.nuevo()
+        edificioMatriz = EdificioBuilder.nuevo()
             .con { e -> e.distancia = distanciaMatriz }
             .con { e -> e.esAmpliable = true }.guardar()
         10.times { usuarios += UsuarioBuilder.nuevo().con { u -> u.estaActivo = true }.guardar() }
@@ -40,7 +41,39 @@ class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
             asunto       : "ALERTA: puestos faltantes",
             mensaje      : /Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Si se asume que los puestos faltantes se ubican en \w+ \(\$\d+\.\d+\), la nueva cuota sería \$\d+\.\d+/
         ]
-        5.times { autos += AutoBuilder.nuevo().con { a -> a.usuario.esAdmin = false }.guardar() }
+        5.times {
+            autos += AutoBuilder.nuevo()
+                .con { a -> a.usuario.esAdmin = false }
+                .con { a -> a.usuario.estaActivo = true }
+                .guardar()
+        }
+
+        when:
+        def notificacion = generadorNotificacionesService.generarNotificacion()
+
+        then:
+        notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size()
+        notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort()
+        notificacion.asunto == notificacionEsperada.asunto
+        notificacion.mensaje =~ notificacionEsperada.mensaje
+        AsignacionPuesto.count() == 10
+    }
+
+    def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y 0 edificios ampliables"() {
+        setup:
+        def notificacionEsperada = [
+            destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
+            asunto       : "ALERTA: puestos faltantes",
+            mensaje      : /Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. No se encontraron edificios ampliables, no se pudo recalcular la cuota/
+        ]
+        5.times {
+            autos += AutoBuilder.nuevo()
+                .con { a -> a.usuario.esAdmin = false }
+                .con { a -> a.usuario.estaActivo = true }
+                .guardar()
+        }
+        edificioMatriz.esAmpliable = false
+        edificioMatriz.save()
 
         when:
         def notificacion = generadorNotificacionesService.generarNotificacion()
