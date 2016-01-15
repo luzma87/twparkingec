@@ -6,7 +6,6 @@ class Puesto {
     String numero
     Double precio = 0.0
 
-    //TODO: prueba de integracion delete edificio => delete puestos
     static belongsTo = [edificio: Edificio]
 
     static mapping = {

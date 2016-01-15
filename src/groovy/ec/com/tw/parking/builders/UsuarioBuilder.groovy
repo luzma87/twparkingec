@@ -41,7 +41,7 @@ class UsuarioBuilder {
         new Usuario(getParams())
     }
 
-    static List<Usuario> lista(cantidad){
+    static List<Usuario> lista(cantidad) {
         def lista = []
         cantidad.times {
             lista += nuevo().crear()
@@ -54,8 +54,14 @@ class UsuarioBuilder {
         return builder
     }
 
-    public UsuarioBuilder con(Consumer<UsuarioBuilder> consumer){
+    public UsuarioBuilder con(Consumer<UsuarioBuilder> consumer) {
         consumer.accept(builder)
         return builder
+    }
+
+    public Usuario guardar() {
+        def usuarioBuilder = crear()
+        usuarioBuilder.preferencia.save(failOnError: true)
+        return usuarioBuilder.save(failOnError: true)
     }
 }
