@@ -8,6 +8,8 @@ import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.spock.IntegrationSpec
 
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
+
 class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
 
     def autos = [], puestos = [], asignaciones = [], usuarios = []
@@ -58,6 +60,22 @@ class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
         expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada)
     }
 
+    def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y varios edificios ampliables"() {
+        setup:
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Se encontraron \d+ edificios ampliables, no se pudo recalcular la cuota/)
+        def edificios = Edificio.findAllByEsAmpliable(false, [max: 3])
+        edificios.each { edificio ->
+            edificio.esAmpliable = true
+            edificio.save()
+        }
+
+        when:
+        def notificacion = generadorNotificacionesService.generarNotificacion()
+
+        then:
+        expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada)
+    }
+
     def setupMasUsuariosQuePuestos(mensajeEsperado) {
         def notificacionEsperada = [
             destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
@@ -74,11 +92,11 @@ class GeneradorNotificacionesIntegrationSpec extends IntegrationSpec {
     }
 
     def expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada) {
-        notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size()
-        notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort()
-        notificacion.asunto == notificacionEsperada.asunto
-        notificacion.mensaje =~ notificacionEsperada.mensaje
-        AsignacionPuesto.count() == 10
+        return notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size() &&
+            notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort() &&
+            notificacion.asunto == notificacionEsperada.asunto &&
+            notificacion.mensaje ==~ notificacionEsperada.mensaje &&
+            AsignacionPuesto.count() == 10
     }
 
 }
