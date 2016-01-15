@@ -30,6 +30,15 @@ class Puesto {
         precio nullable: false, min: 0d
     }
 
+    static ArrayList<Puesto> obtenerLibresPorTamanio(Tamanio tamanio) {
+        return AsignacionPuesto.withCriteria {
+            puesto {
+                eq("tamanio", tamanio)
+            }
+            le("fechaLiberacion", new Date())
+        }.puesto
+    }
+
     String toString() {
         return this.edificio.nombre + " " + this.numero
     }
