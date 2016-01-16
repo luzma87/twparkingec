@@ -20,6 +20,80 @@
                 </div>
             </div>
             
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'distancia', 'error')} required">
+                    <label for="distancia" class="col-md-4 control-label">
+                        <g:message code="edificio.distancia.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <div class="col-md-8">
+                        <g:select id="distancia" name="distancia.id" from="${ec.com.tw.parking.DistanciaEdificio.list()}" optionKey="id" required="" value="${edificioInstance?.distancia?.id}" class="many-to-one form-control"/>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'esAmpliable', 'error')} ">
+                    <label for="esAmpliable" class="col-md-4 control-label">
+                        <g:message code="edificio.esAmpliable.label" />
+                        
+                    </label>
+                    <div class="col-md-8">
+                        <g:checkBox name="esAmpliable" value="${edificioInstance?.esAmpliable}" />
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'datosPago', 'error')} ">
+                    <label for="datosPago" class="col-md-4 control-label">
+                        <g:message code="edificio.datosPago.label" />
+                        
+                    </label>
+                    <div class="col-md-8">
+                        <g:textField name="datosPago" class="form-control " value="${edificioInstance?.datosPago}"/>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'observaciones', 'error')} ">
+                    <label for="observaciones" class="col-md-4 control-label">
+                        <g:message code="edificio.observaciones.label" />
+                        
+                    </label>
+                    <div class="col-md-8">
+                        <g:textField name="observaciones" maxlength="150" class="form-control " value="${edificioInstance?.observaciones}"/>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'puestos', 'error')} ">
+                    <label for="puestos" class="col-md-4 control-label">
+                        <g:message code="edificio.puestos.label" />
+                        
+                    </label>
+                    <div class="col-md-8">
+                        
+<ul class="one-to-many">
+<g:each in="${edificioInstance?.puestos?}" var="p">
+    <li><g:link controller="puesto" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></li>
+</g:each>
+<li class="add">
+<g:link controller="puesto" action="create" params="['edificio.id': edificioInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'puesto.label', default: 'Puesto')])}</g:link>
+</li>
+</ul>
+
+
+                    </div>
+                </div>
+            </div>
+            
         </g:form>
     </div>
 

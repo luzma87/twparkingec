@@ -1,5 +1,6 @@
 
 <%@ page import="ec.com.tw.parking.Edificio" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -38,6 +39,14 @@
                     
                     <g:sortableColumn property="nombre" title="${message(code: 'edificio.nombre.label')}"/>
                     
+                    <th><g:message code="edificio.distancia.label" /></th>
+                    
+                    <g:sortableColumn property="esAmpliable" title="${message(code: 'edificio.esAmpliable.label')}"/>
+                    
+                    <g:sortableColumn property="datosPago" title="${message(code: 'edificio.datosPago.label')}"/>
+                    
+                    <g:sortableColumn property="observaciones" title="${message(code: 'edificio.observaciones.label')}"/>
+                    
                     <th style="width: 76px"><g:message code="default.button.actions.label"/> </th>
                 </tr>
             </thead>
@@ -48,6 +57,14 @@
                             
                             <td>${edificioInstance.nombre}</td>
                             
+                            <td><g:fieldValue bean="${edificioInstance}" field="distancia"/></td>
+                                
+                            <td><g:formatBoolean boolean="${edificioInstance.esAmpliable}" false="${message(code: 'default.boolean.no')}" true="${message(code: 'default.boolean.yes')}" /></td>
+                            
+                            <td><g:fieldValue bean="${edificioInstance}" field="datosPago"/></td>
+                                
+                            <td><g:fieldValue bean="${edificioInstance}" field="observaciones"/></td>
+                                
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" class="btnEditar btn btn-info"
@@ -65,7 +82,7 @@
                 </g:if>
                 <g:else>
                     <tr class="info">
-                        <td class="text-center text-shadow" colspan="2">
+                        <td class="text-center text-shadow" colspan="6">
                             <i class="fa fa-2x icon-ghost"></i>
                             <g:message code="default.no.records.found"/>
                         </td>
