@@ -1,4 +1,5 @@
 import ec.com.tw.parking.AsignacionPuesto
+import ec.com.tw.parking.HistoricoAsignacionPuesto
 import ec.com.tw.parking.Tamanio
 import grails.util.Environment
 
@@ -11,6 +12,8 @@ import ec.com.tw.parking.Usuario
 import ec.com.tw.parking.Auto
 
 class BootStrap {
+
+    def usuariosObj, edificiosObj;
 
     def init = { servletContext ->
 
@@ -303,14 +306,9 @@ class BootStrap {
         ]
         usuarios.each { datosUsuario ->
             def usuario = new Usuario(datosUsuario.usuario)
-            if (!usuario.save(flush:true)) {
+            usuario.addToAutos(datosUsuario.auto)
+            if (!usuario.save(flush: true)) {
                 println "Error al crear usuario: " + usuario.errors
-            } else {
-                def auto = new Auto(datosUsuario.auto)
-                auto.usuario = usuario
-                if (!auto.save(flush:true)) {
-                    println "Error al crear auto: " + auto.errors
-                }
             }
         }
     }
@@ -323,7 +321,7 @@ class BootStrap {
         ]
         distancias.each { datosDistancia ->
             def distanciaEdificio = new DistanciaEdificio(datosDistancia)
-            if (!distanciaEdificio.save(flush:true)) {
+            if (!distanciaEdificio.save(flush: true)) {
                 println "Error al crear distancia edificio: " + distanciaEdificio.errors
             }
         }
@@ -336,7 +334,7 @@ class BootStrap {
         ]
         preferencias.each { datosPreferencia ->
             def preferencia = new TipoPreferencia(datosPreferencia)
-            if (!preferencia.save(flush:true)) {
+            if (!preferencia.save(flush: true)) {
                 println "Error al crear tipo preferencia: " + preferencia.errors
             }
         }
@@ -361,7 +359,7 @@ class BootStrap {
             distanciaDestino: DistanciaEdificio.findByCodigo("C"),
             prioridad       : 3
         ])
-        if (!tipoTransicion1.save(flush:true) || !tipoTransicion2.save(flush:true) || !tipoTransicion3.save(flush:true)) {
+        if (!tipoTransicion1.save(flush: true) || !tipoTransicion2.save(flush: true) || !tipoTransicion3.save(flush: true)) {
             println "Error al crear tipo transicion: "
             println "1: " + tipoTransicion1.errors
             println "2: " + tipoTransicion2.errors
@@ -458,16 +456,11 @@ class BootStrap {
         ]
         edificios.each { datosEdificio ->
             def edificio = new Edificio(datosEdificio.edificio)
-            if (!edificio.save(flush:true)) {
+            datosEdificio.puestos.each { datosPuesto ->
+                edificio.addToPuestos(datosPuesto)
+            }
+            if (!edificio.save(flush: true)) {
                 println "Error al crear edificio: " + edificio.errors
-            } else {
-                datosEdificio.puestos.each { datosPuesto ->
-                    def puesto = new Puesto(datosPuesto)
-                    puesto.edificio = edificio
-                    if (!puesto.save(flush:true)) {
-                        println "Error al crear puesto: " + puesto.errors
-                    }
-                }
             }
         }
     }
@@ -526,8 +519,14 @@ class BootStrap {
         asignacion.fechaAsignacion = new Date()
         asignacion.auto = auto
         asignacion.puesto = puesto
-        if (!asignacion.save(flush:true)) {
+        def historico = new HistoricoAsignacionPuesto()
+        historico.properties = asignacion.properties
+        if (!asignacion.save(flush: true)) {
             println "error al guardar asignacion de ${usuario.toString()} a ${puesto.toString()}"
+        } else {
+            if (!historico.save(flush: true)) {
+                println "error al guardar historico de asignacion de ${usuario.toString()} a ${puesto.toString()}"
+            }
         }
     }
 }
