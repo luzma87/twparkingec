@@ -18,7 +18,6 @@ class AsignadorPuestosService {
 
             puestosNecesarios.times {
                 def asignacion = asignacionesUsuariosPreferenciaSaleEdificioMatriz.remove(0)
-                // TODO: prueba de integracion: debe correr liberar al correr esta funcion
                 asignacion.liberar()
                 autosEnEspera += [
                     auto           : asignacion.auto,
@@ -41,7 +40,6 @@ class AsignadorPuestosService {
             autosEnEspera = liberarPuestosPrioridad(autosEnEspera, prioridad, puestosAliberar)
         }
         autosEnEspera = ordenarAutosPorTamanio(autosEnEspera)
-        def autosSinPuesto = []
         autosEnEspera.each { autoEnEspera ->
             Auto auto = autoEnEspera.auto
             DistanciaEdificio distanciaOrigen = autoEnEspera.distanciaOrigen
@@ -51,11 +49,8 @@ class AsignadorPuestosService {
             if (puestoAdecuado) {
                 asignarPuestoAauto(puestoAdecuado, auto)
             } else {
-                autosSinPuesto += autoEnEspera
+                asignarPuestoFaltante(autoEnEspera)
             }
-        }
-        autosSinPuesto.each { autoSinPuesto ->
-            asignarPuestoFaltante(autoSinPuesto)
         }
     }
 
@@ -85,10 +80,18 @@ class AsignadorPuestosService {
     }
 
     def asignarPuestoAauto(Puesto puesto, Auto auto) {
+        AsignacionPuesto.findAllByAuto(auto).each {
+            it.delete()
+        }
+
         def asignacion = new AsignacionPuesto()
         asignacion.auto = auto
         asignacion.puesto = puesto
         asignacion.fechaAsignacion = new Date()
+
+        def historico = new HistoricoAsignacionPuesto()
+        historico.properties = asignacion.properties
+        historico.save()
         return asignacion.save()
     }
 
@@ -107,7 +110,6 @@ class AsignadorPuestosService {
 
         cantidadAliberar.times {
             def asignacion = asignacionesPrioridad[it]
-            // TODO: prueba de integracion: debe correr liberar al correr esta funcion
             asignacion.liberar()
             autosEnEspera += [
                 auto           : asignacion.auto,

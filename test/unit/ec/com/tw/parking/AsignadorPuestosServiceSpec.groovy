@@ -278,6 +278,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar + faltantes
     }
 
+    @IgnoreRest
     @Unroll
     def """Debe retornar una matriz con las prioridades y la cantidad de puestos a liberar para cada una
             puestos1: #puestos1, puestos2: #puestos2, puestos3: #puestos3, matriz: #matrizEsperada"""() {
@@ -300,6 +301,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         [ocupados: 0, libres: 3] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 0] || [1: 0, 2: 3, 3: 3]
         [ocupados: 0, libres: 3] | [ocupados: 4, libres: 0] | [ocupados: 6, libres: 1] || [1: 0, 2: 3, 3: 2]
         [ocupados: 2, libres: 1] | [ocupados: 4, libres: 1] | [ocupados: 6, libres: 1] || [1: 2, 2: 2, 3: 2]
+        [ocupados: 2, libres: 0] | [ocupados: 5, libres: 0] | [ocupados: 8, libres: 0] || [1: 2, 2: 2, 3: 2]
     }
 
     @Unroll

@@ -30,12 +30,16 @@ class Puesto {
     }
 
     static ArrayList<Puesto> obtenerLibresPorTamanio(Tamanio tamanio) {
-        return AsignacionPuesto.withCriteria {
-            puesto {
-                eq("tamanio", tamanio)
+        def asg = AsignacionPuesto.withCriteria {
+            and {
+                puesto {
+                    eq("tamanio", tamanio)
+                }
+                lt("fechaLiberacion", new Date())
+                isNotNull("fechaLiberacion")
             }
-            le("fechaLiberacion", new Date())
-        }.puesto
+        }
+        return asg.puesto
     }
 
     String toString() {

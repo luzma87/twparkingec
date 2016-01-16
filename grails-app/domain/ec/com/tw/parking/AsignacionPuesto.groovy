@@ -53,9 +53,17 @@ class AsignacionPuesto {
         }
     }
 
-    static int contarOcupadosPorPrioridad(int prioridad) {}
+    static int contarOcupadosPorPrioridad(int prioridad) {
+        def distanciaOrigen = TipoTransicion.findByPrioridad(prioridad).distanciaOrigen
+        return obtenerPorDistancia(distanciaOrigen).count { it.fechaLiberacion == null }
+    }
 
-    static int contarLibresPorPrioridad(int prioridad) {}
+    static int contarLibresPorPrioridad(int prioridad) {
+        def distanciaOrigen = TipoTransicion.findByPrioridad(prioridad).distanciaOrigen
+        return obtenerPorDistancia(distanciaOrigen).count {
+            it.fechaLiberacion != null && it.fechaLiberacion < new Date()
+        }
+    }
 
     String toString() {
         def persona = this.auto.usuario.nombre

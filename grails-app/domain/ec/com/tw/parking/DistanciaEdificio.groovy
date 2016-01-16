@@ -32,13 +32,17 @@ class DistanciaEdificio {
     }
 
     def obtenerPuestosLibres() {
-        return AsignacionPuesto.withCriteria {
-            puesto {
-                edificio {
-                    eq("distancia", this)
+        def asg=AsignacionPuesto.withCriteria {
+            and {
+                puesto {
+                    edificio {
+                        eq("distancia", this)
+                    }
                 }
+                isNotNull("fechaLiberacion")
+                lt("fechaLiberacion", new Date())
             }
-            le("fechaLiberacion", new Date())
-        }.puesto
+        }
+        return asg.puesto
     }
 }
