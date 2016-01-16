@@ -102,7 +102,7 @@ class GeneradorNotificacionesSinUsuariosNoSalenIntegrationSpec extends Integrati
         expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada)
     }
 
-    def setupIgualUsuariosQuePuestos(mensajeEsperado) {
+    private setupIgualUsuariosQuePuestos(mensajeEsperado) {
         def notificacionEsperada = [
             destinatarios: usuarios,
             asunto       : "Nueva organización de parqueaderos",
@@ -111,7 +111,7 @@ class GeneradorNotificacionesSinUsuariosNoSalenIntegrationSpec extends Integrati
         return notificacionEsperada
     }
 
-    def expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada) {
+    private expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada) {
         return notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size() &&
             notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort() &&
             notificacion.asunto == notificacionEsperada.asunto &&

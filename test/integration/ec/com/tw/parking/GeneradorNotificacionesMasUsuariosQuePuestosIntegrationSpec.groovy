@@ -74,7 +74,7 @@ class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends Integr
         expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada)
     }
 
-    def setupMasUsuariosQuePuestos(mensajeEsperado) {
+    private setupMasUsuariosQuePuestos(mensajeEsperado) {
         def notificacionEsperada = [
             destinatarios: usuarios.findAll { it.estaActivo && it.esAdmin },
             asunto       : "ALERTA: puestos faltantes",
@@ -89,7 +89,7 @@ class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends Integr
         return notificacionEsperada
     }
 
-    def expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada) {
+    private expectsMasUsuariosQuePuestos(notificacion, notificacionEsperada) {
         return notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size() &&
             notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort() &&
             notificacion.asunto == notificacionEsperada.asunto &&
