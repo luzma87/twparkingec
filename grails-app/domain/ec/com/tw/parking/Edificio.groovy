@@ -6,6 +6,7 @@ class Edificio {
     DistanciaEdificio distancia
     Boolean esAmpliable
     String datosPago
+    String observaciones
 
     static hasMany = [puestos: Puesto]
 
@@ -21,6 +22,7 @@ class Edificio {
             distancia column: 'distancia_edificio_id'
             datosPago column: 'datos_pago'
             datosPago type: 'text'
+            observaciones column: 'observaciones'
         }
     }
 
@@ -29,6 +31,7 @@ class Edificio {
         distancia nullable: false
         esAmpliable nullable: false
         datosPago nullable: true, blank: false
+        observaciones nullable: true, blank: true, maxSize: 150
     }
 
     String toString() {

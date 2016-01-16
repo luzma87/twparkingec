@@ -17,16 +17,18 @@ class EdificioBuilder {
     DistanciaEdificio distancia = new DistanciaEdificioBuilder().crear()
     String datosPago = getRandomString(300, 1050, false)
     Boolean esAmpliable = getRandomBoolean()
+    String observaciones = getRandomString(1, 150, false)
 
     private EdificioBuilder() {
     }
 
     def getParams() {
         return [
-            nombre     : this.nombre,
-            distancia  : this.distancia,
-            datosPago  : this.datosPago,
-            esAmpliable: this.esAmpliable
+            nombre       : this.nombre,
+            distancia    : this.distancia,
+            datosPago    : this.datosPago,
+            esAmpliable  : this.esAmpliable,
+            observaciones: this.observaciones
         ]
     }
 

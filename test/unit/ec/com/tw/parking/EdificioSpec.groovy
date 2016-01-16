@@ -10,7 +10,7 @@ class EdificioSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def edificio = new EdificioBuilder().crear()
+        def edificio = EdificioBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         edificio.validate()
@@ -19,9 +19,7 @@ class EdificioSpec extends Specification {
 
     void "Debe ser no nulo"(campo) {
         setup:
-        def edificioBuilder = new EdificioBuilder()
-        edificioBuilder[campo] = null
-        def edificio = edificioBuilder.crear()
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = null }.crear()
 
         expect:
         !edificio.validate()
@@ -34,22 +32,19 @@ class EdificioSpec extends Specification {
 
     void "Debe poder ser nulo"(campo) {
         setup:
-        def edificioBuilder = new EdificioBuilder()
-        edificioBuilder[campo] = null
-        def edificio = edificioBuilder.crear()
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = null }.crear()
 
         expect:
         edificio.validate()
         !edificio.hasErrors()
 
         where:
-        campo << ["datosPago"]
+        campo << ["datosPago", "observaciones"]
     }
 
     void "Debe ser no blanco"(campo) {
         setup:
-        def edificioBuilder = new EdificioBuilder()
-        def edificio = edificioBuilder.crear()
+        def edificio = EdificioBuilder.nuevo().crear()
         edificio[campo] = ""
 
         expect:
@@ -64,9 +59,7 @@ class EdificioSpec extends Specification {
     void "Debe tener mas o igual del minimo de caracteres"(campo) {
         setup:
         def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def edificioBuilder = new EdificioBuilder()
-        edificioBuilder[campo.nombre] = valor
-        def edificio = edificioBuilder.crear()
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo.nombre] = valor }.crear()
 
         expect:
         !edificio.validate()
@@ -81,10 +74,8 @@ class EdificioSpec extends Specification {
 
     void "Debe tener menos o igual que el maximo de caracteres"(campo) {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def edificioBuilder = new EdificioBuilder()
-        edificioBuilder[campo.nombre] = valor
-        def edificio = edificioBuilder.crear()
+        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 300, false)
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo.nombre] = valor }.crear()
 
         expect:
         !edificio.validate()
@@ -93,15 +84,16 @@ class EdificioSpec extends Specification {
 
         where:
         campo << [
-            [nombre: "nombre", maxSize: 50]
+            [nombre: "nombre", maxSize: 50],
+            [nombre: "observaciones", maxSize: 150]
         ]
     }
 
     void "Debe tener varios puestos"() {
         setup:
-        def puesto = new PuestoBuilder().crear()
+        def puesto = PuestoBuilder.nuevo().crear()
         puesto.save()
-        def edificio = new EdificioBuilder().crear()
+        def edificio = EdificioBuilder.nuevo().crear()
         edificio.save()
 
         expect:
@@ -111,7 +103,7 @@ class EdificioSpec extends Specification {
 
     void "Debe toString devolver el nombre"() {
         setup:
-        def edificio = new EdificioBuilder().crear()
+        def edificio = EdificioBuilder.nuevo().crear()
 
         expect:
         edificio.toString() == edificio.nombre
