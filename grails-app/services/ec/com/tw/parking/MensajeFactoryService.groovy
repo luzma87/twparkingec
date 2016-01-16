@@ -25,7 +25,28 @@ class MensajeFactoryService {
     }
 
     String construirMensajeExito() {
-        //TODO implementar esto
-        return "OK"
+        def mensaje = "<table class='table table-condensed table-bordered table-striped table-hover'>"
+        mensaje += "<thead>"
+        mensaje += "<tr>"
+        mensaje += "<th>Thoughtworker</th>"
+        mensaje += "<th>Puesto</th>"
+        mensaje += "</tr>"
+        mensaje += "</thead>"
+        mensaje += "<tbody>"
+        def asignacionesActuales = AsignacionPuesto.list()
+        asignacionesActuales.each { asignacion ->
+            mensaje += "<tr>"
+            mensaje += "<td>"
+            mensaje += asignacion.auto.usuario
+            mensaje += "</td>"
+            mensaje += "<td>"
+            mensaje += asignacion
+            mensaje += "</td>"
+            mensaje += "</tr>"
+            mensaje += "</tr>"
+        }
+        mensaje += "</tbody>"
+        mensaje += "</table>"
+        return mensaje
     }
 }
