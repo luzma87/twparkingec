@@ -1,3 +1,4 @@
+import ec.com.tw.parking.AsignacionPuesto
 import ec.com.tw.parking.Tamanio
 import grails.util.Environment
 
@@ -15,88 +16,35 @@ class BootStrap {
 
         if (Environment.current != Environment.TEST) {
             if (DistanciaEdificio.count() == 0) {
-                listaDistanciasEdificioIniciales().each { datosDistancia ->
-                    def distanciaEdificio = new DistanciaEdificio(datosDistancia)
-                    if (!distanciaEdificio.save()) {
-                        println "Error al crear distancia edificio: " + distanciaEdificio.errors
-                    }
-                }
+                crearDistanciasEdificioIniciales()
             }
 
             if (TipoPreferencia.count() == 0) {
-                listaTiposPreferenciaIniciales().each { datosPreferencia ->
-                    def preferencia = new TipoPreferencia(datosPreferencia)
-                    if (!preferencia.save()) {
-                        println "Error al crear tipo preferencia: " + preferencia.errors
-                    }
-                }
+                crearTiposPreferenciaIniciales()
             }
 
             if (TipoTransicion.count() == 0) {
-                def tipoTransicion1 = new TipoTransicion([
-                    nombre          : "Lejos a Matriz",
-                    distanciaOrigen : DistanciaEdificio.findByCodigo("L"),
-                    distanciaDestino: DistanciaEdificio.findByCodigo("M"),
-                    prioridad       : 1
-                ])
-                def tipoTransicion2 = new TipoTransicion([
-                    nombre          : "Cerca a Lejos",
-                    distanciaOrigen : DistanciaEdificio.findByCodigo("C"),
-                    distanciaDestino: DistanciaEdificio.findByCodigo("L"),
-                    prioridad       : 2
-                ])
-                def tipoTransicion3 = new TipoTransicion([
-                    nombre          : "Matriz a Cerca",
-                    distanciaOrigen : DistanciaEdificio.findByCodigo("M"),
-                    distanciaDestino: DistanciaEdificio.findByCodigo("C"),
-                    prioridad       : 3
-                ])
-                if (!tipoTransicion1.save() || !tipoTransicion2.save() || !tipoTransicion3.save()) {
-                    println "Error al crear tipo transicion: "
-                    println "1: " + tipoTransicion1.errors
-                    println "2: " + tipoTransicion2.errors
-                    println "3: " + tipoTransicion3.errors
-                }
+                crearTiposTransicionIniciales()
             }
 
             if (Usuario.count() == 0) {
-                listaUsuariosIniciales().each { datosUsuario ->
-                    def usuario = new Usuario(datosUsuario.usuario)
-                    if (!usuario.save()) {
-                        println "Error al crear usuario: " + usuario.errors
-                    } else {
-                        def auto = new Auto(datosUsuario.auto)
-                        auto.usuario = usuario
-                        if (!auto.save()) {
-                            println "Error al crear auto: " + auto.errors
-                        }
-                    }
-                }
+                crearUsuariosIniciales()
             }
 
             if (Edificio.count() == 0) {
-                listaEdificiosIniciales().each { datosEdificio ->
-                    def edificio = new Edificio(datosEdificio.edificio)
-                    if (!edificio.save()) {
-                        println "Error al crear edificio: " + edificio.errors
-                    } else {
-                        datosEdificio.puestos.each { datosPuesto ->
-                            def puesto = new Puesto(datosPuesto)
-                            puesto.edificio = edificio
-                            if (!puesto.save()) {
-                                println "Error al crear puesto: " + puesto.errors
-                            }
-                        }
-                    }
-                }
+                crearEdificiosIniciales()
+            }
+
+            if (AsignacionPuesto.count() == 0) {
+                crearAsignacionesIniciales()
             }
         }
     }
     def destroy = {
     }
 
-    def listaUsuariosIniciales() {
-        return [
+    def crearUsuariosIniciales() {
+        def usuarios = [
             [
                 usuario: [
                     nombre     : "Carlos Oquendo",
@@ -353,25 +301,76 @@ class BootStrap {
                           esDefault: true]
             ]
         ]
+        usuarios.each { datosUsuario ->
+            def usuario = new Usuario(datosUsuario.usuario)
+            if (!usuario.save(flush:true)) {
+                println "Error al crear usuario: " + usuario.errors
+            } else {
+                def auto = new Auto(datosUsuario.auto)
+                auto.usuario = usuario
+                if (!auto.save(flush:true)) {
+                    println "Error al crear auto: " + auto.errors
+                }
+            }
+        }
     }
 
-    def listaDistanciasEdificioIniciales() {
-        return [
+    def crearDistanciasEdificioIniciales() {
+        def distancias = [
             [codigo: 'M', descripcion: 'Matriz'],
             [codigo: 'C', descripcion: 'Cerca'],
             [codigo: 'L', descripcion: 'Lejos']
         ]
+        distancias.each { datosDistancia ->
+            def distanciaEdificio = new DistanciaEdificio(datosDistancia)
+            if (!distanciaEdificio.save(flush:true)) {
+                println "Error al crear distancia edificio: " + distanciaEdificio.errors
+            }
+        }
     }
 
-    def listaTiposPreferenciaIniciales() {
-        return [
+    def crearTiposPreferenciaIniciales() {
+        def preferencias = [
             [codigo: 'S', descripcion: 'Sale'],
             [codigo: 'N', descripcion: 'No sale']
         ]
+        preferencias.each { datosPreferencia ->
+            def preferencia = new TipoPreferencia(datosPreferencia)
+            if (!preferencia.save(flush:true)) {
+                println "Error al crear tipo preferencia: " + preferencia.errors
+            }
+        }
     }
 
-    def listaEdificiosIniciales() {
-        return [
+    def crearTiposTransicionIniciales() {
+        def tipoTransicion1 = new TipoTransicion([
+            nombre          : "Lejos a Matriz",
+            distanciaOrigen : DistanciaEdificio.findByCodigo("L"),
+            distanciaDestino: DistanciaEdificio.findByCodigo("M"),
+            prioridad       : 1
+        ])
+        def tipoTransicion2 = new TipoTransicion([
+            nombre          : "Cerca a Lejos",
+            distanciaOrigen : DistanciaEdificio.findByCodigo("C"),
+            distanciaDestino: DistanciaEdificio.findByCodigo("L"),
+            prioridad       : 2
+        ])
+        def tipoTransicion3 = new TipoTransicion([
+            nombre          : "Matriz a Cerca",
+            distanciaOrigen : DistanciaEdificio.findByCodigo("M"),
+            distanciaDestino: DistanciaEdificio.findByCodigo("C"),
+            prioridad       : 3
+        ])
+        if (!tipoTransicion1.save(flush:true) || !tipoTransicion2.save(flush:true) || !tipoTransicion3.save(flush:true)) {
+            println "Error al crear tipo transicion: "
+            println "1: " + tipoTransicion1.errors
+            println "2: " + tipoTransicion2.errors
+            println "3: " + tipoTransicion3.errors
+        }
+    }
+
+    def crearEdificiosIniciales() {
+        def edificios = [
             [
                 edificio: [
                     nombre     : "Brescia",
@@ -431,9 +430,9 @@ class BootStrap {
                         "Cuenta corriente Pacífico: 05265673"
                 ],
                 puestos : [
-                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70],
-                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70],
-                    [tamanio: Tamanio.GRANDE, numero: "s/n", precio: 70]
+                    [tamanio: Tamanio.GRANDE, numero: "1", precio: 70],
+                    [tamanio: Tamanio.GRANDE, numero: "2", precio: 70],
+                    [tamanio: Tamanio.GRANDE, numero: "3", precio: 70]
                 ]
             ],
             [
@@ -457,5 +456,78 @@ class BootStrap {
                 ]
             ]
         ]
+        edificios.each { datosEdificio ->
+            def edificio = new Edificio(datosEdificio.edificio)
+            if (!edificio.save(flush:true)) {
+                println "Error al crear edificio: " + edificio.errors
+            } else {
+                datosEdificio.puestos.each { datosPuesto ->
+                    def puesto = new Puesto(datosPuesto)
+                    puesto.edificio = edificio
+                    if (!puesto.save(flush:true)) {
+                        println "Error al crear puesto: " + puesto.errors
+                    }
+                }
+            }
+        }
+    }
+
+    def crearAsignacionesIniciales() {
+        def edificioBrescia = Edificio.findByNombre("Brescia")
+        def edificioEloyAlfaro = Edificio.findByNombre("Eloy Alfaro")
+        def edificioPraga1 = Edificio.findByNombre("Praga 1")
+        def edificioPraga2 = Edificio.findByNombre("Praga 2")
+        def edificioSamoa = Edificio.findByNombre("Samoa")
+        def edificioArdres = Edificio.findByNombre("Ardres")
+        def edificioLeParc = Edificio.findByNombre("Le Parc")
+
+        def asignaciones = []
+        asignaciones += [usuario: Usuario.findByEmail("coquendo@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "26" }]
+        asignaciones += [usuario: Usuario.findByEmail("mmurillo@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "37" }]
+        asignaciones += [usuario: Usuario.findByEmail("ftorre@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "44" }]
+        asignaciones += [usuario: Usuario.findByEmail("dalcocer@thoughtworks.com"),
+                         puesto : edificioEloyAlfaro.puestos.find { it.numero == "6" }]
+        asignaciones += [usuario: Usuario.findByEmail("pjimenez@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "38" }]
+        asignaciones += [usuario: Usuario.findByEmail("geguez@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "25" }]
+        asignaciones += [usuario: Usuario.findByEmail("gcortez@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "27" }]
+        asignaciones += [usuario: Usuario.findByEmail("fureta@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "18" }]
+        asignaciones += [usuario: Usuario.findByEmail("ipazmino@thoughtworks.com"),
+                         puesto : edificioBrescia.puestos.find { it.numero == "39" }]
+        asignaciones += [usuario: Usuario.findByEmail("rvallejo@thoughtworks.com"),
+                         puesto : edificioPraga1.puestos.find { it.numero == "9" }]
+        asignaciones += [usuario: Usuario.findByEmail("mescudero@thoughtworks.com"),
+                         puesto : edificioLeParc.puestos.find { it.numero == "1" }]
+        asignaciones += [usuario: Usuario.findByEmail("vperez@thoughtworks.com"),
+                         puesto : edificioSamoa.puestos.find { it.numero == "50" }]
+        asignaciones += [usuario: Usuario.findByEmail("fcoronel@thoughtworks.com"),
+                         puesto : edificioArdres.puestos.find { it.numero == "57" }]
+        asignaciones += [usuario: Usuario.findByEmail("lmunda@thoughtworks.com"),
+                         puesto : edificioLeParc.puestos.find { it.numero == "2" }]
+        asignaciones += [usuario: Usuario.findByEmail("njumbo@thoughtworks.com"),
+                         puesto : edificioPraga2.puestos.find { it.numero == "22" }]
+        asignaciones += [usuario: Usuario.findByEmail("fcastane@thoughtworks.com"),
+                         puesto : edificioLeParc.puestos.find { it.numero == "3" }]
+
+        asignaciones.each { asignacion ->
+            crearAsignacion(asignacion.usuario, asignacion.puesto)
+        }
+    }
+
+    def crearAsignacion(Usuario usuario, Puesto puesto) {
+        def auto = usuario.autos.first()
+        def asignacion = new AsignacionPuesto()
+        asignacion.fechaAsignacion = new Date()
+        asignacion.auto = auto
+        asignacion.puesto = puesto
+        if (!asignacion.save(flush:true)) {
+            println "error al guardar asignacion de ${usuario.toString()} a ${puesto.toString()}"
+        }
     }
 }
