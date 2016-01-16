@@ -33,10 +33,20 @@
                         <tbody>
                             <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
                                 <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
+                                <g:set var="asignacion" value="${AsignacionPuesto.findByAuto(auto)}"/>
                                 <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-                                    <td>${fieldValue(bean: usuarioInstance, field: "nombre")}</td>
-                                    <td>${auto}</td>
-                                    <td>${AsignacionPuesto.findByAuto(auto)}</td>
+                                    <td>
+                                        ${fieldValue(bean: usuarioInstance, field: "nombre")}
+                                    </td>
+                                    <td>
+                                        ${auto}
+                                    </td>
+                                    <td>
+                                        ${asignacion?.puesto}
+                                        <g:if test="${asignacion?.puesto?.edificio?.observaciones}">
+                                            <br/>[${asignacion?.puesto?.edificio?.observaciones}]
+                                        </g:if>
+                                    </td>
                                 </tr>
                             </g:each>
                         </tbody>

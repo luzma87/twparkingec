@@ -61,9 +61,13 @@
                                 
                             <td><g:formatBoolean boolean="${edificioInstance.esAmpliable}" false="${message(code: 'default.boolean.no')}" true="${message(code: 'default.boolean.yes')}" /></td>
                             
-                            <td><g:fieldValue bean="${edificioInstance}" field="datosPago"/></td>
+                            <td>
+                                ${raw(edificioInstance.datosPago)}
+                            </td>
                                 
-                            <td><g:fieldValue bean="${edificioInstance}" field="observaciones"/></td>
+                            <td>
+                                <g:fieldValue bean="${edificioInstance}" field="observaciones"/>
+                            </td>
                                 
                             <td>
                                 <div class="btn-group btn-group-sm">
