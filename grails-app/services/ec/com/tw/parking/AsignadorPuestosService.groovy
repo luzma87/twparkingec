@@ -89,9 +89,6 @@ class AsignadorPuestosService {
         asignacion.puesto = puesto
         asignacion.fechaAsignacion = new Date()
 
-        def historico = new HistoricoAsignacionPuesto()
-        historico.properties = asignacion.properties
-        historico.save()
         return asignacion.save()
     }
 

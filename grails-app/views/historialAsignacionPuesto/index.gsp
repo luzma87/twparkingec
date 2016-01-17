@@ -26,13 +26,24 @@
 
                     <table class="table table-bordered table-condensed table-striped">
                         <tbody>
-                            <g:each in="${HistoricoAsignacionPuesto.list()}" status="i" var="historial">
-                                <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                            <g:if test="${historial.size() > 0}">
+                                <g:each in="${HistoricoAsignacionPuesto.list()}" status="i" var="historial">
+                                    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                                        <td>
+                                            ${historial}
+                                        </td>
+                                    </tr>
+                                </g:each>
+                            </g:if>
+                            <g:else>
+                                <tr class="info text-shadow text-center">
                                     <td>
-                                        ${historial}
+                                        <i class="fa icon-ghost fa-2x"></i>
+                                        No se encontró el historial de asignaciones.
+                                        El historial se guarda una vez que se termina la asignación
                                     </td>
                                 </tr>
-                            </g:each>
+                            </g:else>
                         </tbody>
                     </table>
                 </div>
