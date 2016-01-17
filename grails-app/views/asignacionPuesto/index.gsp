@@ -16,6 +16,8 @@
 
     <body>
 
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-primary">
@@ -29,12 +31,13 @@
                         </h3>
                     </div>
 
-                    <table class="table table-bordered table-condensed table-striped">
+                    <table class="table table-bordered table-condensed table-striped table-hover">
                         <tbody>
                             <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
                                 <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
                                 <g:set var="asignacion" value="${AsignacionPuesto.findByAuto(auto)}"/>
-                                <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                                <tr>
+                                    <td>${i + 1}</td>
                                     <td>
                                         ${asignacion}
                                         <g:if test="${asignacion?.puesto?.edificio?.observaciones}">
