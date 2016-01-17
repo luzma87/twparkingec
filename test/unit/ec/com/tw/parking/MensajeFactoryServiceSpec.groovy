@@ -69,8 +69,8 @@ class MensajeFactoryServiceSpec extends Specification {
     }
 
     private obtenerPrecioPuesto(edificio) {
-        def precio = getRandomDouble(100)
-        def puesto = PuestoBuilder.nuevo().con{pb -> pb.precio = precio}.crear()
+        def precio = getRandomDouble(1, 100)
+        def puesto = PuestoBuilder.nuevo().con { pb -> pb.precio = precio }.crear()
         GroovyMock(Puesto, global: true)
         Puesto.findByEdificioAndPrecioGreaterThan(edificio, 0) >> puesto
         return precio
