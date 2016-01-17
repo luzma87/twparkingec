@@ -43,6 +43,6 @@ class Puesto {
     }
 
     String toString() {
-        return this.edificio.nombre + " " + this.numero
+        return this.edificio.nombre + " #" + this.numero
     }
 }

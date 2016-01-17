@@ -82,6 +82,6 @@ class PuestoSpec extends Specification {
         def puesto = PuestoBuilder.nuevo().crear()
 
         expect:
-        puesto.toString() == puesto.edificio.nombre + " " + puesto.numero
+        puesto.toString() == puesto.edificio.nombre + " #" + puesto.numero
     }
 }

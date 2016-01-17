@@ -56,7 +56,7 @@ class AsignacionPuestoSpec extends Specification {
         def placa = asignacionPuesto.auto.placa
         def edificio = asignacionPuesto.puesto.edificio.nombre
         def numero = asignacionPuesto.puesto.numero
-        asignacionPuesto.toString() == persona + " (" + placa + ") → " + edificio + " " + numero
+        asignacionPuesto.toString() == persona + " (" + placa + ") → " + edificio + " #" + numero
     }
 
 
