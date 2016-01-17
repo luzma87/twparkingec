@@ -248,7 +248,7 @@ class BootStrap {
                     nombre     : "Luz Marina Unda",
                     email      : "lmunda@thoughtworks.com",
                     password   : "123".encodeAsSHA256(),
-                    esAdmin    : false,
+                    esAdmin    : true,
                     cedula     : "1715068159",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
@@ -294,6 +294,7 @@ class BootStrap {
                     email      : "iecheve@thoughtworks.com",
                     password   : "123".encodeAsSHA256(),
                     esAdmin    : false,
+                    estaActivo : false,
                     cedula     : "1802847440",
                     preferencia: TipoPreferencia.findByCodigo("S")
                 ],
@@ -519,14 +520,8 @@ class BootStrap {
         asignacion.fechaAsignacion = new Date()
         asignacion.auto = auto
         asignacion.puesto = puesto
-        def historico = new HistoricoAsignacionPuesto()
-        historico.properties = asignacion.properties
         if (!asignacion.save(flush: true)) {
             println "error al guardar asignacion de ${usuario.toString()} a ${puesto.toString()}"
-        } else {
-            if (!historico.save(flush: true)) {
-                println "error al guardar historico de asignacion de ${usuario.toString()} a ${puesto.toString()}"
-            }
         }
     }
 }
