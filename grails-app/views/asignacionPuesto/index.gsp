@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <g:message code="puesto.actual"/>
-                            <g:link controller="asignacion" action="reasignar"
+                            <g:link controller="asignacionPuesto" action="reasignar"
                                     class="pull-right btn btn-xs btn-success">
                                 Reasignar
                             </g:link>

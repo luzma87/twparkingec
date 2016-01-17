@@ -9,7 +9,9 @@
 <html>
     <head>
         <meta name="layout" content="main"/>
-        <title>Parámetros</title>
+        <title>
+            <g:message code="parametros.title"/>
+        </title>
     </head>
 
     <body>
@@ -23,19 +25,19 @@
                     <li>
                         <i class="fa-li fa fa-circle-thin"></i>
                         <g:link controller="distanciaEdificio" action="index">
-                            Distancia Edificio
+                            <g:message code="distanciaEdificio.label"/>
                         </g:link>
                     </li>
                     <li>
                         <i class="fa-li fa fa-circle-thin"></i>
                         <g:link controller="tipoPreferencia" action="index">
-                            Tipo de preferencia
+                            <g:message code="tipoPreferencia.label"/>
                         </g:link>
                     </li>
                     <li>
                         <i class="fa-li fa fa-circle-thin"></i>
                         <g:link controller="tipoTransicion" action="index">
-                            Tipo de transición
+                            <g:message code="tipoTransicion.label"/>
                         </g:link>
                     </li>
                 </ul>

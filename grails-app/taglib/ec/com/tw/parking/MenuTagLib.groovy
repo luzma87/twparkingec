@@ -17,41 +17,41 @@ class MenuTagLib {
         }
 
         def items = [
-            inicio: [
+            inicio : [
                 controller: "inicio",
                 action    : "index",
                 label     : message(code: 'navbar.home'),
                 icon      : "fa-home"
             ],
-            admin : [
+            admin  : [
                 label: message(code: 'navbar.admin'),
                 icon : "fa-cog",
                 items: [
-                    usuarios    : [
+                    usuarios  : [
                         controller: "usuario",
                         action    : "list",
                         label     : message(code: 'navbar.users'),
                         icon      : "fa-user"
                     ],
-                    autos       : [
+                    autos     : [
                         controller: "auto",
                         action    : "list",
                         label     : message(code: 'navbar.autos'),
                         icon      : "fa-car"
                     ],
-                    edificios   : [
+                    edificios : [
                         controller: "edificio",
                         action    : "list",
                         label     : message(code: 'navbar.edificios'),
                         icon      : "fa-building"
                     ],
-                    puestos     : [
+                    puestos   : [
                         controller: "puesto",
                         action    : "list",
                         label     : message(code: 'navbar.puestos'),
                         icon      : "fa-cube"
                     ],
-                    parametros  : [
+                    parametros: [
                         controller: "parametros",
                         action    : "index",
                         label     : message(code: 'navbar.parametros'),
@@ -61,11 +61,17 @@ class MenuTagLib {
                 ]
             ],
             asignar: [
-            controller: "asignacion",
-            action    : "index",
-            label     : message(code: 'navbar.asignar'),
-            icon      : "fa-bullseye"
-        ],
+                controller: "asignacionPuesto",
+                action    : "index",
+                label     : message(code: 'navbar.asignar'),
+                icon      : "fa-bullseye"
+            ],
+            historial: [
+                controller: "historialAsignacionPuesto",
+                action    : "index",
+                label     : message(code: 'navbar.historial'),
+                icon      : "fa-calendar"
+            ]
         ]
 
         items.each { k, item ->
