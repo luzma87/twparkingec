@@ -12,7 +12,7 @@ class EnviarMailService {
 
     def g = new ApplicationTagLib()
 
-    def enviarMail(String[] destinatarios, String asunto, String mensaje) {
+    def enviarMail(destinatarios, asunto, mensaje) {
         if (!destinatarios || destinatarios.size() == 0) {
             throw new EnviarMailException(ERROR_MAIL_DESTINATARIO)
         }
