@@ -38,9 +38,15 @@ class GeneradorNotificacionesService {
         format.maximumFractionDigits = 2
         cuota = format.format(cuota)
         def mensaje = "<p>Se han asignado los nuevos puestos de parqueo para este mes.</p>" +
-            "<p>La cuota para este mes es de \$" + cuota + ". Por favor hagan el depósito lo más pronto posible.</p>" +
+            "<p>La cuota para este mes es de \$" + cuota + ". Por favor hagan el depósito lo más pronto posible, los datos son:</p>" +
+            "<p>Cuenta de ahorros banco del Pichincha<br/>" +
+            "4038057000<br/>" +
+            "Luz Marina Unda<br/>" +
+            "CI: 1715068159</p>" +
+            "<p>Porfa envíen el mail de confirmación a twparkingec@thoughtworks.com Y a twparkingec@gmail.com</p>"
             "<p>La nueva organización es la siguiente:<p>"
         mensaje += mensajeFactoryService.construirMensajeExito()
+
 
         return [
             destinatarios: usuarios,
