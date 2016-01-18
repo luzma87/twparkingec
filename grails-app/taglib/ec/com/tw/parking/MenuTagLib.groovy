@@ -58,7 +58,7 @@ class MenuTagLib {
         html += "                   <li class=\"dropdown\">"
         html += "                       <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Usuario <b class=\"caret\"></b></a>"
         html += "                       <ul class=\"dropdown-menu\">"
-        html += "                           <li><a href=\"${createLink(controller: 'persona', action: 'personal')}\"><i class=\"fa fa-cogs\"></i> ${message(code: 'navbar.user.config')}</a></li>"
+        html += "                           <li><a href=\"${createLink(controller: 'usuario', action: 'personal')}\"><i class=\"fa fa-cogs\"></i> ${message(code: 'navbar.user.config')}</a></li>"
         html += "                           <li class=\"divider\"></li>"
         html += "                           <li><a href=\"${createLink(controller: 'login', action: 'logout')}\"><i class=\"fa fa-power-off\"></i> ${message(code: 'navbar.user.logout')}</a></li>"
         html += "                       </ul>"

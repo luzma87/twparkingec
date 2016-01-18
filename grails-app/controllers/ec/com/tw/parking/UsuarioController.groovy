@@ -46,4 +46,31 @@ class UsuarioController extends Shield {
         def usuarioInstance = crudHelperService.obtenerObjeto(Usuario, params.id)
         return [usuarioInstance: usuarioInstance]
     }
+
+    def personal() {
+        def usuario = Usuario.get(session.usuario.id)
+        return [usuarioInstance: usuario]
+    }
+
+    def save() {
+        def usuarioInstance = crudHelperService.obtenerObjeto(Usuario, params.id)
+        if (!usuarioInstance) {
+            render msgBuilder.renderNoEncontrado(entidad: 'usuario')
+            return
+        }
+        if (params.password) {
+            params.password = params.password.toString().encodeAsSHA256()
+        }
+        if (params.old_password && session.usuario.password != params.old_password.toString().trim().encodeAsSHA256()) {
+            flash.tipo = "error"
+            flash.message = "Su contraseña actual no concuerda"
+            redirect(action: "personal")
+            return
+        }
+        def result = crudHelperService.guardarObjeto(usuarioInstance, params)
+        def parts = result.split("\\*")
+        flash.tipo = parts[0]
+        flash.message = parts[1]
+        redirect(action: "personal")
+    }
 }

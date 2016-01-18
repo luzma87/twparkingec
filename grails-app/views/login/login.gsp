@@ -24,7 +24,9 @@
             <div class="col-md-4 col-md-offset-3">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Inicio de sesión</h3>
+                        <h3 class="panel-title">
+                            <g:message code="login.label"/>
+                        </h3>
                     </div>
 
                     <div class="panel-body">
@@ -35,7 +37,9 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-user"></i>
                                     </span>
-                                    <g:textField class="form-control required" placeholder="Usuario" name="usuario" required=""/>
+                                    <g:textField class="form-control required"
+                                                 placeholder="${g.message(code: 'usuario.label')}"
+                                                 name="usuario" required=""/>
                                     <span class="input-group-addon">
                                         @thoughtworks.com
                                     </span>
@@ -47,12 +51,14 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-lock"></i>
                                     </span>
-                                    <g:passwordField class="form-control required" placeholder="Password" name="password" required=""/>
+                                    <g:passwordField class="form-control required"
+                                                     placeholder="${g.message(code: 'usuario.password.label')}"
+                                                     name="password" required=""/>
                                 </div>
                             </div>
 
                             <button type="submit" id="btnLogin" class="btn btn-block btn-success">
-                                <i class="fa fa-sign-in"></i> Entrar
+                                <i class="fa fa-sign-in"></i> <g:message code="login.enter.label"/>
                             </button>
                         </g:form>
                     </div>

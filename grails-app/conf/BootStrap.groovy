@@ -482,13 +482,13 @@ class BootStrap {
                          puesto : edificioBrescia.puestos.find { it.numero == "44" }]
         asignaciones += [usuario: Usuario.findByEmail("dalcocer@thoughtworks.com"),
                          puesto : edificioEloyAlfaro.puestos.find { it.numero == "6" }]
-        asignaciones += [usuario: Usuario.findByEmail("pjimenez@thoughtworks.com"),
+        asignaciones += [usuario: Usuario.findByEmail("fureta@thoughtworks.com"),
                          puesto : edificioBrescia.puestos.find { it.numero == "38" }]
         asignaciones += [usuario: Usuario.findByEmail("geguez@thoughtworks.com"),
                          puesto : edificioBrescia.puestos.find { it.numero == "25" }]
         asignaciones += [usuario: Usuario.findByEmail("gcortez@thoughtworks.com"),
                          puesto : edificioBrescia.puestos.find { it.numero == "27" }]
-        asignaciones += [usuario: Usuario.findByEmail("fureta@thoughtworks.com"),
+        asignaciones += [usuario: Usuario.findByEmail("pjimenez@thoughtworks.com"),
                          puesto : edificioBrescia.puestos.find { it.numero == "18" }]
         asignaciones += [usuario: Usuario.findByEmail("ipazmino@thoughtworks.com"),
                          puesto : edificioBrescia.puestos.find { it.numero == "39" }]
