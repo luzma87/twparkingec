@@ -16,7 +16,8 @@ class AsignacionPuestoController extends Shield {
             datosNotificacion.asunto,
             datosNotificacion.mensaje
         )
-        flash.message = "OKI"
+        flash.message = "Puestos reasignados exitosamente y mail de notificacion enviado"
+        flash.tipo = "success"
         redirect(controller: "asignacionPuesto", action: "index")
     }
 }
