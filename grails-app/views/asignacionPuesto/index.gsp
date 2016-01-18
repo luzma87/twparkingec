@@ -33,9 +33,7 @@
 
                     <table class="table table-bordered table-condensed table-striped table-hover">
                         <tbody>
-                            <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
-                                <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
-                                <g:set var="asignacion" value="${AsignacionPuesto.findByAuto(auto)}"/>
+                            <g:each in="${AsignacionPuesto.list()}" status="i" var="asignacion">
                                 <tr>
                                     <td>${i + 1}</td>
                                     <td>

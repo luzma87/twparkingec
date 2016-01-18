@@ -18,28 +18,27 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <g:message code="default.registered.people"/>
-                            <span class="badge pull-right">${Usuario.count()}</span>
                         </h3>
                     </div>
 
                     <table class="table table-bordered table-condensed table-striped">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>${message(code: 'usuario.nombre.label')}</th>
                                 <th>${message(code: 'auto.label')}</th>
                                 <th>${message(code: 'puesto.label')}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <g:each in="${Usuario.list()}" status="i" var="usuarioInstance">
-                                <g:set var="auto" value="${usuarioInstance.autos.find { it.esDefault }}"/>
-                                <g:set var="asignacion" value="${AsignacionPuesto.findByAuto(auto)}"/>
-                                <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                            <g:each in="${AsignacionPuesto.list()}" status="i" var="asignacion">
+                                <tr>
+                                    <td>${i + 1}</td>
                                     <td>
-                                        ${fieldValue(bean: usuarioInstance, field: "nombre")}
+                                        ${asignacion.auto.usuario}
                                     </td>
                                     <td>
-                                        ${auto}
+                                        ${asignacion.auto} (${asignacion.auto.placa})
                                     </td>
                                     <td>
                                         ${asignacion?.puesto}
