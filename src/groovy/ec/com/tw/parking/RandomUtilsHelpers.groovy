@@ -48,20 +48,20 @@ class RandomUtilsHelpers {
         return array[pos]
     }
 
-    static getRandomInt(max) {
+    static Integer getRandomInt(max) {
         return getRandomInt(0, max)
     }
 
-    static getRandomInt(min, max) {
+    static Integer getRandomInt(min, max) {
         Random random = new Random()
         return random.nextInt(max - min) + min
     }
 
-    static getRandomDouble(max) {
+    static Double getRandomDouble(max) {
         return getRandomDouble(0, max)
     }
 
-    static getRandomDouble(min, max) {
+    static Double getRandomDouble(min, max) {
         def entero = getRandomInt(min, max - 1)
         def decimal = getRandomInt(0, 100) / 100
         return entero + decimal
