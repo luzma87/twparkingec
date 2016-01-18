@@ -16,63 +16,7 @@ class MenuTagLib {
             attrs.title = "TW Parking EC"
         }
 
-        def items = [
-            inicio : [
-                controller: "inicio",
-                action    : "index",
-                label     : message(code: 'navbar.home'),
-                icon      : "fa-home"
-            ],
-            admin  : [
-                label: message(code: 'navbar.admin'),
-                icon : "fa-cog",
-                items: [
-                    usuarios  : [
-                        controller: "usuario",
-                        action    : "list",
-                        label     : message(code: 'navbar.users'),
-                        icon      : "fa-user"
-                    ],
-                    autos     : [
-                        controller: "auto",
-                        action    : "list",
-                        label     : message(code: 'navbar.autos'),
-                        icon      : "fa-car"
-                    ],
-                    edificios : [
-                        controller: "edificio",
-                        action    : "list",
-                        label     : message(code: 'navbar.edificios'),
-                        icon      : "fa-building"
-                    ],
-                    puestos   : [
-                        controller: "puesto",
-                        action    : "list",
-                        label     : message(code: 'navbar.puestos'),
-                        icon      : "fa-cube"
-                    ],
-                    parametros: [
-                        controller: "parametros",
-                        action    : "index",
-                        label     : message(code: 'navbar.parametros'),
-                        icon      : "fa-cog",
-                        separator : true
-                    ]
-                ]
-            ],
-            asignar: [
-                controller: "asignacionPuesto",
-                action    : "index",
-                label     : message(code: 'navbar.asignar'),
-                icon      : "fa-bullseye"
-            ],
-            historial: [
-                controller: "asignacionPuesto",
-                action    : "historial",
-                label     : message(code: 'navbar.historial'),
-                icon      : "fa-calendar"
-            ]
-        ]
+        def items = getMenuItems()
 
         items.each { k, item ->
             strItems += renderNavbarItem(item)
@@ -127,6 +71,91 @@ class MenuTagLib {
 
         out << raw(html)
     }
+
+    private getMenuItems() {
+        if (session.esAdmin) {
+            return getAdminMenuItems()
+        }
+        return getUsuariosMenuItems()
+    }
+
+    private getAdminMenuItems() {
+        return [
+            inicio   : [
+                controller: "inicio",
+                action    : "index",
+                label     : message(code: 'navbar.home'),
+                icon      : "fa-home"
+            ],
+            admin    : [
+                label: message(code: 'navbar.admin'),
+                icon : "fa-cog",
+                items: [
+                    usuarios  : [
+                        controller: "usuario",
+                        action    : "list",
+                        label     : message(code: 'navbar.users'),
+                        icon      : "fa-user"
+                    ],
+                    autos     : [
+                        controller: "auto",
+                        action    : "list",
+                        label     : message(code: 'navbar.autos'),
+                        icon      : "fa-car"
+                    ],
+                    edificios : [
+                        controller: "edificio",
+                        action    : "list",
+                        label     : message(code: 'navbar.edificios'),
+                        icon      : "fa-building"
+                    ],
+                    puestos   : [
+                        controller: "puesto",
+                        action    : "list",
+                        label     : message(code: 'navbar.puestos'),
+                        icon      : "fa-cube"
+                    ],
+                    parametros: [
+                        controller: "parametros",
+                        action    : "index",
+                        label     : message(code: 'navbar.parametros'),
+                        icon      : "fa-cog",
+                        separator : true
+                    ]
+                ]
+            ],
+            asignar  : [
+                controller: "asignacionPuesto",
+                action    : "index",
+                label     : message(code: 'navbar.asignar'),
+                icon      : "fa-bullseye"
+            ],
+            historial: [
+                controller: "asignacionPuesto",
+                action    : "historial",
+                label     : message(code: 'navbar.historial'),
+                icon      : "fa-calendar"
+            ]
+        ]
+    }
+
+    private getUsuariosMenuItems() {
+        return [
+            inicio   : [
+                controller: "inicio",
+                action    : "index",
+                label     : message(code: 'navbar.home'),
+                icon      : "fa-home"
+            ],
+            historial: [
+                controller: "asignacionPuesto",
+                action    : "historial",
+                label     : message(code: 'navbar.historial'),
+                icon      : "fa-calendar"
+            ]
+        ]
+    }
+
 
     private String renderNavbarItem(item) {
         def str = "", clase = ""
