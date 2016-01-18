@@ -5,7 +5,7 @@
   Time: 22:47
 --%>
 
-<%@ page import="ec.com.tw.parking.AsignacionPuesto; ec.com.tw.parking.HistoricoAsignacionPuesto" contentType="text/html;charset=UTF-8" %>
+<%@ page import="ec.com.tw.parking.AsignacionPuesto;" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main"/>
