@@ -40,9 +40,8 @@ class MensajeFactoryService {
             mensaje += asignacion.auto.usuario
             mensaje += "</td>"
             mensaje += "<td>"
-            mensaje += asignacion
+            mensaje += asignacion.puesto
             mensaje += "</td>"
-            mensaje += "</tr>"
             mensaje += "</tr>"
         }
         mensaje += "</tbody>"
