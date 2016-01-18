@@ -63,6 +63,16 @@ class AsignadorPuestosService {
                 puestos += it
             }
         }
+        puestos = quitarPuestosOcupados(puestos)
+        DistanciaEdificio nuevaDistanciaDestino = distanciaDestino.obtenerDestino()
+        def puestoPosible = puestos.find { it.edificio.distancia == nuevaDistanciaDestino }
+        if (!puestoPosible && puestos.size() > 0) {
+            puestoPosible = puestos.first()
+        }
+        asignarPuestoAauto(puestoPosible, autoSinPuesto.auto)
+    }
+
+    def quitarPuestosOcupados(puestos) {
         def quitar = []
         puestos.eachWithIndex { puesto, index ->
             def asg = AsignacionPuesto.findAllByPuestoAndFechaLiberacionIsNull(puesto)
@@ -73,15 +83,7 @@ class AsignadorPuestosService {
         quitar.each {
             puestos.remove(it)
         }
-        DistanciaEdificio nuevaDistanciaDestino = distanciaDestino.obtenerDestino()
-        def puestoPosible = puestos.find { it.edificio.distancia == nuevaDistanciaDestino }
-        if (!puestoPosible && puestos.size() > 0) {
-            puestoPosible = puestos.first()
-            if (!puestoPosible) {
-                def asg = AsignacionPuesto.findAllByFechaLiberacionIsNotNullAndFechaLiberacionLessThan(new Date())
-            }
-        }
-        asignarPuestoAauto(puestoPosible, autoSinPuesto.auto)
+        return puestos
     }
 
     def ordenarAutosPorTamanio(autosEnEspera) {
@@ -89,16 +91,7 @@ class AsignadorPuestosService {
     }
 
     Puesto obtenerPuestoAdecuado(ArrayList<Puesto> puestos, Auto auto) {
-        def quitar = []
-        puestos.eachWithIndex { puesto, index ->
-            def asg = AsignacionPuesto.findAllByPuestoAndFechaLiberacionIsNull(puesto)
-            if (asg.size() > 0) {
-                quitar += puesto
-            }
-        }
-        quitar.each {
-            puestos.remove(it)
-        }
+        puestos = quitarPuestosOcupados(puestos)
         return puestos.find { it.tamanio.valor >= auto.tamanio.valor }
     }
 
