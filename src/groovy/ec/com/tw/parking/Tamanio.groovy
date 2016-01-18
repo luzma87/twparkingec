@@ -23,4 +23,18 @@ public enum Tamanio {
     Integer getValor() {
         return valor
     }
+
+    def getTamaniosCompatibles() {
+        switch (this) {
+            case PEQUENIO:
+                return [PEQUENIO, MEDIANO, GRANDE]
+                break
+            case MEDIANO:
+                return [MEDIANO, GRANDE]
+                break
+            case GRANDE:
+                return [GRANDE]
+                break
+        }
+    }
 }

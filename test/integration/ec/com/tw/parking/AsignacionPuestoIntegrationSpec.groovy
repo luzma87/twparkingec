@@ -53,10 +53,19 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         setup:
         def distancia = DistanciaEdificioBuilder.nuevo().guardar()
         def edificio = EdificioBuilder.nuevo().con { ed -> ed.distancia = distancia }.guardar()
+        def preferenciaSale = TipoPreferenciaBuilder.nuevo().con { p -> p.codigo = "S" }.guardar()
+        def preferenciaNoSale = TipoPreferenciaBuilder.nuevo().con { p -> p.codigo = "N" }.guardar()
         def puestosDistanciaCorrecta = [], otrosPuestos = [], autos = []
         5.times { puestosDistanciaCorrecta += PuestoBuilder.nuevo().con { pb -> pb.edificio = edificio }.guardar() }
         5.times { otrosPuestos += PuestoBuilder.nuevo().guardar() }
-        10.times { autos += AutoBuilder.nuevo().guardar() }
+        5.times {
+            autos += AutoBuilder.nuevo()
+                .con { a -> a.usuario.preferencia = preferenciaSale }.guardar()
+        }
+        5.times {
+            autos += AutoBuilder.nuevo()
+                .con { a -> a.usuario.preferencia = preferenciaNoSale }.guardar()
+        }
         List<AsignacionPuesto> asignacionesEsperadas = []
         5.times {
             asignacionesEsperadas += AsignacionPuestoBuilder.nuevo()
@@ -68,6 +77,6 @@ class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
         }
 
         expect:
-        AsignacionPuesto.obtenerPorDistancia(distancia) == asignacionesEsperadas
+        AsignacionPuesto.obtenerOcupadosPorDistanciaYpreferenciaSale(distancia) == asignacionesEsperadas
     }
 }

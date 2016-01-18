@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <g:each in="${AsignacionPuesto.list()}" status="i" var="asignacion">
+                            <g:each in="${AsignacionPuesto.findAllByFechaLiberacionIsNull([order: 'auto'])}" status="i" var="asignacion">
                                 <tr>
                                     <td>${i + 1}</td>
                                     <td>

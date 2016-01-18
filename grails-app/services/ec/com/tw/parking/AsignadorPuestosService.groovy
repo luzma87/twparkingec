@@ -58,10 +58,28 @@ class AsignadorPuestosService {
         def puestos = Puesto.obtenerLibresPorTamanio(autoSinPuesto.auto.tamanio)
         DistanciaEdificio distanciaOrigen = autoSinPuesto.distanciaOrigen
         DistanciaEdificio distanciaDestino = distanciaOrigen.obtenerDestino()
+        distanciaOrigen.obtenerPuestosLibres().each {
+            if (!puestos.contains(it)) {
+                puestos += it
+            }
+        }
+        def quitar = []
+        puestos.eachWithIndex { puesto, index ->
+            def asg = AsignacionPuesto.findAllByPuestoAndFechaLiberacionIsNull(puesto)
+            if (asg.size() > 0) {
+                quitar += puesto
+            }
+        }
+        quitar.each {
+            puestos.remove(it)
+        }
         DistanciaEdificio nuevaDistanciaDestino = distanciaDestino.obtenerDestino()
         def puestoPosible = puestos.find { it.edificio.distancia == nuevaDistanciaDestino }
-        if (!puestoPosible) {
+        if (!puestoPosible && puestos.size() > 0) {
             puestoPosible = puestos.first()
+            if (!puestoPosible) {
+                def asg = AsignacionPuesto.findAllByFechaLiberacionIsNotNullAndFechaLiberacionLessThan(new Date())
+            }
         }
         asignarPuestoAauto(puestoPosible, autoSinPuesto.auto)
     }
@@ -71,6 +89,16 @@ class AsignadorPuestosService {
     }
 
     Puesto obtenerPuestoAdecuado(ArrayList<Puesto> puestos, Auto auto) {
+        def quitar = []
+        puestos.eachWithIndex { puesto, index ->
+            def asg = AsignacionPuesto.findAllByPuestoAndFechaLiberacionIsNull(puesto)
+            if (asg.size() > 0) {
+                quitar += puesto
+            }
+        }
+        quitar.each {
+            puestos.remove(it)
+        }
         return puestos.find { it.tamanio.valor >= auto.tamanio.valor }
     }
 
@@ -80,16 +108,11 @@ class AsignadorPuestosService {
     }
 
     def asignarPuestoAauto(Puesto puesto, Auto auto) {
-        AsignacionPuesto.findAllByAuto(auto).each {
-            it.delete()
-        }
-
         def asignacion = new AsignacionPuesto()
         asignacion.auto = auto
         asignacion.puesto = puesto
         asignacion.fechaAsignacion = new Date()
-
-        return asignacion.save()
+        return asignacion.save(flush: true)
     }
 
     def obtenerUsuariosSinParqueadero(List<Usuario> usuariosNoSalen, List<AsignacionPuesto> asignacionesUsuariosNoSalen) {
@@ -103,7 +126,7 @@ class AsignadorPuestosService {
     def liberarPuestosPrioridad(autosEnEspera, prioridad, cantidadAliberar) {
         def transicionPrioridad = TipoTransicion.findByPrioridad(prioridad)
         def distanciaOrigenPrioridad = transicionPrioridad.distanciaOrigen
-        def asignacionesPrioridad = AsignacionPuesto.obtenerPorDistancia(distanciaOrigenPrioridad)
+        def asignacionesPrioridad = AsignacionPuesto.obtenerOcupadosPorDistanciaYpreferenciaSale(distanciaOrigenPrioridad)
 
         cantidadAliberar.times {
             def asignacion = asignacionesPrioridad[it]

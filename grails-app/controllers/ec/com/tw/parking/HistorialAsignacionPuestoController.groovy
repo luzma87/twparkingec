@@ -5,7 +5,6 @@ import ec.com.tw.parking.commons.Shield
 class HistorialAsignacionPuestoController extends Shield {
 
     def index() {
-        return [historial: HistoricoAsignacionPuesto.list()]
     }
 
 }

@@ -159,7 +159,7 @@ class AsignadorPuestosServiceSpec extends Specification {
                 .crear()
         }
         GroovyMock(AsignacionPuesto, global: true)
-        AsignacionPuesto.obtenerPorDistancia(distanciaOrigenPrioridad) >> asignacionesPrioridad
+        AsignacionPuesto.obtenerOcupadosPorDistanciaYpreferenciaSale(distanciaOrigenPrioridad) >> asignacionesPrioridad
 
         def autosPrioridad = []
         cantidadAliberar.times {

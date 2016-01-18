@@ -110,18 +110,13 @@ class GeneradorNotificacionesConUsuariosNoSalenIntegrationSpec extends Integrati
 
     def "Debe generar notificacion cuando hay igual de usuarios q de puestos, con usuarios con preferencia no sale"() {
         setup:
-        def notificacionEsperada = setupIgualUsuariosQuePuestos("Se han asignado los puestos. La nueva organización es la siguiente:")
+        def notificacionEsperada = setupIgualUsuariosQuePuestos("Se han asignado los nuevos puestos de parqueo para este mes. La nueva organización es la siguiente:")
 
         when:
         def notificacion = generadorNotificacionesService.generarNotificacion()
 
         then:
         expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada)
-//        AsignacionPuesto.withCriteria {
-//            projections {
-//                countDistinct("puesto")
-//            }
-//        } == 15
     }
 
     private setupIgualUsuariosQuePuestos(mensajeEsperado) {
@@ -138,7 +133,12 @@ class GeneradorNotificacionesConUsuariosNoSalenIntegrationSpec extends Integrati
             notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort() &&
             notificacion.asunto == notificacionEsperada.asunto &&
             notificacion.mensaje.startsWith(notificacionEsperada.mensaje) &&
-            AsignacionPuesto.count() == 15 &&
-            HistoricoAsignacionPuesto.count() == 21
+            AsignacionPuesto.count() == 21 &&
+            AsignacionPuesto.withCriteria {
+                isNull("fechaLiberacion")
+                projections {
+                    countDistinct("puesto")
+                }
+            }.first() == 15
     }
 }

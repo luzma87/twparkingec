@@ -9,22 +9,34 @@
 <html>
     <head>
         <style type="text/css">
-        h1 {
+        * {
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .hola {
             color: red;
-            text-align: center;
         }
 
         .mensaje {
             color: blue;
         }
+
+        .table {
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background-color: #bbbbbb;
+        }
         </style>
     </head>
 
     <body>
-        <h1>HOLA</h1>
+        <p class="hola">Hola a tod@s,</p>
 
         <div class="mensaje">
-            ${mensaje}
+            ${raw(mensaje)}
         </div>
     </body>
 </html>

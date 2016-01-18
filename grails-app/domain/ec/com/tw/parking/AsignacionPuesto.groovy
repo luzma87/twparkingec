@@ -51,24 +51,31 @@ class AsignacionPuesto {
         }
     }
 
-    static List<AsignacionPuesto> obtenerPorDistancia(DistanciaEdificio distancia) {
+    static List<AsignacionPuesto> obtenerOcupadosPorDistanciaYpreferenciaSale(DistanciaEdificio distancia) {
+        def preferenciaSale = TipoPreferencia.findByCodigo("S")
         return AsignacionPuesto.withCriteria {
             puesto {
                 edificio {
                     eq("distancia", distancia)
                 }
             }
+            auto {
+                usuario {
+                    eq("preferencia", preferenciaSale)
+                }
+            }
+            isNull("fechaLiberacion")
         }
     }
 
     static int contarOcupadosPorPrioridad(int prioridad) {
         def distanciaOrigen = TipoTransicion.findByPrioridad(prioridad).distanciaOrigen
-        return obtenerPorDistancia(distanciaOrigen).count { it.fechaLiberacion == null }
+        return obtenerOcupadosPorDistanciaYpreferenciaSale(distanciaOrigen).count { it.fechaLiberacion == null }
     }
 
     static int contarLibresPorPrioridad(int prioridad) {
         def distanciaOrigen = TipoTransicion.findByPrioridad(prioridad).distanciaOrigen
-        return obtenerPorDistancia(distanciaOrigen).count {
+        return obtenerOcupadosPorDistanciaYpreferenciaSale(distanciaOrigen).count {
             it.fechaLiberacion != null && it.fechaLiberacion < new Date()
         }
     }

@@ -25,7 +25,7 @@
                         <h3 class="panel-title">
                             <g:message code="puesto.actual"/>
                             <g:link controller="asignacionPuesto" action="reasignar"
-                                    class="pull-right btn btn-xs btn-success">
+                                    class="pull-right btn btn-xs btn-success js-btn-reasignar">
                                 Reasignar
                             </g:link>
                         </h3>
@@ -33,7 +33,7 @@
 
                     <table class="table table-bordered table-condensed table-striped table-hover">
                         <tbody>
-                            <g:each in="${AsignacionPuesto.list()}" status="i" var="asignacion">
+                            <g:each in="${AsignacionPuesto.findAllByFechaLiberacionIsNull([sort: "auto"])}" status="i" var="asignacion">
                                 <tr>
                                     <td>${i + 1}</td>
                                     <td>
@@ -49,5 +49,14 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            $(function () {
+                $(".js-btn-reasignar").click(function () {
+                    openLoader("Por favor espere", "Reasignando puestos");
+                });
+            });
+        </script>
+
     </body>
 </html>

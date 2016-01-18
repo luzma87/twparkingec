@@ -5,7 +5,7 @@
   Time: 22:47
 --%>
 
-<%@ page import="ec.com.tw.parking.HistoricoAsignacionPuesto" contentType="text/html;charset=UTF-8" %>
+<%@ page import="ec.com.tw.parking.AsignacionPuesto; ec.com.tw.parking.HistoricoAsignacionPuesto" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main"/>
@@ -26,24 +26,20 @@
 
                     <table class="table table-bordered table-condensed table-striped">
                         <tbody>
-                            <g:if test="${historial.size() > 0}">
-                                <g:each in="${HistoricoAsignacionPuesto.list()}" status="i" var="historial">
-                                    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-                                        <td>
-                                            ${historial}
-                                        </td>
-                                    </tr>
-                                </g:each>
-                            </g:if>
-                            <g:else>
-                                <tr class="info text-shadow text-center">
+                            <g:each in="${AsignacionPuesto.listOrderByAuto()}" status="i" var="historial">
+                                <tr>
+                                    <td>${i + 1}</td>
                                     <td>
-                                        <i class="fa icon-ghost fa-2x"></i>
-                                        No se encontró el historial de asignaciones.
-                                        El historial se guarda una vez que se termina la asignación
+                                        ${historial}
+                                    </td>
+                                    <td>
+                                        <g:formatDate date="${historial.fechaAsignacion}"/>
+                                    </td>
+                                    <td>
+                                        <g:formatDate date="${historial.fechaLiberacion}"/>
                                     </td>
                                 </tr>
-                            </g:else>
+                            </g:each>
                         </tbody>
                     </table>
                 </div>

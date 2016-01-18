@@ -25,7 +25,7 @@ class MensajeFactoryService {
     }
 
     String construirMensajeExito() {
-        def mensaje = "<table class='table table-condensed table-bordered table-striped table-hover'>"
+        def mensaje = "<table class='table' border='1'>"
         mensaje += "<thead>"
         mensaje += "<tr>"
         mensaje += "<th>Thoughtworker</th>"
@@ -33,7 +33,7 @@ class MensajeFactoryService {
         mensaje += "</tr>"
         mensaje += "</thead>"
         mensaje += "<tbody>"
-        def asignacionesActuales = AsignacionPuesto.list()
+        def asignacionesActuales = AsignacionPuesto.findAllByFechaLiberacionIsNull()
         asignacionesActuales.each { asignacion ->
             mensaje += "<tr>"
             mensaje += "<td>"

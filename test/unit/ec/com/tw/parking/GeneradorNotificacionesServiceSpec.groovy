@@ -112,7 +112,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
             "y solamente existen $cantidadPuestos. "
         def mensajeEsperadoDelMock = getRandomString(10, 100, false)
         if (puestosFaltantes == 0) {
-            mensajeEsperado = "Se han asignado los puestos. La nueva organización es la siguiente: "
+            mensajeEsperado = "Se han asignado los nuevos puestos de parqueo para este mes. La nueva organización es la siguiente: "
         }
         def mensaje = mensajeEsperado + mensajeEsperadoDelMock
 

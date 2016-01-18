@@ -32,7 +32,7 @@ class DistanciaEdificio {
     }
 
     def obtenerPuestosLibres() {
-        def asg=AsignacionPuesto.withCriteria {
+        def asg = AsignacionPuesto.withCriteria {
             and {
                 puesto {
                     edificio {

@@ -30,7 +30,8 @@ class GeneradorNotificacionesService {
 
     private generadorNotificacionExito() {
         def usuarios = Usuario.findAllByEstaActivo(true)
-        def mensaje = "Se han asignado los puestos. La nueva organización es la siguiente: "
+        def mensaje = "Se han asignado los nuevos puestos de parqueo para este mes. " +
+            "La nueva organización es la siguiente: "
         mensaje += mensajeFactoryService.construirMensajeExito()
 
         return [
