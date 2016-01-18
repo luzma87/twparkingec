@@ -27,6 +27,9 @@ class UsuarioController extends Shield {
             render msgBuilder.renderNoEncontrado(entidad: 'usuario')
             return
         }
+        if (params.password) {
+            params.password = params.password.toString().encodeAsSHA256()
+        }
         render crudHelperService.guardarObjeto(usuarioInstance, params)
     }
 
