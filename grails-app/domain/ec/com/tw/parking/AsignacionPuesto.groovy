@@ -29,14 +29,6 @@ class AsignacionPuesto {
         fechaLiberacion nullable: true
     }
 
-    def beforeDelete() {
-        def historial = new HistoricoAsignacionPuesto()
-        historial.properties = this.properties
-        if (!historial.save()) {
-            println "error al guardar el historial de " + this.toString()
-        }
-    }
-
     static List<AsignacionPuesto> obtenerOcupadosPorPreferenciaYedificio(TipoPreferencia preferencia, Edificio edificio) {
         return AsignacionPuesto.withCriteria {
             puesto {

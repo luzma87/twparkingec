@@ -20,4 +20,8 @@ class AsignacionPuestoController extends Shield {
         flash.tipo = "success"
         redirect(controller: "asignacionPuesto", action: "index")
     }
+
+    def historial() {
+
+    }
 }

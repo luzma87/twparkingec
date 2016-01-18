@@ -84,10 +84,6 @@ class GeneradorNotificacionesSinUsuariosNoSalenIntegrationSpec extends Integrati
                 .con { a -> a.fechaAsignacion = new Date() - getRandomInt(5, 10) }
                 .con { a -> a.puesto = puestos[it] }
                 .con { a -> a.auto = autos[it] }.guardar()
-            HistoricoAsignacionPuestoBuilder.nuevo()
-                .con { a -> a.fechaAsignacion = new Date() - getRandomInt(5, 10) }
-                .con { a -> a.puesto = puestos[it] }
-                .con { a -> a.auto = autos[it] }.guardar()
         }
     }
 

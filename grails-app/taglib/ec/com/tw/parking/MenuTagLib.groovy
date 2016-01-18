@@ -67,8 +67,8 @@ class MenuTagLib {
                 icon      : "fa-bullseye"
             ],
             historial: [
-                controller: "historialAsignacionPuesto",
-                action    : "index",
+                controller: "asignacionPuesto",
+                action    : "historial",
                 label     : message(code: 'navbar.historial'),
                 icon      : "fa-calendar"
             ]
