@@ -115,7 +115,7 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
-grails.mail.default.from="TWParking"
+grails.mail.default.from="twparkingec@gmail.com"
 grails {
     mail {
         host = "mailtrap.io"
