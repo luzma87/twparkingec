@@ -1,5 +1,4 @@
 import ec.com.tw.parking.AsignacionPuesto
-import ec.com.tw.parking.HistoricoAsignacionPuesto
 import ec.com.tw.parking.Tamanio
 import grails.util.Environment
 
@@ -9,7 +8,6 @@ import ec.com.tw.parking.Puesto
 import ec.com.tw.parking.TipoPreferencia
 import ec.com.tw.parking.TipoTransicion
 import ec.com.tw.parking.Usuario
-import ec.com.tw.parking.Auto
 
 class BootStrap {
 
