@@ -93,7 +93,7 @@ class GeneradorNotificacionesSinUsuariosNoSalenIntegrationSpec extends Integrati
 
     def "Debe generar notificacion cuando hay igual de usuarios q de puestos, sin usuarios con preferencia no sale"() {
         setup:
-        def notificacionEsperada = setupIgualUsuariosQuePuestos("Se han asignado los nuevos puestos de parqueo para este mes. La nueva organización es la siguiente:")
+        def notificacionEsperada = setupIgualUsuariosQuePuestos("<p>Se han asignado los nuevos puestos de parqueo para este mes.")
 
         when:
         def notificacion = generadorNotificacionesService.generarNotificacion()

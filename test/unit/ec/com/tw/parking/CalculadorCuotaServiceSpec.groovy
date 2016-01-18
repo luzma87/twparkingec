@@ -6,6 +6,7 @@ import spock.lang.Specification
 
 import static RandomUtilsHelpers.getRandomDouble
 import static RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 
 @TestFor(CalculadorCuotaService)
 class CalculadorCuotaServiceSpec extends Specification {
@@ -28,7 +29,7 @@ class CalculadorCuotaServiceSpec extends Specification {
 
     void "Debe calcular la cuota por usuario del servicio de parqueadero"() {
         setup:
-        def cuota = precioTotal / cantidad
+        def cuota = (precioTotal + 0.5) / cantidad
         GroovyMock(Usuario, global: true)
         Usuario.countByEstaActivo(true) >> cantidad
 
@@ -43,7 +44,7 @@ class CalculadorCuotaServiceSpec extends Specification {
         GroovyMock(Usuario, global: true)
         Usuario.countByEstaActivo(true) >> cantidad + puestosFaltantes
 
-        def cuotaNueva = (precioTotal + (puestosFaltantes * precio)) / (cantidad + puestosFaltantes)
+        def cuotaNueva = (precioTotal + (puestosFaltantes * precio) + 0.5) / (cantidad + puestosFaltantes)
 
         expect:
         service.calcularCuota(puestosFaltantes, precio) == cuotaNueva

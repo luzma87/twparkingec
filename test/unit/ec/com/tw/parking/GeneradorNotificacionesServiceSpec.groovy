@@ -9,6 +9,7 @@ import spock.lang.Specification
 
 import static RandomUtilsHelpers.getRandomInt
 import static RandomUtilsHelpers.getRandomString
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 
 @TestFor(GeneradorNotificacionesService)
 @Mock([CalculadorCuotaService, AsignadorPuestosService, Edificio, TipoPreferencia, Usuario, Auto])
@@ -34,7 +35,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         1 * mensajeFactoryServiceMock.construirMensajePuestosFaltantes(_) >> mapaEsperado.mensajeMock
         respuesta.destinatarios.nombre == mapaEsperado.destinatarios.nombre
         respuesta.asunto == mapaEsperado.asunto
-        respuesta.mensaje == mapaEsperado.mensaje
+        respuesta.mensaje.startsWith(mapaEsperado.mensaje)
     }
 
     def "Debe retornar mapa con destinatarios, mensaje de alerta, y asunto: caso de exito"() {
@@ -52,7 +53,7 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         1 * mensajeFactoryServiceMock.construirMensajeExito() >> mapaEsperado.mensajeMock
         respuesta.destinatarios.properties == mapaEsperado.destinatarios.properties
         respuesta.asunto == mapaEsperado.asunto
-        respuesta.mensaje == mapaEsperado.mensaje
+        respuesta.mensaje.startsWith(mapaEsperado.mensaje)
     }
 
     def """Debe llamar a asignador puestos usuarios no salen en el caso de exito
@@ -93,6 +94,9 @@ class GeneradorNotificacionesServiceSpec extends Specification {
             autosNoSalen += AutoBuilder.lista(cantidadAutos - cantidadAsignaciones)
         }
         def usuariosNoSalen = autosNoSalen.usuario
+        CalculadorCuotaService calculadorCuotaServiceMock = Mock(CalculadorCuotaService)
+        service.calculadorCuotaService = calculadorCuotaServiceMock
+        calculadorCuotaServiceMock.calcularCuota() >> getRandomDouble(1, 100)
         GroovyMock(Usuario, global: true)
         Usuario.findAllByPreferencia(TipoPreferencia.findByCodigo('N')) >> usuariosNoSalen
         GroovyMock(Auto, global: true)
@@ -112,9 +116,9 @@ class GeneradorNotificacionesServiceSpec extends Specification {
             "y solamente existen $cantidadPuestos. "
         def mensajeEsperadoDelMock = getRandomString(10, 100, false)
         if (puestosFaltantes == 0) {
-            mensajeEsperado = "Se han asignado los nuevos puestos de parqueo para este mes. La nueva organización es la siguiente: "
+            mensajeEsperado = "Se han asignado los nuevos puestos de parqueo para este mes."
         }
-        def mensaje = mensajeEsperado + mensajeEsperadoDelMock
+        def mensaje = "<p>" + mensajeEsperado
 
         return [mensaje: mensaje, mensajeMock: mensajeEsperadoDelMock]
     }
@@ -145,6 +149,9 @@ class GeneradorNotificacionesServiceSpec extends Specification {
         cantidadUsuarios.times {
             usuarios += UsuarioBuilder.nuevo().crear()
         }
+        CalculadorCuotaService calculadorCuotaServiceMock = Mock(CalculadorCuotaService)
+        service.calculadorCuotaService = calculadorCuotaServiceMock
+        calculadorCuotaServiceMock.calcularCuota() >> getRandomDouble(1, 100)
         GroovyMock(Puesto, global: true)
         Puesto.count() >> cantidadPuestos
         GroovyMock(Usuario, global: true)

@@ -36,7 +36,7 @@ class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends Integr
 
     def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y 1 edificio ampliable"() {
         setup:
-        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Si se asume que los puestos faltantes se ubican en \w+ \(\$\d+\.\d+\), la nueva cuota sería \$\d+\.\d+/)
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/<p>Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Si se asume que los puestos faltantes se ubican en \w+ \(\$\d+\.\d+\), la nueva cuota sería \$\d+\.\d+<\/p>/)
 
         when:
         def notificacion = generadorNotificacionesService.generarNotificacion()
@@ -47,7 +47,7 @@ class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends Integr
 
     def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y 0 edificios ampliables"() {
         setup:
-        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. No se encontraron edificios ampliables, no se pudo recalcular la cuota/)
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/<p>Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. No se encontraron edificios ampliables, no se pudo recalcular la cuota<\/p>/)
         edificioMatriz.esAmpliable = false
         edificioMatriz.save()
 
@@ -60,7 +60,7 @@ class GeneradorNotificacionesMasUsuariosQuePuestosIntegrationSpec extends Integr
 
     def "Debe generar notificacion de alerta cuando existen mas usuarios que puestos y varios edificios ampliables"() {
         setup:
-        def notificacionEsperada = setupMasUsuariosQuePuestos(/Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Se encontraron \d+ edificios ampliables, no se pudo recalcular la cuota/)
+        def notificacionEsperada = setupMasUsuariosQuePuestos(/<p>Faltan \d+ puestos: se necesitan \d+ y solamente existen \d+\. Se encontraron \d+ edificios ampliables, no se pudo recalcular la cuota<\/p>/)
         def edificios = Edificio.findAllByEsAmpliable(false, [max: 3])
         edificios.each { edificio ->
             edificio.esAmpliable = true
