@@ -35,7 +35,8 @@ class Shield {
         } else {
             def allowedUser = [
                 inicio          : ["index"],
-                asignacionPuesto: ["historial"]
+                asignacionPuesto: ["historial"],
+                usuario         : ["personal"]
             ]
             if (allowedUser[controllerName] && allowedUser[controllerName].contains(actionName)) {
                 return true
