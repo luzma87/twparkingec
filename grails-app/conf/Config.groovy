@@ -118,9 +118,13 @@ log4j.main = {
 grails.mail.default.from="twparkingec@gmail.com"
 grails {
     mail {
-        host = "mailtrap.io"
-        port = 2525
-        username = "547054a0a973274f2"
-        password = "b4bcc6e9e30af6"
+        host = "smtp.gmail.com"
+        port = 465
+        username = "twparkingec@gmail.com"
+        password = "cassette-freedom-elegy-recede-dehorn"
+        props = ["mail.smtp.auth":"true",
+                 "mail.smtp.socketFactory.port":"465",
+                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                 "mail.smtp.socketFactory.fallback":"false"]
     }
 }

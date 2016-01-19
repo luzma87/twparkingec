@@ -43,7 +43,9 @@ class GeneradorNotificacionesService {
             "4038057000<br/>" +
             "Luz Marina Unda<br/>" +
             "CI: 1715068159</p>" +
-            "<p>Porfa envíen el mail de confirmación a twparkingec@thoughtworks.com Y a twparkingec@gmail.com</p>"
+            "<p>Porfa envíen el mail de confirmación a twparkingec@thoughtworks.com Y a twparkingec@gmail.com</p>" +
+            "<p>Porfa entregar los controles a Gaby antes de que empiece el nuevo mes para que las personas " +
+            "que los necesitan puedan recogerlos</p>" +
             "<p>La nueva organización es la siguiente:<p>"
         mensaje += mensajeFactoryService.construirMensajeExito()
 
