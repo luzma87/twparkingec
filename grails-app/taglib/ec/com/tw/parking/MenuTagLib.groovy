@@ -128,7 +128,7 @@ class MenuTagLib {
             ],
             asignar  : [
                 controller: "asignacionPuesto",
-                action    : "index",
+                action    : "list",
                 label     : message(code: 'navbar.asignar'),
                 icon      : "fa-bullseye"
             ],

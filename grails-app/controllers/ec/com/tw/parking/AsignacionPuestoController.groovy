@@ -7,7 +7,7 @@ class AsignacionPuestoController extends Shield {
     def generadorNotificacionesService
     def enviarMailService
 
-    def index() {}
+    def list() {}
 
     def reasignar() {
         def datosNotificacion = generadorNotificacionesService.generarNotificacion()
@@ -18,7 +18,7 @@ class AsignacionPuestoController extends Shield {
         )
         flash.message = "Puestos reasignados exitosamente y mail de notificacion enviado"
         flash.tipo = "success"
-        redirect(controller: "asignacionPuesto", action: "index")
+        redirect(controller: "asignacionPuesto", action: "list")
     }
 
     def historial() {
