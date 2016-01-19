@@ -24,7 +24,7 @@ class Shield {
             return true
         } else {
             println "intenta acceder a " + controllerName + "/" + actionName + "  params: " + params + " pero no tiene permiso"
-            redirect(controller: 'shield', action: 'forbidden_403')
+            response.sendError(403)
             return false
         }
     }
@@ -37,7 +37,7 @@ class Shield {
                 inicio          : ["index"],
                 asignacionPuesto: ["historial"]
             ]
-            if (allowedUser[controllerName].contains(actionName)) {
+            if (allowedUser[controllerName] && allowedUser[controllerName].contains(actionName)) {
                 return true
             }
         }

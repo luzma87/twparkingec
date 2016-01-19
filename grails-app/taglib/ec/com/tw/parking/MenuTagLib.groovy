@@ -29,6 +29,8 @@ class MenuTagLib {
         def linkI18nEs = createLink(controller: session.cn, action: session.an, params: paramsEs)
         def linkI18nEn = createLink(controller: session.cn, action: session.an, params: paramsEn)
 
+        def usuario = session.usuario.toString()
+
         def html = "<!-- Fixed navbar -->"
         html += "    <nav class=\"navbar navbar-default navbar-fixed-top\">"
         html += "        <div class=\"container\">"
@@ -56,7 +58,7 @@ class MenuTagLib {
         html += "                       </ul>"
         html += "                   </li>"
         html += "                   <li class=\"dropdown\">"
-        html += "                       <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Usuario <b class=\"caret\"></b></a>"
+        html += "                       <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">$usuario <b class=\"caret\"></b></a>"
         html += "                       <ul class=\"dropdown-menu\">"
         html += "                           <li><a href=\"${createLink(controller: 'usuario', action: 'personal')}\"><i class=\"fa fa-cogs\"></i> ${message(code: 'navbar.user.config')}</a></li>"
         html += "                           <li class=\"divider\"></li>"
