@@ -81,11 +81,9 @@
                 <div class="col-md-12 form-group ${hasErrors(bean: edificioInstance, field: 'puestos', 'error')} ">
                     <label class="col-md-4 control-label">
                         <g:message code="edificio.puestos.label"/>
-
                     </label>
 
                     <div class="col-md-8">
-
                         <ul class="one-to-many fa-ul">
                             <g:each in="${edificioInstance?.puestos ?}" var="p">
                                 <li>
