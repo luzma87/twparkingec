@@ -30,6 +30,9 @@ class Shield {
     }
 
     boolean isAllowed() {
+        if (request.method == "POST") {
+            return true
+        }
         if (session.esAdmin) {
             return true
         } else {
