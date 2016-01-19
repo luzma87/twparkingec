@@ -36,7 +36,7 @@ class Auto {
     }
 
     String toString() {
-        return this.marca + " " + this.modelo + (this.esDefault ? "*" : "")
+        return this.usuario.toString() + ": " + this.marca + " " + this.modelo + (this.esDefault ? "" : "*")
     }
 
 }

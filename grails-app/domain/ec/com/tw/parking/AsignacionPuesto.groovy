@@ -4,7 +4,7 @@ class AsignacionPuesto {
 
     Auto auto
     Puesto puesto
-    Date fechaAsignacion
+    Date fechaAsignacion = new Date()
     Date fechaLiberacion
 
     static mapping = {

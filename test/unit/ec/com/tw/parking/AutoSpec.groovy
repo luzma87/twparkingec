@@ -84,11 +84,11 @@ class AutoSpec extends Specification {
         ]
     }
 
-    void "Debe toString devolver la marca, el modelo y si es default"() {
+    void "Debe toString devolver el usuario, la marca, el modelo y si es default"() {
         setup:
         def auto = AutoBuilder.nuevo().crear()
 
         expect:
-        auto.toString() == auto.marca + " " + auto.modelo + (auto.esDefault ? "*" : "")
+        auto.toString() == auto.usuario.toString() + ": " + auto.marca + " " + auto.modelo + (auto.esDefault ? "" : "*")
     }
 }

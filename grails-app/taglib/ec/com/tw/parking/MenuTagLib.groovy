@@ -117,6 +117,13 @@ class MenuTagLib {
                         label     : message(code: 'navbar.puestos'),
                         icon      : "fa-cube"
                     ],
+                    asignaciones: [
+                        controller: "asignacionPuesto",
+                        action    : "list",
+                        label     : message(code: 'navbar.asignaciones'),
+                        icon      : "fa-cubes",
+                        separator : true
+                    ],
                     parametros: [
                         controller: "parametros",
                         action    : "index",
