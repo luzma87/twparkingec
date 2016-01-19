@@ -16,7 +16,7 @@ class LoginController {
         def usuarios = Usuario.withCriteria {
             eq("email", email)
             eq("password", password)
-            eq("estaActivo", true)
+//            eq("estaActivo", true)
         }
         if (usuarios.size() == 1) {
             def usuario = usuarios.first()

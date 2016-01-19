@@ -73,4 +73,17 @@ class UsuarioController extends Shield {
         flash.message = parts[1]
         redirect(action: "personal")
     }
+
+    def cambiarEstado() {
+        def id = params.id
+        def activar = params.activar == "true"
+
+        def usuario = Usuario.get(id)
+        usuario.estaActivo = activar
+        if (usuario.save(flush: true)) {
+            render "SUCCESS*Usuario actualizado exitosamente"
+        } else {
+            render "ERROR*Ha ocurrido un error al actualizar usuario"
+        }
+    }
 }
