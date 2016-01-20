@@ -46,4 +46,26 @@ class Puesto {
     String toString() {
         return this.edificio.nombre + " #" + this.numero
     }
+
+    static obtenerSinAsignacion() {
+        def todosPuestos = Puesto.list()
+        def puestosConAsignacion = AsignacionPuesto.withCriteria {
+            projections {
+                distinct("puesto")
+            }
+        }
+        def puestosEnAmbasListas = todosPuestos.intersect(puestosConAsignacion)
+        def puestosSinAsignacion = todosPuestos + puestosConAsignacion
+        puestosSinAsignacion.removeAll(puestosEnAmbasListas)
+
+        def puestosSinAsignacionActiva = []
+        todosPuestos.each { puesto ->
+            if (AsignacionPuesto.countByPuestoAndFechaLiberacionIsNotNull(puesto) > 0 &&
+                AsignacionPuesto.countByPuestoAndFechaLiberacionIsNull(puesto) == 0) {
+                puestosSinAsignacionActiva += puesto
+            }
+        }
+        puestosSinAsignacion += puestosSinAsignacionActiva
+        return puestosSinAsignacion
+    }
 }

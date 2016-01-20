@@ -37,16 +37,16 @@ class AsignacionPuestoController extends Shield {
     }
 
     def list() {
-        return [puestosSinAsignacion         : getPuestosSinAsignacion(),
-                autosSinAsignacion           : getAutosSinAsignacion(),
+        return [puestosSinAsignacion         : Puesto.obtenerSinAsignacion(),
+                autosSinAsignacion           : Auto.obtenerSinAsignacion(),
                 asignacionPuestoInstanceList : AsignacionPuesto.list(),
                 asignacionPuestoInstanceCount: AsignacionPuesto.count()]
     }
 
     def form_ajax() {
         def asignacionPuestoInstance = crudHelperService.obtenerObjeto(AsignacionPuesto, params.id)
-        return [puestosSinAsignacion    : getPuestosSinAsignacion(),
-                autosSinAsignacion      : getAutosSinAsignacion(),
+        return [puestosSinAsignacion    : Puesto.obtenerSinAsignacion(),
+                autosSinAsignacion      : Auto.obtenerSinAsignacion(),
                 asignacionPuestoInstance: asignacionPuestoInstance]
     }
 
@@ -66,58 +66,6 @@ class AsignacionPuestoController extends Shield {
             return
         }
         render crudHelperService.eliminarObjeto(asignacionPuestoInstance)
-    }
-
-    def getPuestosSinAsignacion() {
-        def todosPuestos = Puesto.list()
-        def puestosConAsignacion = AsignacionPuesto.withCriteria {
-            projections {
-                distinct("puesto")
-            }
-        }
-        def puestosEnAmbasListas = todosPuestos.intersect(puestosConAsignacion)
-        def puestosSinAsignacion = todosPuestos + puestosConAsignacion
-        puestosSinAsignacion.removeAll(puestosEnAmbasListas)
-
-        def puestosSinAsignacionActiva = []
-        todosPuestos.each { puesto ->
-            if (AsignacionPuesto.countByPuestoAndFechaLiberacionIsNotNull(puesto) > 0 &&
-                AsignacionPuesto.countByPuestoAndFechaLiberacionIsNull(puesto) == 0) {
-                puestosSinAsignacionActiva += puesto
-            }
-        }
-        puestosSinAsignacion += puestosSinAsignacionActiva
-        return puestosSinAsignacion
-    }
-
-    def getAutosSinAsignacion() {
-        def todosAutos = Auto.withCriteria {
-            usuario {
-                eq("estaActivo", true)
-            }
-        }
-        def autosConAsignacion = AsignacionPuesto.withCriteria {
-            auto {
-                usuario {
-                    eq("estaActivo", true)
-                }
-            }
-            projections {
-                distinct("auto")
-            }
-        }
-        def autosEnAmbasListas = todosAutos.intersect(autosConAsignacion)
-        def autosSinAsignacion = todosAutos + autosConAsignacion
-        autosSinAsignacion.removeAll(autosEnAmbasListas)
-        def autosSinAsignacionActiva = []
-        todosAutos.each { auto ->
-            if (AsignacionPuesto.countByAutoAndFechaLiberacionIsNotNull(auto) > 0 &&
-                AsignacionPuesto.countByAutoAndFechaLiberacionIsNull(auto) == 0) {
-                autosSinAsignacionActiva += auto
-            }
-        }
-        autosSinAsignacion += autosSinAsignacionActiva
-        return autosSinAsignacion
     }
 
     def liberar_ajax() {

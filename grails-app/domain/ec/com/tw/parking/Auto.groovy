@@ -39,4 +39,34 @@ class Auto {
         return this.usuario.toString() + ": " + this.marca + " " + this.modelo + (this.esDefault ? "" : "*")
     }
 
+    static obtenerSinAsignacion() {
+        def todosAutos = Auto.withCriteria {
+            usuario {
+                eq("estaActivo", true)
+            }
+        }
+        def autosConAsignacion = AsignacionPuesto.withCriteria {
+            auto {
+                usuario {
+                    eq("estaActivo", true)
+                }
+            }
+            projections {
+                distinct("auto")
+            }
+        }
+        def autosEnAmbasListas = todosAutos.intersect(autosConAsignacion)
+        def autosSinAsignacion = todosAutos + autosConAsignacion
+        autosSinAsignacion.removeAll(autosEnAmbasListas)
+        def autosSinAsignacionActiva = []
+        todosAutos.each { auto ->
+            if (AsignacionPuesto.countByAutoAndFechaLiberacionIsNotNull(auto) > 0 &&
+                AsignacionPuesto.countByAutoAndFechaLiberacionIsNull(auto) == 0) {
+                autosSinAsignacionActiva += auto
+            }
+        }
+        autosSinAsignacion += autosSinAsignacionActiva
+        return autosSinAsignacion
+    }
+
 }

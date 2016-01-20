@@ -1,13 +1,12 @@
 package ec.com.tw.parking
 
 
-
 import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(AsignacionPuestoController)
-@Mock([AsignacionPuesto, MensajesBuilderTagLib])
+@Mock([AsignacionPuesto, MensajesBuilderTagLib, Auto, Puesto])
 class AsignacionPuestoControllerSpec extends Specification {
 
     CrudHelperService crudHelperServiceMock
@@ -17,12 +16,14 @@ class AsignacionPuestoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    void "Debe obtener la lista de asignacionPuestos y su numero"() {
+    void "Debe obtener la lista de asignacionPuestos, su numero, autos sin asignacion y puestos sin asignacion"() {
         setup:
         asignacionPuestoInstance.save()
 
         expect:
-        controller.list() == [asignacionPuestoInstanceList: [asignacionPuestoInstance],
+        controller.list() == [puestosSinAsignacion         : Puesto.obtenerSinAsignacion(),
+                              autosSinAsignacion           : Auto.obtenerSinAsignacion(),
+                              asignacionPuestoInstanceList : [asignacionPuestoInstance],
                               asignacionPuestoInstanceCount: 1]
 
         where:

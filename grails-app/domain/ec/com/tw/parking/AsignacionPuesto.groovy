@@ -78,7 +78,7 @@ class AsignacionPuesto {
         def placa = this.auto.placa
         def edificio = this.puesto.edificio
         def numero = this.puesto.numero
-        return persona + " (" + placa + ") → " + edificio.nombre + " #" + numero + " (" + edificio.distancia + ")"
+        return persona + " (" + placa + ") → " + edificio.nombre + " #" + numero
     }
 
     def liberar() {

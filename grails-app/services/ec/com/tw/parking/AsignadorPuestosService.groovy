@@ -58,12 +58,14 @@ class AsignadorPuestosService {
     def liberarPuestosUsuariosNoActivos() {
         def usuariosNoActivos = Usuario.findAllByEstaActivo(false)
         def autos = Auto.findAllByUsuarioInList(usuariosNoActivos)
-        def asignaciones = AsignacionPuesto.withCriteria {
-            inList("auto", autos)
-            isNull("fechaLiberacion")
-        }
-        asignaciones.each { asignacion ->
-            asignacion.liberar()
+        if (autos.size() > 0) {
+            def asignaciones = AsignacionPuesto.withCriteria {
+                inList("auto", autos)
+                isNull("fechaLiberacion")
+            }
+            asignaciones.each { asignacion ->
+                asignacion.liberar()
+            }
         }
     }
 
