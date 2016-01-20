@@ -37,21 +37,43 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'password', 'error')} required">
-                    <label for="password" class="col-md-4 control-label">
-                        <g:message code="usuario.password.label"/>
-                        <span class="required-indicator">*</span>
-                    </label>
+            <g:if test="${!usuarioInstance.password}">
+                <div class="row">
+                    <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'password', 'error')} required">
+                        <label for="password" class="col-md-4 control-label">
+                            <g:message code="usuario.password.label"/>
+                            <span class="required-indicator">*</span>
+                        </label>
 
-                    <div class="col-md-8">
-                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>
-                        </span><g:field type="password" name="password" maxlength="512" required="" class="form-control  required" value="${usuarioInstance?.password}"/>
+                        <div class="col-md-8">
+                            <div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>
+                            </span><g:field type="password" name="password" maxlength="512" required=""
+                                            class="form-control  required"/>
+                            </div>
+
                         </div>
-
                     </div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'password', 'error')} required">
+                        <label for="password" class="col-md-4 control-label">
+                            <g:message code="usuario.password.again.label"/>
+                            <span class="required-indicator">*</span>
+                        </label>
+
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <g:field type="password" name="password2" maxlength="512" required=""
+                                         class="form-control  required"
+                                         equalTo="#password"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </g:if>
 
             <div class="row">
                 <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'esAdmin', 'error')} ">
@@ -117,20 +139,13 @@
 
                     <div class="col-md-8">
                         <ul class="one-to-many fa-ul">
-                            <g:each in="${usuarioInstance?.autos ?}" var="a">
+                            <g:each in="${usuarioInstance?.autos ?}" var="auto">
                                 <li>
-                                    <g:link controller="auto" action="show" id="${a.id}">
-                                        <i class="fa-li fa fa-car"></i>
-                                        ${a?.encodeAsHTML()}
-                                    </g:link>
+                                    <i class="fa-li fa fa-car"></i>
+                                    ${auto.marca} ${auto.modelo} ${auto.placa}
+                                    (<g:message code="tamanio.${auto.tamanio}"/>)
                                 </li>
                             </g:each>
-                            <li class="add">
-                                <g:link controller="auto" action="create" params="['usuario.id': usuarioInstance?.id]">
-                                    <i class="fa-li fa fa-plus"></i>
-                                    ${message(code: 'default.add.label', args: [message(code: 'auto.label', default: 'Auto')])}
-                                </g:link>
-                            </li>
                         </ul>
                     </div>
                 </div>

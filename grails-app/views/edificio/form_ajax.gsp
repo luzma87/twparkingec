@@ -85,20 +85,13 @@
 
                     <div class="col-md-8">
                         <ul class="one-to-many fa-ul">
-                            <g:each in="${edificioInstance?.puestos ?}" var="p">
+                            <g:each in="${edificioInstance?.puestos}" var="puesto">
                                 <li>
-                                    <g:link controller="puesto" action="show" id="${p.id}">
-                                        <i class="fa-li fa fa-cube"></i>
-                                        ${p?.encodeAsHTML()}
-                                    </g:link>
+                                    <i class="fa-li fa fa-cube"></i>
+                                    #${puesto.numero}
+                                    (<g:message code="tamanio.${puesto.tamanio}"/><g:if test="${puesto.precio}">, <g:formatNumber number="${puesto.precio}" type="currency" currencySymbol="\$"/></g:if>)
                                 </li>
                             </g:each>
-                            <li class="add">
-                                <g:link controller="puesto" action="create" params="['edificio.id': edificioInstance?.id]">
-                                    <i class="fa-li fa fa-plus"></i>
-                                    ${message(code: 'default.add.label', args: [message(code: 'puesto.label', default: 'Puesto')])}
-                                </g:link>
-                            </li>
                         </ul>
 
                     </div>

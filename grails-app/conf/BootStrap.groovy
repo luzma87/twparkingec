@@ -385,9 +385,10 @@ class BootStrap {
         def edificios = [
             [
                 edificio: [
-                    nombre     : "Brescia",
-                    distancia  : DistanciaEdificio.findByCodigo("M"),
-                    esAmpliable: false
+                    nombre       : "Brescia",
+                    distancia    : DistanciaEdificio.findByCodigo("M"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.PEQUENIO, numero: "26", precio: 0],
@@ -402,9 +403,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Eloy Alfaro",
-                    distancia  : DistanciaEdificio.findByCodigo("L"),
-                    esAmpliable: false
+                    nombre       : "Eloy Alfaro",
+                    distancia    : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "6", precio: 0]
@@ -412,9 +414,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Praga 1",
-                    distancia  : DistanciaEdificio.findByCodigo("C"),
-                    esAmpliable: false
+                    nombre       : "Praga 1",
+                    distancia    : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "9", precio: 0]
@@ -422,9 +425,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Praga 2",
-                    distancia  : DistanciaEdificio.findByCodigo("C"),
-                    esAmpliable: false
+                    nombre       : "Praga 2",
+                    distancia    : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "22", precio: 0]
@@ -449,9 +453,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Samoa",
-                    distancia  : DistanciaEdificio.findByCodigo("C"),
-                    esAmpliable: false
+                    nombre       : "Samoa",
+                    distancia    : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "50", precio: 0]
@@ -459,9 +464,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Ardres",
-                    distancia  : DistanciaEdificio.findByCodigo("L"),
-                    esAmpliable: false
+                    nombre       : "Ardres",
+                    distancia    : DistanciaEdificio.findByCodigo("L"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "57", precio: 0]
@@ -469,9 +475,10 @@ class BootStrap {
             ],
             [
                 edificio: [
-                    nombre     : "Plaza Real",
-                    distancia  : DistanciaEdificio.findByCodigo("C"),
-                    esAmpliable: false
+                    nombre       : "Plaza Real",
+                    distancia    : DistanciaEdificio.findByCodigo("C"),
+                    esAmpliable  : false,
+                    observaciones: "Retirar tarjeta de acceso y control para la puerta"
                 ],
                 puestos : [
                     [tamanio: Tamanio.GRANDE, numero: "358", precio: 0]

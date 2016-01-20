@@ -109,6 +109,20 @@ class AsignacionPuestoController extends Shield {
         def autosEnAmbasListas = todosAutos.intersect(autosConAsignacion)
         def autosSinAsignacion = todosAutos + autosConAsignacion
         autosSinAsignacion.removeAll(autosEnAmbasListas)
+        def autosSinAsignacionActiva = []
+        todosAutos.each { auto ->
+            if (AsignacionPuesto.countByAutoAndFechaLiberacionIsNotNull(auto) > 0 &&
+                AsignacionPuesto.countByAutoAndFechaLiberacionIsNull(auto) == 0) {
+                autosSinAsignacionActiva += auto
+            }
+        }
+        autosSinAsignacion += autosSinAsignacionActiva
         return autosSinAsignacion
+    }
+
+    def liberar_ajax() {
+        def asignacion = AsignacionPuesto.get(params.id)
+        asignacion.liberar()
+        render "SUCCESS*Asignación liberada exitosamente"
     }
 }

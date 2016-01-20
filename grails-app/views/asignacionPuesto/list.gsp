@@ -66,12 +66,14 @@
 
                     <g:sortableColumn property="fechaLiberacion" title="${message(code: 'asignacionPuesto.fechaLiberacion.label')}"/>
 
+                    <th style="width: 76px"><g:message code="default.button.actions.label"/></th>
                 </tr>
             </thead>
             <tbody>
                 <g:if test="${asignacionPuestoInstanceCount > 0}">
                     <g:each in="${asignacionPuestoInstanceList}" status="i" var="asignacionPuestoInstance">
-                        <tr data-id="${asignacionPuestoInstance.id}">
+                        <tr class="${asignacionPuestoInstance.fechaLiberacion ? 'text-danger' : 'text-success'}"
+                            data-id="${asignacionPuestoInstance.id}">
 
                             <td>${asignacionPuestoInstance.auto}</td>
 
@@ -81,6 +83,16 @@
 
                             <td><g:formatDate date="${asignacionPuestoInstance.fechaLiberacion}" format="${message(code: 'default.date.format')}"/></td>
 
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <g:if test="${asignacionPuestoInstance.fechaLiberacion == null}">
+                                        <g:link action="liberar" class="btn btn-warning btnLiberar"
+                                                title="${g.message(code: 'default.button.free.label')}">
+                                            <i class="fa fa-circle-o-notch"></i>
+                                        </g:link>
+                                    </g:if>
+                                </div>
+                            </td>
                         </tr>
                     </g:each>
                 </g:if>
@@ -207,6 +219,50 @@
                     } //success
                 }); //ajax
             } //createEdit
+            function liberarAsignacionPuesto(itemId) {
+                bootbox.dialog({
+                    title   : "${message(code: 'default.alert.title')}",
+                    message : "<i class='fa fa-circle-o-notch fa-3x pull-left text-warning text-shadow'></i><p>" +
+                              "${message(code: 'default.free.confirm.message', args:[message(code: 'asignacionPuesto.label')])}</p>",
+                    buttons : {
+                        cancelar : {
+                            label     : "${message(code: 'default.button.cancel.label')}",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        liberar  : {
+                            label     : "<i class='fa fa-circle-o-notch'></i> ${message(code: 'default.button.free.label')}",
+                            className : "btn-warning",
+                            callback  : function () {
+                                openLoader("${message(code: 'default.freeing', args:[message(code: 'asignacionPuesto.label')])}");
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '${createLink(controller:'asignacionPuesto', action:'liberar_ajax')}',
+                                    data    : {
+                                        id : itemId
+                                    },
+                                    success : function (msg) {
+                                        var parts = msg.split("*");
+                                        log(parts[1], parts[0]); // log(msg, type, title, hide)
+                                        if (parts[0] == "SUCCESS") {
+                                            setTimeout(function () {
+                                                location.reload(true);
+                                            }, 1000);
+                                        } else {
+                                            closeLoader();
+                                        }
+                                    },
+                                    error   : function () {
+                                        log("${message(code: 'default.internal.error')}", "Error");
+                                        closeLoader();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
             $(function () {
                 $(".btnCrear").click(function () {
                     crearEditarAsignacionPuesto();
@@ -218,6 +274,10 @@
                 });
                 $(".btnEliminar").click(function () {
                     eliminarAsignacionPuesto($(this).parents("tr").data("id"));
+                    return false;
+                });
+                $(".btnLiberar").click(function () {
+                    liberarAsignacionPuesto($(this).parents("tr").data("id"));
                     return false;
                 });
             });

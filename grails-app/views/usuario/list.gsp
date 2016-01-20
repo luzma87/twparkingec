@@ -36,7 +36,7 @@
         <table class="table table-condensed table-bordered table-striped table-hover margin-top">
             <thead>
                 <tr>
-
+                    <th></th>
                     <g:sortableColumn property="nombre" title="${message(code: 'usuario.nombre.label')}"/>
 
                     <g:sortableColumn property="email" title="${message(code: 'usuario.email.label')}"/>
@@ -52,7 +52,7 @@
                 <g:if test="${usuarioInstanceCount > 0}">
                     <g:each in="${usuarioInstanceList}" status="i" var="usuarioInstance">
                         <tr data-id="${usuarioInstance.id}">
-
+                            <td>${i + 1}</td>
                             <td>${usuarioInstance.nombre}</td>
 
                             <td><g:fieldValue bean="${usuarioInstance}" field="email"/></td>
