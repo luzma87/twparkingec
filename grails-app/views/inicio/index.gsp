@@ -38,7 +38,7 @@
                                         ${asignacion.auto.usuario}
                                     </td>
                                     <td>
-                                        ${asignacion.auto} (${asignacion.auto.placa})
+                                        ${asignacion.auto.marca} ${asignacion.auto.modelo} (${asignacion.auto.placa})
                                     </td>
                                     <td>
                                         ${asignacion?.puesto}

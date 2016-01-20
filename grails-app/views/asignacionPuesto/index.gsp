@@ -24,8 +24,14 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <g:message code="puesto.actual"/>
-                            <g:link controller="asignacionPuesto" action="reasignar"
-                                    class="pull-right btn btn-xs btn-success js-btn-reasignar">
+                            <g:link controller="asignacionPuesto" action="enviarMails"
+                                    class="pull-right btn btn-xs btn-warning btnLoader">
+                                <i class="fa fa-paper-plane-o"></i>
+                                Enviar mails
+                            </g:link>
+                            <g:link controller="asignacionPuesto" action="reasignar" style="margin-right: 10px"
+                                    class="pull-right btn btn-xs btn-info btnLoader">
+                                <i class="fa fa-random"></i>
                                 Reasignar
                             </g:link>
                         </h3>
@@ -52,8 +58,8 @@
 
         <script type="text/javascript">
             $(function () {
-                $(".js-btn-reasignar").click(function () {
-                    openLoader("Por favor espere", "Reasignando puestos");
+                $(".btnLoader").click(function () {
+                    openLoader("Por favor espere");
                 });
             });
         </script>

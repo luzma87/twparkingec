@@ -31,7 +31,7 @@ class GeneradorNotificacionesService {
         }
     }
 
-    private generadorNotificacionExito() {
+    def generadorNotificacionExito() {
         def usuarios = Usuario.findAllByEstaActivo(true)
         def cuota = calculadorCuotaService.calcularCuota()
         NumberFormat format = NumberFormat.getNumberInstance()

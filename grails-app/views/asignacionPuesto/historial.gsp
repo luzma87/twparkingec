@@ -24,10 +24,10 @@
                         </h3>
                     </div>
 
-                    <table class="table table-bordered table-condensed table-striped">
+                    <table class="table table-bordered table-condensed table-striped table-hover">
                         <tbody>
                             <g:each in="${AsignacionPuesto.listOrderByAuto()}" status="i" var="historial">
-                                <tr>
+                                <tr class="${historial.fechaLiberacion ? 'text-danger' : 'text-success'}">
                                     <td>${i + 1}</td>
                                     <td>
                                         ${historial}

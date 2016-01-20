@@ -34,6 +34,26 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Puestos sin asignación</h4>
+                <ul class="fa-ul">
+                    <g:each in="${puestosSinAsignacion}" var="puesto">
+                        <li>${puesto} (${puesto.edificio.distancia})</li>
+                    </g:each>
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h4>Autos sin asignacion</h4>
+                <ul class="fa-ul">
+                    <g:each in="${autosSinAsignacion}" var="auto">
+                        <li>${auto}</li>
+                    </g:each>
+                </ul>
+            </div>
+        </div>
+
         <table class="table table-condensed table-bordered table-striped table-hover margin-top">
             <thead>
                 <tr>

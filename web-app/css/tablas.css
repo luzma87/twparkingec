@@ -5,3 +5,47 @@
 td, th {
     vertical-align: middle;
 }
+
+.table > thead > tr > td.danger-pastel,
+.table > tbody > tr > td.danger-pastel,
+.table > tfoot > tr > td.danger-pastel,
+.table > thead > tr > th.danger-pastel,
+.table > tbody > tr > th.danger-pastel,
+.table > tfoot > tr > th.danger-pastel,
+.table > thead > tr.danger-pastel > td,
+.table > tbody > tr.danger-pastel > td,
+.table > tfoot > tr.danger-pastel > td,
+.table > thead > tr.danger-pastel > th,
+.table > tbody > tr.danger-pastel > th,
+.table > tfoot > tr.danger-pastel > th {
+    background-color: #ffc0c3;
+}
+.table-hover > tbody > tr > td.danger-pastel:hover,
+.table-hover > tbody > tr > th.danger-pastel:hover,
+.table-hover > tbody > tr.danger-pastel:hover > td,
+.table-hover > tbody > tr:hover > .danger-pastel,
+.table-hover > tbody > tr.danger-pastel:hover > th {
+    background-color: #c49191;
+}
+
+.table > thead > tr > td.success-pastel,
+.table > tbody > tr > td.success-pastel,
+.table > tfoot > tr > td.success-pastel,
+.table > thead > tr > th.success-pastel,
+.table > tbody > tr > th.success-pastel,
+.table > tfoot > tr > th.success-pastel,
+.table > thead > tr.success-pastel > td,
+.table > tbody > tr.success-pastel > td,
+.table > tfoot > tr.success-pastel > td,
+.table > thead > tr.success-pastel > th,
+.table > tbody > tr.success-pastel > th,
+.table > tfoot > tr.success-pastel > th {
+    background-color: #b0d8b6;
+}
+.table-hover > tbody > tr > td.success-pastel:hover,
+.table-hover > tbody > tr > th.success-pastel:hover,
+.table-hover > tbody > tr.success-pastel:hover > td,
+.table-hover > tbody > tr:hover > .success-pastel,
+.table-hover > tbody > tr.success-pastel:hover > th {
+    background-color: #93bb99;
+}

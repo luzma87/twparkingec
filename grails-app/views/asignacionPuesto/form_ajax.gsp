@@ -15,7 +15,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <g:select id="auto" name="auto.id" from="${ec.com.tw.parking.Auto.list()}" optionKey="id" required="" value="${asignacionPuestoInstance?.auto?.id}" class="many-to-one form-control"/>
+                        <g:select id="auto" name="auto.id" from="${autosSinAsignacion}" optionKey="id" required="" value="${asignacionPuestoInstance?.auto?.id}" class="many-to-one form-control"/>
 
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <g:select id="puesto" name="puesto.id" from="${ec.com.tw.parking.Puesto.list()}" optionKey="id" required="" value="${asignacionPuestoInstance?.puesto?.id}" class="many-to-one form-control"/>
+                        <g:select id="puesto" name="puesto.id" from="${puestosSinAsignacion}" optionKey="id" required="" value="${asignacionPuestoInstance?.puesto?.id}" class="many-to-one form-control"/>
 
                     </div>
                 </div>

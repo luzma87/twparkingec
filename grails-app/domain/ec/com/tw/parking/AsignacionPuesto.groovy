@@ -57,6 +57,7 @@ class AsignacionPuesto {
                 }
             }
             isNull("fechaLiberacion")
+            order "fechaAsignacion", "asc"
         }
     }
 
@@ -75,9 +76,9 @@ class AsignacionPuesto {
     String toString() {
         def persona = this.auto.usuario.nombre
         def placa = this.auto.placa
-        def edificio = this.puesto.edificio.nombre
+        def edificio = this.puesto.edificio
         def numero = this.puesto.numero
-        return persona + " (" + placa + ") → " + edificio + " #" + numero
+        return persona + " (" + placa + ") → " + edificio.nombre + " #" + numero + " (" + edificio.distancia + ")"
     }
 
     def liberar() {

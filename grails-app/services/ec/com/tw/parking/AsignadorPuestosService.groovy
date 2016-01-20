@@ -35,6 +35,7 @@ class AsignadorPuestosService {
     }
 
     def asignarPuestosSalen(autosEnEspera) {
+        liberarPuestosUsuariosNoActivos()
         def puestosAliberarPorPrioridad = obtenerCantidadPuestosAliberarPorPrioridad()
         puestosAliberarPorPrioridad.each { prioridad, puestosAliberar ->
             autosEnEspera = liberarPuestosPrioridad(autosEnEspera, prioridad, puestosAliberar)
@@ -51,6 +52,18 @@ class AsignadorPuestosService {
             } else {
                 asignarPuestoFaltante(autoEnEspera)
             }
+        }
+    }
+
+    def liberarPuestosUsuariosNoActivos() {
+        def usuariosNoActivos = Usuario.findAllByEstaActivo(false)
+        def autos = Auto.findAllByUsuarioInList(usuariosNoActivos)
+        def asignaciones = AsignacionPuesto.withCriteria {
+            inList("auto", autos)
+            isNull("fechaLiberacion")
+        }
+        asignaciones.each { asignacion ->
+            asignacion.liberar()
         }
     }
 
@@ -124,10 +137,12 @@ class AsignadorPuestosService {
         cantidadAliberar.times {
             def asignacion = asignacionesPrioridad[it]
             asignacion.liberar()
-            autosEnEspera += [
-                auto           : asignacion.auto,
-                distanciaOrigen: distanciaOrigenPrioridad
-            ]
+            if (asignacion.auto.usuario.estaActivo) {
+                autosEnEspera += [
+                    auto           : asignacion.auto,
+                    distanciaOrigen: distanciaOrigenPrioridad
+                ]
+            }
         }
         return autosEnEspera
     }

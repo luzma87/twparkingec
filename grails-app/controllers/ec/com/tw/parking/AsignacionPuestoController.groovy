@@ -14,13 +14,20 @@ class AsignacionPuestoController extends Shield {
     }
 
     def reasignar() {
-        def datosNotificacion = generadorNotificacionesService.generarNotificacion()
+        generadorNotificacionesService.generarNotificacion()
+        flash.message = "Puestos reasignados exitosamente"
+        flash.tipo = "success"
+        redirect(controller: "asignacionPuesto", action: "index")
+    }
+
+    def enviarMails() {
+        def datosNotificacion = generadorNotificacionesService.generadorNotificacionExito()
         enviarMailService.enviarMail(
             datosNotificacion.destinatarios.email,
             datosNotificacion.asunto,
             datosNotificacion.mensaje
         )
-        flash.message = "Puestos reasignados exitosamente y mail de notificacion enviado"
+        flash.message = "Mail exitosamente"
         flash.tipo = "success"
         redirect(controller: "asignacionPuesto", action: "index")
     }
@@ -30,12 +37,17 @@ class AsignacionPuestoController extends Shield {
     }
 
     def list() {
-        return [asignacionPuestoInstanceList: AsignacionPuesto.list(), asignacionPuestoInstanceCount: AsignacionPuesto.count()]
+        return [puestosSinAsignacion         : getPuestosSinAsignacion(),
+                autosSinAsignacion           : getAutosSinAsignacion(),
+                asignacionPuestoInstanceList : AsignacionPuesto.list(),
+                asignacionPuestoInstanceCount: AsignacionPuesto.count()]
     }
 
     def form_ajax() {
         def asignacionPuestoInstance = crudHelperService.obtenerObjeto(AsignacionPuesto, params.id)
-        return [asignacionPuestoInstance: asignacionPuestoInstance]
+        return [puestosSinAsignacion    : getPuestosSinAsignacion(),
+                autosSinAsignacion      : getAutosSinAsignacion(),
+                asignacionPuestoInstance: asignacionPuestoInstance]
     }
 
     def save_ajax() {
@@ -54,5 +66,49 @@ class AsignacionPuestoController extends Shield {
             return
         }
         render crudHelperService.eliminarObjeto(asignacionPuestoInstance)
+    }
+
+    def getPuestosSinAsignacion() {
+        def todosPuestos = Puesto.list()
+        def puestosConAsignacion = AsignacionPuesto.withCriteria {
+            projections {
+                distinct("puesto")
+            }
+        }
+        def puestosEnAmbasListas = todosPuestos.intersect(puestosConAsignacion)
+        def puestosSinAsignacion = todosPuestos + puestosConAsignacion
+        puestosSinAsignacion.removeAll(puestosEnAmbasListas)
+
+        def puestosSinAsignacionActiva = []
+        todosPuestos.each { puesto ->
+            if (AsignacionPuesto.countByPuestoAndFechaLiberacionIsNotNull(puesto) > 0 &&
+                AsignacionPuesto.countByPuestoAndFechaLiberacionIsNull(puesto) == 0) {
+                puestosSinAsignacionActiva += puesto
+            }
+        }
+        puestosSinAsignacion += puestosSinAsignacionActiva
+        return puestosSinAsignacion
+    }
+
+    def getAutosSinAsignacion() {
+        def todosAutos = Auto.withCriteria {
+            usuario {
+                eq("estaActivo", true)
+            }
+        }
+        def autosConAsignacion = AsignacionPuesto.withCriteria {
+            auto {
+                usuario {
+                    eq("estaActivo", true)
+                }
+            }
+            projections {
+                distinct("auto")
+            }
+        }
+        def autosEnAmbasListas = todosAutos.intersect(autosConAsignacion)
+        def autosSinAsignacion = todosAutos + autosConAsignacion
+        autosSinAsignacion.removeAll(autosEnAmbasListas)
+        return autosSinAsignacion
     }
 }
