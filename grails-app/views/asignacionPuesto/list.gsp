@@ -88,7 +88,7 @@
                                     <g:if test="${asignacionPuestoInstance.fechaLiberacion == null}">
                                         <g:link action="liberar" class="btn btn-warning btnLiberar"
                                                 title="${g.message(code: 'default.button.free.label')}">
-                                            <i class="fa fa-circle-o-notch"></i>
+                                            <i class="fa fa-undo"></i>
                                         </g:link>
                                     </g:if>
                                 </div>
@@ -222,7 +222,7 @@
             function liberarAsignacionPuesto(itemId) {
                 bootbox.dialog({
                     title   : "${message(code: 'default.alert.title')}",
-                    message : "<i class='fa fa-circle-o-notch fa-3x pull-left text-warning text-shadow'></i><p>" +
+                    message : "<i class='fa fa-undo fa-3x pull-left text-warning text-shadow'></i><p>" +
                               "${message(code: 'default.free.confirm.message', args:[message(code: 'asignacionPuesto.label')])}</p>",
                     buttons : {
                         cancelar : {
@@ -232,7 +232,7 @@
                             }
                         },
                         liberar  : {
-                            label     : "<i class='fa fa-circle-o-notch'></i> ${message(code: 'default.button.free.label')}",
+                            label     : "<i class='fa fa-undo'></i> ${message(code: 'default.button.free.label')}",
                             className : "btn-warning",
                             callback  : function () {
                                 openLoader("${message(code: 'default.freeing', args:[message(code: 'asignacionPuesto.label')])}");
