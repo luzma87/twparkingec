@@ -115,7 +115,6 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
-grails.mail.overrideAddress="luzmaun@gmail.com"
 grails.mail.default.from="twparkingec@gmail.com"
 grails {
     mail {
