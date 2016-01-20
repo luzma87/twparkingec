@@ -11,6 +11,12 @@ class AsignacionPuestoController extends Shield {
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
+        def ultimaAsignacion = AsignacionPuesto.withCriteria {
+            projections {
+                max("fechaAsignacion")
+            }
+        }.first()
+        return [ultimaAsignacion: ultimaAsignacion]
     }
 
     def reasignar() {

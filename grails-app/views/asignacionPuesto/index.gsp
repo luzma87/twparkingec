@@ -24,6 +24,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <g:message code="puesto.actual"/>
+                            [Última asignación: <g:formatDate date="${ultimaAsignacion}"/>]
                             <g:link controller="asignacionPuesto" action="enviarMails"
                                     class="pull-right btn btn-xs btn-warning btnLoader">
                                 <i class="fa fa-paper-plane-o"></i>
