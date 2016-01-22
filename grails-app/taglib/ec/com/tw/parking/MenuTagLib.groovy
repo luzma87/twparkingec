@@ -99,12 +99,6 @@ class MenuTagLib {
                         label     : message(code: 'navbar.users'),
                         icon      : "fa-user"
                     ],
-                    autos     : [
-                        controller: "auto",
-                        action    : "list",
-                        label     : message(code: 'navbar.autos'),
-                        icon      : "fa-car"
-                    ],
                     edificios : [
                         controller: "edificio",
                         action    : "list",

@@ -1,4 +1,4 @@
-<%@ page import="ec.com.tw.parking.Usuario" %>
+<%@ page import="ec.com.tw.parking.AsignacionPuesto; ec.com.tw.parking.Usuario" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,7 +45,9 @@
 
                     <g:sortableColumn property="cedula" title="${message(code: 'usuario.cedula.label')}"/>
 
-                    <th style="width: 111px"><g:message code="default.button.actions.label"/></th>
+                    <th><g:message code="usuario.autos.label"/></th>
+
+                    <th style="width: 105px"><g:message code="default.button.actions.label"/></th>
                 </tr>
             </thead>
             <tbody>
@@ -62,10 +64,34 @@
                             <td><g:fieldValue bean="${usuarioInstance}" field="cedula"/></td>
 
                             <td>
-                                <div class="btn-group btn-group-sm">
+                                <ul class="fa-ul">
+                                    <g:each in="${usuarioInstance.autos}" var="auto">
+                                        <li data-id="${auto.id}">
+                                            <i class="fa fa-car"></i>
+                                            <a href="#" class="btnEditarAuto"
+                                               title="${message(code: 'default.button.edit.label')}">
+                                                ${auto.toStringCorto()}
+                                            </a>
+                                            <g:if test="${AsignacionPuesto.countByAuto(auto) == 0}">
+                                                <a href="#" class="btn btn-link btnEliminarAuto"
+                                                   title="${message(code: 'default.button.delete.label')}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </g:if>
+                                        </li>
+                                    </g:each>
+                                </ul>
+                            </td>
+
+                            <td>
+                                <div class="btn-group btn-group-xs">
                                     <a href="#" class="btnEditar btn btn-info"
                                        title="${message(code: 'default.button.edit.label')}">
                                         <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="#" class="btnAgregarAuto btn btn-primary"
+                                       title="${message(code: 'default.button.add.car.label')}">
+                                        <i class="fa fa-car"></i>
                                     </a>
                                     <a href="#" class="btnPassword btn btn-warning"
                                        title="${message(code: 'default.button.password.label')}">
@@ -83,10 +109,6 @@
                                             <i class="fa fa-toggle-off"></i>
                                         </a>
                                     </g:else>
-                                %{--<a href="#" class="btnEliminar btn btn-danger"--}%
-                                %{--title="${message(code:'default.button.delete.label')}">--}%
-                                %{--<i class="fa fa-trash"></i>--}%
-                                %{--</a>--}%
                                 </div>
                             </td>
                         </tr>
@@ -133,50 +155,6 @@
                 } else {
                     return false;
                 } //else
-            }
-            function eliminarUsuario(itemId) {
-                bootbox.dialog({
-                    title   : "${message(code: 'default.alert.title')}",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-                              "${message(code: 'default.delete.confirm.message', args:[message(code: 'usuario.label')])}</p>",
-                    buttons : {
-                        cancelar : {
-                            label     : "${message(code: 'default.button.cancel.label')}",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        },
-                        eliminar : {
-                            label     : "<i class='fa fa-trash-o'></i> ${message(code: 'default.button.delete.label')}",
-                            className : "btn-danger",
-                            callback  : function () {
-                                openLoader("${message(code: 'default.deleting', args:[message(code: 'usuario.label')])}");
-                                $.ajax({
-                                    type    : "POST",
-                                    url     : '${createLink(controller:'usuario', action:'delete_ajax')}',
-                                    data    : {
-                                        id : itemId
-                                    },
-                                    success : function (msg) {
-                                        var parts = msg.split("*");
-                                        log(parts[1], parts[0]); // log(msg, type, title, hide)
-                                        if (parts[0] == "SUCCESS") {
-                                            setTimeout(function () {
-                                                location.reload(true);
-                                            }, 1000);
-                                        } else {
-                                            closeLoader();
-                                        }
-                                    },
-                                    error   : function () {
-                                        log("${message(code: 'default.internal.error')}", "Error");
-                                        closeLoader();
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
             }
             function crearEditarUsuario(id) {
                 var title = id ?
@@ -250,7 +228,6 @@
                     } //success
                 }); //ajax
             }
-
             function cambiarEstadoUsuario(id, activar) {
                 var title = "${message(code: 'default.alert.disable.user.title')}";
                 var icon = "fa-toggle-off";
@@ -309,6 +286,119 @@
                     }
                 });
             }
+
+            function guardarAuto() {
+                var $form = $("#frmAuto");
+                if ($form.valid()) {
+                    openLoader("${message(code: 'default.saving', args:[message(code: 'auto.label')])}");
+                    $.ajax({
+                        type    : "POST",
+                        url     : $form.attr("action"),
+                        data    : $form.serialize(),
+                        success : function (msg) {
+                            var parts = msg.split("*");
+                            log(parts[1], parts[0]); // log(msg, type, title, hide)
+                            setTimeout(function () {
+                                if (parts[0] == "SUCCESS") {
+                                    location.reload(true);
+                                } else {
+                                    closeLoader();
+                                    return false;
+                                }
+                            }, 1000);
+                        },
+                        error   : function () {
+                            log("${message(code: 'default.internal.error')}", "Error");
+                            closeLoader();
+                        }
+                    });
+                } else {
+                    return false;
+                } //else
+            }
+            function crearEditarAuto(autoId, usuarioId) {
+                var title = autoId ?
+                            "${message(code: 'default.edit.label', args:[message(code: 'auto.label')])}" :
+                            "${message(code: 'default.add.label', args:[message(code: 'auto.label')])}";
+                var data = autoId ? {id : autoId} : {};
+                data.usuario = usuarioId ? usuarioId : null;
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(controller:'auto', action:'form_ajax')}",
+                    data    : data,
+                    success : function (msg) {
+                        var b = bootbox.dialog({
+                            id      : "dlgCreateEditAuto",
+                            title   : title,
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "${message(code: 'default.button.cancel.label')}",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                guardar  : {
+                                    id        : "btnSave",
+                                    label     : "<i class='fa fa-save'></i> ${message(code: 'default.button.save.label')}",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        return guardarAuto();
+                                    } //callback
+                                } //guardar
+                            } //buttons
+                        }); //dialog
+                        setTimeout(function () {
+                            b.find(".form-control").first().focus()
+                        }, 500);
+                    } //success
+                }); //ajax
+            } //createEdit
+            function eliminarAuto(itemId) {
+                bootbox.dialog({
+                    title   : "${message(code: 'default.alert.title')}",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
+                              "${message(code: 'default.delete.confirm.message', args:[message(code: 'auto.label')])}</p>",
+                    buttons : {
+                        cancelar : {
+                            label     : "${message(code: 'default.button.cancel.label')}",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        eliminar : {
+                            label     : "<i class='fa fa-trash-o'></i> ${message(code: 'default.button.delete.label')}",
+                            className : "btn-danger",
+                            callback  : function () {
+                                openLoader("${message(code: 'default.deleting', args:[message(code: 'auto.label')])}");
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '${createLink(controller:'auto', action:'delete_ajax')}',
+                                    data    : {
+                                        id : itemId
+                                    },
+                                    success : function (msg) {
+                                        var parts = msg.split("*");
+                                        log(parts[1], parts[0]); // log(msg, type, title, hide)
+                                        if (parts[0] == "SUCCESS") {
+                                            setTimeout(function () {
+                                                location.reload(true);
+                                            }, 1000);
+                                        } else {
+                                            closeLoader();
+                                        }
+                                    },
+                                    error   : function () {
+                                        log("${message(code: 'default.internal.error')}", "Error");
+                                        closeLoader();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+
             $(function () {
                 $(".btnCrear").click(function () {
                     crearEditarUsuario();
@@ -322,15 +412,25 @@
                     editarPassword($(this).parents("tr").data("id"));
                     return false;
                 });
-                $(".btnEliminar").click(function () {
-                    eliminarUsuario($(this).parents("tr").data("id"));
-                    return false;
-                });
                 $(".btnActivar").click(function () {
                     cambiarEstadoUsuario($(this).parents("tr").data("id"), true);
+                    return false;
                 });
                 $(".btnDesactivar").click(function () {
                     cambiarEstadoUsuario($(this).parents("tr").data("id"), false);
+                    return false;
+                });
+                $(".btnEditarAuto").click(function () {
+                    crearEditarAuto($(this).parents("li").data("id"));
+                    return false;
+                });
+                $(".btnAgregarAuto").click(function () {
+                    crearEditarAuto(null, $(this).parents("tr").data("id"));
+                    return false;
+                });
+                $(".btnEliminarAuto").click(function () {
+                    eliminarAuto($(this).parents("li").data("id"));
+                    return false;
                 });
             });
         </script>

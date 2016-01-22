@@ -15,25 +15,6 @@ class AutoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    void "Debe redireccionar a list cuando se ejecuta index"() {
-        when:
-        controller.index()
-        then:
-        response.redirectedUrl == "/auto/list"
-    }
-
-    void "Debe obtener la lista de autos y su numero"() {
-        setup:
-        autoInstance.save()
-
-        expect:
-        controller.list() == [autoInstanceList: [autoInstance],
-                              autoInstanceCount: 1]
-
-        where:
-        autoInstance = new AutoBuilder().crear()
-    }
-
     void "Debe devolver una instancia de auto"() {
         when:
         def autoInstanceReturned = controller.form_ajax().autoInstance

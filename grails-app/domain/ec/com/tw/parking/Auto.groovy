@@ -35,10 +35,6 @@ class Auto {
         esDefault nullable: false
     }
 
-    String toString() {
-        return this.usuario.toString() + ": " + this.marca + " " + this.modelo + (this.esDefault ? "" : "*")
-    }
-
     static obtenerSinAsignacion() {
         def todosAutos = Auto.withCriteria {
             usuario {
@@ -69,4 +65,11 @@ class Auto {
         return autosSinAsignacion
     }
 
+    String toStringCorto() {
+        return this.marca + " " + this.modelo + (this.esDefault ? "" : "*") + " (" + this.placa + ")"
+    }
+
+    String toString() {
+        return this.usuario.toString() + ": " + toStringCorto()
+    }
 }

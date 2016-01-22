@@ -8,22 +8,17 @@ class AutoController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
-    def index() {
-        redirect(action: 'list')
-    }
-
-    def list() {
-        return [autoInstanceList: Auto.list(), autoInstanceCount: Auto.count()]
-    }
-
     def form_ajax() {
-        def autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
+        Auto autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
+        if (params.usuario != 'null') {
+            autoInstance.usuario = Usuario.get(params.usuario)
+        }
         return [autoInstance: autoInstance]
     }
 
     def save_ajax() {
         def autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
-        if(!autoInstance) {
+        if (!autoInstance) {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }
@@ -32,7 +27,7 @@ class AutoController extends Shield {
 
     def delete_ajax() {
         def autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
-        if(!autoInstance || !autoInstance.id) {
+        if (!autoInstance || !autoInstance.id) {
             render msgBuilder.renderNoEncontrado(entidad: 'auto')
             return
         }
