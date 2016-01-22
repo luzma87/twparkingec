@@ -93,23 +93,17 @@ class MenuTagLib {
                 label: message(code: 'navbar.admin'),
                 icon : "fa-cog",
                 items: [
-                    usuarios  : [
+                    usuarios    : [
                         controller: "usuario",
                         action    : "list",
                         label     : message(code: 'navbar.users'),
                         icon      : "fa-user"
                     ],
-                    edificios : [
+                    edificios   : [
                         controller: "edificio",
                         action    : "list",
                         label     : message(code: 'navbar.edificios'),
                         icon      : "fa-building"
-                    ],
-                    puestos   : [
-                        controller: "puesto",
-                        action    : "list",
-                        label     : message(code: 'navbar.puestos'),
-                        icon      : "fa-cube"
                     ],
                     asignaciones: [
                         controller: "asignacionPuesto",
@@ -118,7 +112,7 @@ class MenuTagLib {
                         icon      : "fa-cubes",
                         separator : true
                     ],
-                    parametros: [
+                    parametros  : [
                         controller: "parametros",
                         action    : "index",
                         label     : message(code: 'navbar.parametros'),

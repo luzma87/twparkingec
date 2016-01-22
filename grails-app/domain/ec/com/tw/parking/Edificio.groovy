@@ -16,6 +16,7 @@ class Edificio {
         version false
         id generator: 'identity'
         sort nombre: "asc"
+        puestos sort: "numero", order: "asc"
         columns {
             id column: 'id'
             nombre column: 'nombre'

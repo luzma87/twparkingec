@@ -15,25 +15,6 @@ class PuestoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    void "Debe redireccionar a list cuando se ejecuta index"() {
-        when:
-        controller.index()
-        then:
-        response.redirectedUrl == "/puesto/list"
-    }
-
-    void "Debe obtener la lista de puestos y su numero"() {
-        setup:
-        puestoInstance.save()
-
-        expect:
-        controller.list() == [puestoInstanceList : [puestoInstance],
-                              puestoInstanceCount: 1]
-
-        where:
-        puestoInstance = new PuestoBuilder().crear()
-    }
-
     void "Debe devolver una instancia de puesto"() {
         when:
         def puestoInstanceReturned = controller.form_ajax().puestoInstance
@@ -43,7 +24,7 @@ class PuestoControllerSpec extends Specification {
         puestoInstanceReturned.properties == puestoInstance.properties
 
         where:
-        puestoInstance << [new Puesto(), new PuestoBuilder().crear()]
+        puestoInstance << [new Puesto(), PuestoBuilder.nuevo().crear()]
     }
 
     void "Debe guardar un puesto valido"() {
@@ -78,7 +59,7 @@ class PuestoControllerSpec extends Specification {
     void "Debe mostrar error al actualizar un puesto con datos invalidos"() {
         setup:
         def expectedMessage = "ERROR*default.not.saved.message"
-        def puestoInstance = new PuestoBuilder().crear()
+        def puestoInstance = PuestoBuilder.nuevo().crear()
 
         when:
         request.method = "POST"
@@ -93,7 +74,7 @@ class PuestoControllerSpec extends Specification {
     void "Debe eliminar un puesto valido"() {
         setup:
         def expectedMessage = "SUCCESS*default.deleted.message"
-        def puestoInstance = new PuestoBuilder().crear()
+        def puestoInstance = PuestoBuilder.nuevo().crear()
         def random = new Random()
         puestoInstance.id = random.nextInt()
 

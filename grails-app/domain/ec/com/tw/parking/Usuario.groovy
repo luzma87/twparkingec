@@ -18,6 +18,7 @@ class Usuario {
         version false
         id generator: 'identity'
         sort nombre: "asc"
+        autos sort: "placa", order: "asc"
         columns {
             id column: 'id'
             nombre column: 'nombre'

@@ -8,16 +8,11 @@ class PuestoController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
-    def index() {
-        redirect(action: 'list')
-    }
-
-    def list() {
-        return [puestoInstanceList: Puesto.list(), puestoInstanceCount: Puesto.count()]
-    }
-
     def form_ajax() {
-        def puestoInstance = crudHelperService.obtenerObjeto(Puesto, params.id)
+        Puesto puestoInstance = crudHelperService.obtenerObjeto(Puesto, params.id)
+        if (params.edificio != 'null') {
+            puestoInstance.edificio = Edificio.get(params.edificio)
+        }
         return [puestoInstance: puestoInstance]
     }
 

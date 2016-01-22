@@ -73,7 +73,7 @@
                                                 ${auto.toStringCorto()}
                                             </a>
                                             <g:if test="${AsignacionPuesto.countByAuto(auto) == 0}">
-                                                <a href="#" class="btn btn-link btnEliminarAuto"
+                                                <a href="#" class="btn btn-danger btn-xs btnEliminarAuto"
                                                    title="${message(code: 'default.button.delete.label')}">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
