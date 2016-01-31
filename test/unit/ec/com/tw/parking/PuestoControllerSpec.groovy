@@ -15,18 +15,6 @@ class PuestoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    void "Debe devolver una instancia de puesto"() {
-        when:
-        def puestoInstanceReturned = controller.form_ajax().puestoInstance
-
-        then:
-        1 * crudHelperServiceMock.obtenerObjeto(Puesto, _) >> puestoInstance
-        puestoInstanceReturned.properties == puestoInstance.properties
-
-        where:
-        puestoInstance << [new Puesto(), PuestoBuilder.nuevo().crear()]
-    }
-
     void "Debe guardar un puesto valido"() {
         setup:
         def puestoInstance = new Puesto()
@@ -103,5 +91,17 @@ class PuestoControllerSpec extends Specification {
 
         where:
         puestoInstance << [null, new Puesto()]
+    }
+
+    void "Debe devolver una instancia de puesto"() {
+        when:
+        def puestoInstanceReturned = controller.form_ajax().puestoInstance
+
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(Puesto, _) >> puestoInstance
+        puestoInstanceReturned.properties == puestoInstance.properties
+
+        where:
+        puestoInstance << [new Puesto(), PuestoBuilder.nuevo().crear()]
     }
 }
