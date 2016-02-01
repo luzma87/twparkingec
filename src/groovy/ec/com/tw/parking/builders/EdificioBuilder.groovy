@@ -14,7 +14,7 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomString
 class EdificioBuilder {
     static EdificioBuilder builder
     String nombre = getRandomString(2, 50, false)
-    DistanciaEdificio distancia = new DistanciaEdificioBuilder().crear()
+    DistanciaEdificio distancia = DistanciaEdificioBuilder.nuevo().crear()
     String datosPago = getRandomString(300, 1050, false)
     Boolean esAmpliable = getRandomBoolean()
     String observaciones = getRandomString(1, 150, false)

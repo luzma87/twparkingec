@@ -22,7 +22,7 @@ class AutoBuilder {
     String tamanio = getRandomFromArray(Tamanio.values())
     Boolean esDefault = getRandomBoolean()
 
-    Usuario usuario = new UsuarioBuilder().crear()
+    Usuario usuario = UsuarioBuilder.nuevo().crear()
 
     private AutoBuilder() {
     }
