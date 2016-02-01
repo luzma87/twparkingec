@@ -1,5 +1,7 @@
 package ec.com.tw.parking
 
+import org.springframework.web.servlet.support.RequestContextUtils as RCU
+
 class ElementosTagLib {
     static defaultEncodeAs = [taglib: 'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
@@ -17,8 +19,8 @@ class ElementosTagLib {
     def flashMessage = { attrs, body ->
         def contenido = body()
 
-        def closable =  true
-        if(attrs.closable == false || attrs.closable == "no") {
+        def closable = true
+        if (attrs.closable == false || attrs.closable == "no") {
             closable = false
         }
 
@@ -145,13 +147,16 @@ class ElementosTagLib {
         def showDate = attrs.showDate ?: true
         def showTime = attrs.showTime ?: false
 
-        def defaultFormat = "dd-MM-YYYY"
+        def defaultFormat = g.message(code: 'default.date.format.no.time')
+
+        def language = attrs.lang ?: RCU.getLocale(request)
+
         if (showTime) {
             defaultFormat += " HH:mm"
         }
 
         def format = attrs.format ?: defaultFormat
-        def formatJS = attrs.formatJS ?: format.replaceAll("d", "D")
+        def formatJS = attrs.formatJS ?: format.replaceAll("d", "D").replaceAll("y", "Y")
 
         def startDate = attrs.minDate ?: false
         def endDate = attrs.maxDate ?: false
@@ -215,6 +220,8 @@ class ElementosTagLib {
             }
         }
 
+        readonly = false
+
         def br = "\n"
 
         def textfield = "<input type='text' name='${nameInput}' id='${id}' " + (readonly ? "readonly=''" : "") + " value='${value}'" +
@@ -254,7 +261,9 @@ class ElementosTagLib {
         js += '$(".btn-clear").click(function() {' + br +
             '$(this).parent().parent().children("input").val("");' + br +
             '});' + br
-        js += '$("#' + id + '").datetimepicker({' + br
+        js += '$("#' + id + '").bind("keydown", function() {' +
+            'return false;' +
+            '}).datetimepicker({' + br
         if (startDate) {
             if (startDate instanceof Date) {
                 startDate = "moment(${startDate.format('dd/MM/yyyy')})"
@@ -267,20 +276,16 @@ class ElementosTagLib {
             }
             js += "maxDate: '${endDate}'," + br
         }
-        js += 'pickDate: ' + showDate + ',' + br
-        js += 'pickTime: ' + showTime + ',' + br
-        js += 'useMinutes: ' + showMin + ',' + br
-        js += 'useSeconds: false,' + br
-        js += 'minuteStepping: ' + minStep + ',' + br
+        js += 'stepping: ' + minStep + ',' + br
         js += 'sideBySide: true,' + br
         if (daysOfWeekDisabled) {
             js += "daysOfWeekDisabled: '${daysOfWeekDisabled}'," + br
         }
-        if (beforeShowDay) {
-            js += "beforeShowDay: function() { ${beforeShowDay}() }," + br
-            js += "beforeShowDay: ${beforeShowDay}," + br
-        }
-        js += 'language: "es",' + br
+//        if (beforeShowDay) {
+//            js += "beforeShowDay: function() { ${beforeShowDay}() }," + br
+//            js += "beforeShowDay: ${beforeShowDay}," + br
+//        }
+        js += 'locale: "' + language + '",' + br
         js += 'icons: {' + br
         js += 'time: "fa fa-clock-o",' + br
         js += 'date: "fa fa-calendar",' + br
@@ -288,19 +293,19 @@ class ElementosTagLib {
         js += 'down: "fa fa-arrow-down"' + br
         js += '},' + br
 //        js += "format: '${formatJS}'," + br
-        js += "orientation: '${orientation}'," + br
-        js += "showToday: ${todayHighlight}" + br
+//        js += "orientation: '${orientation}'," + br
+        js += "useCurrent: ${todayHighlight}" + br
         js += "}).on('dp.change', function(e) {" + br
-//        js += 'console.log(e.date.date(),e.date.month(),e.date.year(), e.date.hour(), e.date.minute());'
+////        js += 'console.log(e.date.date(),e.date.month(),e.date.year(), e.date.hour(), e.date.minute());'
         js += "var fecha = e.date;" + br
         js += "if(fecha) {" + br
         js += '$("#' + nameHiddenDay + '").val(fecha.date());' + br
         js += '$("#' + nameHiddenMonth + '").val(fecha.month() + 1);' + br
         js += '$("#' + nameHiddenYear + '").val(fecha.year());' + br
-        if (showTime) {
-            js += '$("#' + nameHiddenHour + '").val(fecha.hour());' + br
-            js += '$("#' + nameHiddenMin + '").val(fecha.minute());' + br
-        }
+//        if (showTime) {
+//            js += '$("#' + nameHiddenHour + '").val(fecha.hour());' + br
+//            js += '$("#' + nameHiddenMin + '").val(fecha.minute());' + br
+//        }
         js += '$(e.currentTarget).parents(".grupo").removeClass("has-error").find("label.help-block").hide();' + br
         js += "}" + br
         if (onChangeDate) {
@@ -315,7 +320,7 @@ class ElementosTagLib {
         js += "});" + br
         js += "</script>" + br
 
-        out << div
-        out << js
+        out << raw(div)
+        out << raw(js)
     }
 }

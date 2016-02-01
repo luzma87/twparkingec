@@ -32,7 +32,7 @@ class PagoSpec extends Specification {
         pago.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["usuario", "fechaPago", "mes", "monto"]
+        campo << ["usuario", "fechaPago", "mes", "anio", "monto"]
     }
 
     void "Debe el monto ser positivo"() {

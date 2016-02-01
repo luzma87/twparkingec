@@ -16,6 +16,7 @@ class PagoBuilder {
     Usuario usuario = UsuarioBuilder.nuevo().crear()
     Date fechaPago = new Date()
     String mes = getRandomFromArray(Mes.values())
+    Integer anio = getRandomInt(2000, 2020)
     Double monto = getRandomDouble(1, 100)
 
     private PagoBuilder() {
@@ -26,6 +27,7 @@ class PagoBuilder {
             usuario  : this.usuario,
             fechaPago: this.fechaPago,
             mes      : this.mes,
+            anio     : this.anio,
             monto    : this.monto
         ]
     }

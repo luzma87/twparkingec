@@ -1,4 +1,4 @@
-<%@ page import="ec.com.tw.parking.Auto" %>
+<%@ page import="ec.com.tw.parking.enums.Tamanio; ec.com.tw.parking.Auto" %>
 
 <g:if test="${autoInstance}">
     <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
@@ -70,8 +70,8 @@
 
                     <div class="col-md-8">
                         <g:select name="tamanio" class="form-control"
-                                  from="${ec.com.tw.parking.Tamanio?.values()}"
-                                  keys="${ec.com.tw.parking.Tamanio.values()*.name()}"
+                                  from="${Tamanio?.values()}"
+                                  keys="${Tamanio.values()*.name()}"
                                   required="" value="${autoInstance?.tamanio?.name()}"
                                   valueMessagePrefix="tamanio"/>
 

@@ -1,4 +1,4 @@
-<%@ page import="ec.com.tw.parking.Tamanio; ec.com.tw.parking.Puesto" %>
+<%@ page import="ec.com.tw.parking.enums.Tamanio; ec.com.tw.parking.Puesto" %>
 
 <g:if test="${puestoInstance}">
     <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>

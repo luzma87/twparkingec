@@ -6,6 +6,7 @@ class Pago {
     Usuario usuario
     Date fechaPago
     Mes mes
+    Integer anio
     Double monto
 
     static mapping = {
@@ -19,6 +20,7 @@ class Pago {
             usuario column: 'usuario_id'
             fechaPago column: 'fecha_pago'
             mes column: 'mes'
+            anio column: 'anio'
             monto column: 'monto'
         }
     }
@@ -27,6 +29,7 @@ class Pago {
         usuario nullable: false
         fechaPago nullable: false
         mes nullable: false
+        anio nullable: false
         monto nullable: false, min: 0D
     }
 }

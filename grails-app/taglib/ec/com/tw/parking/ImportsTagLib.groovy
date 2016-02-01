@@ -59,6 +59,7 @@ class ImportsTagLib {
         html += css(href: resource(dir: 'js/jquery.qtip.custom', file: 'jquery.qtip.min.css'))
         html += css(href: resource(dir: 'js/pnotify/dist', file: 'pnotify.css'))
         html += css(href: resource(dir: 'js/pnotify/dist', file: 'pnotify.brighttheme.css'))
+        html += css(href: resource(dir: 'js/bootstrap-datetimepicker/build/css', file: 'bootstrap-datetimepicker.min.css'))
         out << html
     }
 
@@ -77,6 +78,8 @@ class ImportsTagLib {
         html += js(src: resource(dir: 'js/bootstrap-maxlength-1.7.0/src', file: 'bootstrap-maxlength.js'))
         html += js(src: resource(dir: 'js/pnotify/dist/', file: 'pnotify.js'))
         html += js(src: resource(dir: 'js/pnotify/dist/', file: 'pnotify.callbacks.js'))
+        html += js(src: resource(dir: 'js', file: 'moment-with-locales.js'))
+        html += js(src: resource(dir: 'js/bootstrap-datetimepicker/build/js', file: 'bootstrap-datetimepicker.min.js'))
 
         html += js(src: resource(dir: 'js', file: 'ui.js'))
         html += js(src: resource(dir: 'js', file: 'funciones.js'))
