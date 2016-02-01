@@ -3,6 +3,7 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import ec.com.tw.parking.builders.AutoBuilder
 import ec.com.tw.parking.builders.PuestoBuilder
+import ec.com.tw.parking.enums.Tamanio
 import grails.test.spock.IntegrationSpec
 
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt

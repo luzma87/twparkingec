@@ -1,5 +1,7 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.enums.Tamanio
+
 class Auto {
 
     String marca

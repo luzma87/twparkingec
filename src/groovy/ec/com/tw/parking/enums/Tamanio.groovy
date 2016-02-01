@@ -1,4 +1,4 @@
-package ec.com.tw.parking
+package ec.com.tw.parking.enums
 
 /**
  * Created by lmunda on 1/14/16 09:43.

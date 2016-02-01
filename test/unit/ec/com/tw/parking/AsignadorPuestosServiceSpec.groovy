@@ -7,6 +7,7 @@ import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.PuestoBuilder
 import ec.com.tw.parking.builders.TipoTransicionBuilder
 import ec.com.tw.parking.builders.UsuarioBuilder
+import ec.com.tw.parking.enums.Tamanio
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.IgnoreRest

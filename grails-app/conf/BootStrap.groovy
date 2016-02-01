@@ -1,6 +1,6 @@
 import ec.com.tw.parking.AsignacionPuesto
 import ec.com.tw.parking.DatosIniciales
-import ec.com.tw.parking.Tamanio
+import ec.com.tw.parking.enums.Tamanio
 import grails.util.Environment
 
 import ec.com.tw.parking.DistanciaEdificio
