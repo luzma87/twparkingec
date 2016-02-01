@@ -1,4 +1,4 @@
-<%@ page import="ec.com.tw.parking.Pago" %>
+<%@ page import="ec.com.tw.parking.enums.Mes; ec.com.tw.parking.Pago" %>
 
 <!DOCTYPE html>
 <html>
@@ -34,60 +34,61 @@
             </div>
         </div>
 
-        <table class="table table-condensed table-bordered table-striped table-hover margin-top">
+        <h2><g:message code="pagos.title"/> <g:select name="anio" from="${anios}" value="${anio}"/></h2>
+
+        <table class="table table-bordered table-condensed table-striped table-hover">
             <thead>
                 <tr>
-
-                    <th><g:message code="pago.usuario.label"/></th>
-
-                    <g:sortableColumn property="fechaPago" title="${message(code: 'pago.fechaPago.label')}"/>
-
-                    <g:sortableColumn property="mes" title="${message(code: 'pago.mes.label')}"/>
-
-                    <g:sortableColumn property="monto" title="${message(code: 'pago.monto.label')}"/>
-
-                    <th style="width: 76px"><g:message code="default.button.actions.label"/></th>
+                    <th class="text-center">TWer</th>
+                    <g:each in="${Mes.values()}" var="mes">
+                        <th class="text-center">
+                            <g:message code="mes.${mes}"/>
+                        </th>
+                    </g:each>
                 </tr>
             </thead>
             <tbody>
-                <g:if test="${pagoInstanceCount > 0}">
-                    <g:each in="${pagoInstanceList}" status="i" var="pagoInstance">
-                        <tr data-id="${pagoInstance.id}">
-
-                            <td>${pagoInstance.usuario}</td>
-
-                            <td><g:formatDate date="${pagoInstance.fechaPago}"
-                                              format="${message(code: 'default.date.format.no.time')}"/></td>
-
-                            <td>
-                                <g:message code="mes.${pagoInstance.mes}"/> ${pagoInstance.anio}
+                <g:each in="${pagos}" status="i" var="datosPagos">
+                    <tr>
+                        <td>${datosPagos.value.usuario}</td>
+                        <g:each in="${Mes.values()}" var="mes">
+                            <g:set var="pago" value="${datosPagos.value.pagos.find { it.mes == mes }}"/>
+                            <td class="text-center col-md-2">
+                                <g:if test="${pago}">
+                                    <g:formatDate date="${pago.fechaPago}"
+                                                  format="${g.message(code: 'default.date.format.no.time')}"/>
+                                    <br/>
+                                    <g:formatNumber number="${pago.monto}" type="currency" currencySymbol="\$"/>
+                                    <g:if test="${mes.numero == mesActual + 1}">
+                                        <a href="#" class="btn btn-xs btn-danger btnEliminar"
+                                           data-id="${pago.id}"
+                                           title="${message(code: 'default.button.delete.label')}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </g:if>
+                                </g:if>
+                                <g:else>
+                                    <g:if test="${mes.numero == mesActual + 1}">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-usd"></i>
+                                            </span>
+                                            <input type="text" class="form-control input" value="${cuota}">
+                                            <span class="input-group-btn">
+                                                <a href="#" class="btn btn-success btnRegistrarPago"
+                                                   data-usuario="${datosPagos.value.usuario.id}"
+                                                   data-mes="${mes}"
+                                                   title="${g.message(code: 'pago.registrar')}">
+                                                    <i class="fa fa-lg fa-money"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </g:if>
+                                </g:else>
                             </td>
-
-                            <td><g:formatNumber number="${pagoInstance.monto}" type="currency" currencySymbol="\$"/></td>
-
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btnEditar btn btn-info"
-                                       title="${message(code: 'default.button.edit.label')}">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                    <a href="#" class="btnEliminar btn btn-danger"
-                                       title="${message(code: 'default.button.delete.label')}">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </g:each>
-                </g:if>
-                <g:else>
-                    <tr class="info">
-                        <td class="text-center text-shadow" colspan="5">
-                            <i class="fa fa-2x icon-ghost"></i>
-                            <g:message code="default.no.records.found"/>
-                        </td>
+                        </g:each>
                     </tr>
-                </g:else>
+                </g:each>
             </tbody>
         </table>
 
@@ -203,18 +204,61 @@
                     } //success
                 }); //ajax
             } //createEdit
+            function registrarPago($btn) {
+                openLoader("${message(code: 'default.saving', args:[message(code: 'pago.label')])}");
+                var usuarioId = $btn.data("usuario");
+                var numeroMes = $btn.data("mes");
+                var monto = $btn.parent().prev().val();
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(controller: 'pago', action: 'save_ajax')}",
+                    data    : {
+                        usuario : usuarioId,
+                        mes     : numeroMes,
+                        anio    : "${params.anio}",
+                        monto   : monto
+                    },
+                    success : function (msg) {
+                        var parts = msg.split("*");
+                        log(parts[1], parts[0]); // log(msg, type, title, hide)
+                        setTimeout(function () {
+                            if (parts[0] == "SUCCESS") {
+                                location.reload(true);
+                            } else {
+                                closeLoader();
+                                return false;
+                            }
+                        }, 1000);
+                    },
+                    error   : function () {
+                        log("${message(code: 'default.internal.error')}", "Error");
+                        closeLoader();
+                    }
+                });
+            }
             $(function () {
+                $("#anio").change(function () {
+                    var anio = $(this).val();
+                    if ("${params.anio}" != anio) {
+                        location.href = "${createLink(controller: 'pago', action:'list')}?anio=" + anio;
+                    }
+                });
                 $(".btnCrear").click(function () {
                     crearEditarPago();
                     return false;
                 });
-                $(".btnEditar").click(function () {
-                    crearEditarPago($(this).parents("tr").data("id"));
+                $(".btnEliminar").click(function () {
+                    eliminarPago($(this).data("id"));
                     return false;
                 });
-                $(".btnEliminar").click(function () {
-                    eliminarPago($(this).parents("tr").data("id"));
+                $(".btnRegistrarPago").click(function () {
+                    registrarPago($(this));
                     return false;
+                });
+                $(".input").keypress(function (ev) {
+                    if (ev.keyCode == 13) {
+                        $(this).next().children().first().click();
+                    }
                 });
             });
         </script>

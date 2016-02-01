@@ -4,7 +4,7 @@ import ec.com.tw.parking.enums.Mes
 
 class Pago {
     Usuario usuario
-    Date fechaPago
+    Date fechaPago = new Date()
     Mes mes
     Integer anio
     Double monto
