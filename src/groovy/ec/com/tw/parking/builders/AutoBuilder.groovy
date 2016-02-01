@@ -3,6 +3,7 @@ package ec.com.tw.parking.builders
 import ec.com.tw.parking.Auto
 import ec.com.tw.parking.Tamanio
 import ec.com.tw.parking.Usuario
+import ec.com.tw.parking.enums.Tamanio
 
 import java.util.function.Consumer
 
