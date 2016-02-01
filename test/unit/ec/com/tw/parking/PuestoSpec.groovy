@@ -3,7 +3,6 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.PuestoBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -50,20 +49,20 @@ class PuestoSpec extends Specification {
         campo << ["numero"]
     }
 
-    void "Debe tener menos o igual que el maximo de caracteres"() {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def puesto = PuestoBuilder.nuevo().con { p -> p[campo.nombre] = valor }.crear()
+        def valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 100, false)
+        def puesto = PuestoBuilder.nuevo().con { p -> p[campo] = valor }.crear()
 
         expect:
         !puesto.validate()
         puesto.hasErrors()
-        puesto.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        puesto.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "numero", maxSize: 6]
-        ]
+        campo    | maxSize
+        "numero" | 6
     }
 
     void "Debe el precio ser positivo"() {

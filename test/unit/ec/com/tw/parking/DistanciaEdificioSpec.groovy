@@ -3,23 +3,23 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.DistanciaEdificioBuilder
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @TestFor(DistanciaEdificio)
 class DistanciaEdificioSpec extends Specification {
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def distanciaEdificio = new DistanciaEdificioBuilder().crear()
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         distanciaEdificio.validate()
         !distanciaEdificio.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo ser no nulo"() {
         setup:
-        def distanciaEdificioBuilder = new DistanciaEdificioBuilder()
-        distanciaEdificioBuilder[campo] = null
-        def distanciaEdificio = distanciaEdificioBuilder.crear()
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().con { d -> d[campo] = null }.crear()
 
         expect:
         !distanciaEdificio.validate()
@@ -30,11 +30,11 @@ class DistanciaEdificioSpec extends Specification {
         campo << ["codigo", "descripcion"]
     }
 
-    void "Debe ser no blanco"(campo) {
+    @Unroll
+    void "Debe #campo ser no blanco"() {
         setup:
-        def distanciaEdificioBuilder = new DistanciaEdificioBuilder()
-        def distanciaEdificio = distanciaEdificioBuilder.crear()
-        distanciaEdificio[campo] = ""
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().crear()
+        distanciaEdificio[campo] = ''
 
         expect:
         !distanciaEdificio.validate()
@@ -45,46 +45,42 @@ class DistanciaEdificioSpec extends Specification {
         campo << ["codigo", "descripcion"]
     }
 
-    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener mas o igual que #minSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def distanciaEdificioBuilder = new DistanciaEdificioBuilder()
-        distanciaEdificioBuilder[campo.nombre] = valor
-        def distanciaEdificio = distanciaEdificioBuilder.crear()
+        def valor = RandomUtilsHelpers.getRandomString(1, minSize, false)
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !distanciaEdificio.validate()
         distanciaEdificio.hasErrors()
-        distanciaEdificio.errors[campo.nombre]?.code == 'minSize.notmet'
+        distanciaEdificio.errors[campo]?.code == 'minSize.notmet'
 
         where:
-        campo << [
-            [nombre: "descripcion", minSize: 3]
-        ]
+        campo         | minSize
+        "descripcion" | 3
     }
 
-    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def distanciaEdificioBuilder = new DistanciaEdificioBuilder()
-        distanciaEdificioBuilder[campo.nombre] = valor
-        def distanciaEdificio = distanciaEdificioBuilder.crear()
+        def valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 100, false)
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !distanciaEdificio.validate()
         distanciaEdificio.hasErrors()
-        distanciaEdificio.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        distanciaEdificio.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "codigo", maxSize: 1],
-            [nombre: "descripcion", maxSize: 10]
-        ]
+        campo         | maxSize
+        "codigo"      | 1
+        "descripcion" | 10
     }
 
     void "Debe toString devolver la descripcion"() {
         setup:
-        def distanciaEdificio = new DistanciaEdificioBuilder().crear()
+        def distanciaEdificio = DistanciaEdificioBuilder.nuevo().crear()
 
         expect:
         distanciaEdificio.toString() == distanciaEdificio.descripcion

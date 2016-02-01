@@ -4,6 +4,7 @@ import ec.com.tw.parking.builders.AsignacionPuestoBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @TestFor(AsignacionPuesto)
 @Mock([Auto, Puesto, TipoPreferencia, Edificio, DistanciaEdificio])
@@ -11,18 +12,17 @@ class AsignacionPuestoSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def asignacionPuesto = new AsignacionPuestoBuilder().crear()
+        def asignacionPuesto = AsignacionPuestoBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         asignacionPuesto.validate()
         !asignacionPuesto.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo ser no nulo"() {
         setup:
-        def asignacionPuestoBuilder = new AsignacionPuestoBuilder()
-        asignacionPuestoBuilder[campo] = null
-        def asignacionPuesto = asignacionPuestoBuilder.crear()
+        def asignacionPuesto = AsignacionPuestoBuilder.nuevo().con { a -> a[campo] = null }.crear()
 
         expect:
         !asignacionPuesto.validate()
@@ -33,11 +33,10 @@ class AsignacionPuestoSpec extends Specification {
         campo << ["auto", "puesto", "fechaAsignacion"]
     }
 
-    void "Debe poder ser nulo"(campo) {
+    @Unroll
+    void "Debe #campo poder ser nulo"(campo) {
         setup:
-        def asignacionPuestoBuilder = new AsignacionPuestoBuilder()
-        asignacionPuestoBuilder[campo] = null
-        def asignacionPuesto = asignacionPuestoBuilder.crear()
+        def asignacionPuesto = AsignacionPuestoBuilder.nuevo().con { a -> a[campo] = null }.crear()
 
         expect:
         asignacionPuesto.validate()
@@ -49,7 +48,7 @@ class AsignacionPuestoSpec extends Specification {
 
     void "Debe toString mostrar la informacion necesaria"() {
         setup:
-        def asignacionPuesto = new AsignacionPuestoBuilder().crear()
+        def asignacionPuesto = AsignacionPuestoBuilder.nuevo().crear()
 
         expect:
         def persona = asignacionPuesto.auto.usuario.nombre
@@ -58,7 +57,4 @@ class AsignacionPuestoSpec extends Specification {
         def numero = asignacionPuesto.puesto.numero
         asignacionPuesto.toString() == persona + " (" + placa + ") → " + edificio + " #" + numero
     }
-
-
-
 }

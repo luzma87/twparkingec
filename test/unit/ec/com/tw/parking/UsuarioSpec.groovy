@@ -5,6 +5,7 @@ import ec.com.tw.parking.builders.UsuarioBuilder
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @TestFor(Usuario)
 @Mock([Auto])
@@ -12,18 +13,17 @@ class UsuarioSpec extends Specification {
 
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def usuario = new UsuarioBuilder().crear()
+        def usuario = UsuarioBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         usuario.validate()
         !usuario.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo no ser nulo"() {
         setup:
-        def usuarioBuilder = new UsuarioBuilder()
-        usuarioBuilder[campo] = null
-        def usuario = usuarioBuilder.crear()
+        def usuario = UsuarioBuilder.nuevo().con { d -> d[campo] = null }.crear()
 
         expect:
         !usuario.validate()
@@ -34,10 +34,10 @@ class UsuarioSpec extends Specification {
         campo << ["nombre", "email", "password", "esAdmin", "cedula", "estaActivo", "preferencia"]
     }
 
-    void "Debe ser no blanco"(campo) {
+    @Unroll
+    void "Debe #campo ser no blanco"() {
         setup:
-        def usuarioBuilder = new UsuarioBuilder()
-        def usuario = usuarioBuilder.crear()
+        def usuario = UsuarioBuilder.nuevo().crear()
         usuario[campo] = ""
 
         expect:
@@ -49,56 +49,51 @@ class UsuarioSpec extends Specification {
         campo << ["nombre", "email", "password", "cedula"]
     }
 
-    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener mas o igual que #minSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def usuarioBuilder = new UsuarioBuilder()
-        usuarioBuilder[campo.nombre] = valor
-        def usuario = usuarioBuilder.crear();
+        def valor = RandomUtilsHelpers.getRandomString(1, minSize, false)
+        def usuario = UsuarioBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors[campo.nombre]?.code == 'minSize.notmet'
+        usuario.errors[campo]?.code == 'minSize.notmet'
 
         where:
-        campo << [
-            [nombre: "nombre", minSize: 3],
-            [nombre: "cedula", minSize: 10]
-        ]
+        campo    | minSize
+        "nombre" | 3
+        "cedula" | 10
     }
 
-    void "Debe tener menos o igual el maximo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
         def valor
-        if (campo.nombre == "email") {
-            valor = RandomUtilsHelpers.getRandomMail(campo.maxSize + 1, 850)
+        if (campo == "email") {
+            valor = RandomUtilsHelpers.getRandomMail(maxSize + 1, 850)
         } else {
-            valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 850, false)
+            valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 850, false)
         }
-        def usuarioBuilder = new UsuarioBuilder()
-        usuarioBuilder[campo.nombre] = valor
-        def usuario = usuarioBuilder.crear();
+        def usuario = UsuarioBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !usuario.validate()
         usuario.hasErrors()
-        usuario.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        usuario.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "nombre", maxSize: 50],
-            [nombre: "email", maxSize: 100],
-            [nombre: "password", maxSize: 512],
-            [nombre: "cedula", maxSize: 10]
-        ]
+        campo      | maxSize
+        "nombre"   | 50
+        "email"    | 100
+        "password" | 512
+        "cedula"   | 10
     }
 
     void "Debe el email tener el formato correcto"() {
         when: 'el email tiene un formato incorrecto'
-        def usuarioBuilder = new UsuarioBuilder()
-        usuarioBuilder.email = RandomUtilsHelpers.getRandomString(1, 100, false)
-        def usuario = usuarioBuilder.crear();
+        def valor = RandomUtilsHelpers.getRandomString(1, 100, false)
+        def usuario = UsuarioBuilder.nuevo().con { d -> d.email = valor }.crear()
 
         then: 'la validacion debe fallar'
         !usuario.validate()
@@ -108,9 +103,9 @@ class UsuarioSpec extends Specification {
 
     void "Debe tener varios autos"() {
         setup:
-        def auto = new AutoBuilder().crear()
+        def auto = AutoBuilder.nuevo().crear()
         auto.save()
-        def usuario = new UsuarioBuilder().crear()
+        def usuario = UsuarioBuilder.nuevo().crear()
         usuario.save()
 
         expect:
@@ -120,7 +115,7 @@ class UsuarioSpec extends Specification {
 
     void "Debe toString devolver el nombre"() {
         setup:
-        def usuario = new UsuarioBuilder().crear()
+        def usuario = UsuarioBuilder.nuevo().crear()
 
         expect:
         usuario.toString() == usuario.nombre

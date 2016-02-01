@@ -4,6 +4,7 @@ import ec.com.tw.parking.builders.EdificioBuilder
 import ec.com.tw.parking.builders.PuestoBuilder
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @TestFor(Edificio)
 class EdificioSpec extends Specification {
@@ -17,7 +18,8 @@ class EdificioSpec extends Specification {
         !edificio.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo ser no nulo"() {
         setup:
         def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = null }.crear()
 
@@ -30,7 +32,8 @@ class EdificioSpec extends Specification {
         campo << ["nombre", "distancia", "esAmpliable"]
     }
 
-    void "Debe poder ser nulo"(campo) {
+    @Unroll
+    void "Debe #campo poder ser nulo"() {
         setup:
         def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = null }.crear()
 
@@ -42,7 +45,8 @@ class EdificioSpec extends Specification {
         campo << ["datosPago", "observaciones"]
     }
 
-    void "Debe ser no blanco"(campo) {
+    @Unroll
+    void "Debe #campo ser no blanco"() {
         setup:
         def edificio = EdificioBuilder.nuevo().crear()
         edificio[campo] = ""
@@ -56,37 +60,37 @@ class EdificioSpec extends Specification {
         campo << ["nombre", "datosPago"]
     }
 
-    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener mas o igual que #minSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def edificio = EdificioBuilder.nuevo().con { e -> e[campo.nombre] = valor }.crear()
+        def valor = RandomUtilsHelpers.getRandomString(1, minSize, false)
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = valor }.crear()
 
         expect:
         !edificio.validate()
         edificio.hasErrors()
-        edificio.errors[campo.nombre]?.code == 'minSize.notmet'
+        edificio.errors[campo]?.code == 'minSize.notmet'
 
         where:
-        campo << [
-            [nombre: "nombre", minSize: 2]
-        ]
+        campo    | minSize
+        "nombre" | 2
     }
 
-    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 300, false)
-        def edificio = EdificioBuilder.nuevo().con { e -> e[campo.nombre] = valor }.crear()
+        def valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 300, false)
+        def edificio = EdificioBuilder.nuevo().con { e -> e[campo] = valor }.crear()
 
         expect:
         !edificio.validate()
         edificio.hasErrors()
-        edificio.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        edificio.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "nombre", maxSize: 50],
-            [nombre: "observaciones", maxSize: 150]
-        ]
+        campo           | maxSize
+        "nombre"        | 50
+        "observaciones" | 150
     }
 
     void "Debe tener varios puestos"() {

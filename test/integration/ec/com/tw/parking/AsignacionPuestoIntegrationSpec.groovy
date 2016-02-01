@@ -9,6 +9,7 @@ import ec.com.tw.parking.builders.TipoPreferenciaBuilder
 import grails.test.spock.IntegrationSpec
 
 import static RandomUtilsHelpers.getRandomInt
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 
 class AsignacionPuestoIntegrationSpec extends IntegrationSpec {
 

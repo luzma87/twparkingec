@@ -1,6 +1,7 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.builders.*
+import ec.com.tw.parking.enums.Tamanio
 import grails.test.spock.IntegrationSpec
 
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt

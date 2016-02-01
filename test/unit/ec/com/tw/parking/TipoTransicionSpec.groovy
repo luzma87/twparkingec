@@ -3,6 +3,7 @@ package ec.com.tw.parking
 import ec.com.tw.parking.builders.TipoTransicionBuilder
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static RandomUtilsHelpers.getRandomInt
 
@@ -10,18 +11,17 @@ import static RandomUtilsHelpers.getRandomInt
 class TipoTransicionSpec extends Specification {
     void "Deben los datos ser correctos"() {
         when: 'Los datos son correctos'
-        def tipoTransicion = new TipoTransicionBuilder().crear()
+        def tipoTransicion = TipoTransicionBuilder.nuevo().crear()
 
         then: 'la validacion debe pasar'
         tipoTransicion.validate()
         !tipoTransicion.hasErrors()
     }
 
-    void "Debe ser no nulo"(campo) {
+    @Unroll
+    void "Debe #campo no ser nulo"() {
         setup:
-        def tipoTransicionBuilder = new TipoTransicionBuilder()
-        tipoTransicionBuilder[campo] = null
-        def tipoTransicion = tipoTransicionBuilder.crear()
+        def tipoTransicion = TipoTransicionBuilder.nuevo().con { d -> d[campo] = null }.crear()
 
         expect:
         !tipoTransicion.validate()
@@ -32,11 +32,11 @@ class TipoTransicionSpec extends Specification {
         campo << ["nombre", "distanciaOrigen", "distanciaDestino", "prioridad"]
     }
 
-    void "Debe ser no blanco"(campo) {
+    @Unroll
+    void "Debe #campo no ser blanco"() {
         setup:
-        def tipoTransicionBuilder = new TipoTransicionBuilder()
-        def tipoTransicion = tipoTransicionBuilder.crear()
-        tipoTransicion[campo] = ""
+        def tipoTransicion = TipoTransicionBuilder.nuevo().crear()
+        tipoTransicion[campo] = ''
 
         expect:
         !tipoTransicion.validate()
@@ -47,48 +47,42 @@ class TipoTransicionSpec extends Specification {
         campo << ["nombre"]
     }
 
-    void "Debe tener mas o igual del minimo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener mas o igual #minSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def tipoTransicionBuilder = new TipoTransicionBuilder()
-        tipoTransicionBuilder[campo.nombre] = valor
-        def tipoTransicion = tipoTransicionBuilder.crear()
+        def valor = RandomUtilsHelpers.getRandomString(1, minSize, false)
+        def tipoTransicion = TipoTransicionBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !tipoTransicion.validate()
         tipoTransicion.hasErrors()
-        tipoTransicion.errors[campo.nombre]?.code == 'minSize.notmet'
+        tipoTransicion.errors[campo]?.code == 'minSize.notmet'
 
         where:
-        campo << [
-            [nombre: "nombre", minSize: 3]
-        ]
+        campo    | minSize
+        "nombre" | 3
     }
 
-    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def tipoTransicionBuilder = new TipoTransicionBuilder()
-        tipoTransicionBuilder[campo.nombre] = valor
-        def tipoTransicion = tipoTransicionBuilder.crear()
+        def valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 100, false)
+        def tipoTransicion = TipoTransicionBuilder.nuevo().con { d -> d[campo] = valor }.crear()
 
         expect:
         !tipoTransicion.validate()
         tipoTransicion.hasErrors()
-        tipoTransicion.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        tipoTransicion.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "nombre", maxSize: 30]
-        ]
+        campo    | maxSize
+        "nombre" | 30
     }
 
     void "Debe la prioridad ser positiva y mayor que 0"() {
         setup:
         def negativo = getRandomInt(0, 10) * -1
-        def tipoTransicionBuilder = new TipoTransicionBuilder()
-        tipoTransicionBuilder.prioridad = negativo
-        def tipoTransicion = tipoTransicionBuilder.crear()
+        def tipoTransicion = TipoTransicionBuilder.nuevo().con { d -> d.prioridad = negativo }.crear()
 
         expect:
         !tipoTransicion.validate()
@@ -98,7 +92,7 @@ class TipoTransicionSpec extends Specification {
 
     void "Debe toString devolver el nombre"() {
         setup:
-        def tipoTransicion = new TipoTransicionBuilder().crear()
+        def tipoTransicion = TipoTransicionBuilder.nuevo().crear()
 
         expect:
         tipoTransicion.toString() == tipoTransicion.nombre

@@ -48,40 +48,40 @@ class AutoSpec extends Specification {
         campo << ["marca", "modelo", "placa"]
     }
 
-    void "Debe tener mas o igual del minimo de caracteres"() {
+    @Unroll
+    void "Debe #campo tener mas o igual que #minSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(1, campo.minSize, false)
-        def auto = AutoBuilder.nuevo().con { a -> a[campo.nombre] = valor }.crear()
+        def valor = RandomUtilsHelpers.getRandomString(1, minSize, false)
+        def auto = AutoBuilder.nuevo().con { a -> a[campo] = valor }.crear()
 
         expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors[campo.nombre]?.code == 'minSize.notmet'
+        auto.errors[campo]?.code == 'minSize.notmet'
 
         where:
-        campo << [
-            [nombre: "marca", minSize: 2],
-            [nombre: "modelo", minSize: 2],
-            [nombre: "placa", minSize: 7]
-        ]
+        campo    | minSize
+        "marca"  | 2
+        "modelo" | 2
+        "placa"  | 7
     }
 
-    void "Debe tener menos o igual que el maximo de caracteres"(campo) {
+    @Unroll
+    void "Debe #campo tener menos o igual que #maxSize caracteres"() {
         setup:
-        def valor = RandomUtilsHelpers.getRandomString(campo.maxSize + 1, 100, false)
-        def auto = AutoBuilder.nuevo().con { a -> a[campo.nombre] = valor }.crear()
+        def valor = RandomUtilsHelpers.getRandomString(maxSize + 1, 100, false)
+        def auto = AutoBuilder.nuevo().con { a -> a[campo] = valor }.crear()
 
         expect:
         !auto.validate()
         auto.hasErrors()
-        auto.errors[campo.nombre]?.code == 'maxSize.exceeded'
+        auto.errors[campo]?.code == 'maxSize.exceeded'
 
         where:
-        campo << [
-            [nombre: "marca", maxSize: 20],
-            [nombre: "modelo", maxSize: 25],
-            [nombre: "placa", maxSize: 8]
-        ]
+        campo    | maxSize
+        "marca"  | 20
+        "modelo" | 25
+        "placa"  | 8
     }
 
     void "Debe toString devolver el usuario, la marca, el modelo, la placa y si es default"() {
