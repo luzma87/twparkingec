@@ -112,6 +112,12 @@ class MenuTagLib {
                         icon      : "fa-cubes",
                         separator : true
                     ],
+                    pagos: [
+                        controller: "pago",
+                        action    : "list",
+                        label     : message(code: 'navbar.pagos'),
+                        icon      : "fa-money",
+                    ],
                     parametros  : [
                         controller: "parametros",
                         action    : "index",
