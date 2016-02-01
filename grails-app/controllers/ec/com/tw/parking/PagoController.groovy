@@ -1,6 +1,7 @@
 package ec.com.tw.parking
 
 import ec.com.tw.parking.commons.Shield
+import ec.com.tw.parking.enums.Mes
 
 class PagoController extends Shield {
 
@@ -10,7 +11,24 @@ class PagoController extends Shield {
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
-        redirect(action: 'list')
+        def anioActual = new Date().format("yyyy").toInteger()
+        def pagos = [:]
+        Usuario.list().each { usuario ->
+            Mes.values().each { mes ->
+                def pagosUsu = Pago.withCriteria {
+                    eq("mes", mes)
+                    eq("anio", anioActual)
+                    eq("usuario", usuario)
+                }
+                if (pagosUsu.size() > 0) {
+                    if (!pagos[usuario.email]) {
+                        pagos[usuario.email] = [usuario: usuario, pagos: []]
+                    }
+                    pagos[usuario.email].pagos += pagosUsu
+                }
+            }
+        }
+        return [anio: anioActual, pagos: pagos]
     }
 
     def list() {

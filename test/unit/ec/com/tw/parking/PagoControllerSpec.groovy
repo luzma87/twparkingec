@@ -17,13 +17,6 @@ class PagoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    void "Debe redireccionar a list cuando se ejecuta index"() {
-        when:
-        controller.index()
-        then:
-        response.redirectedUrl == "/pago/list"
-    }
-
     void "Debe obtener la lista de pagos y su numero"() {
         setup:
         pagoInstance.save()

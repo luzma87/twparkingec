@@ -132,6 +132,12 @@ class MenuTagLib {
                 action    : "historial",
                 label     : message(code: 'navbar.historial'),
                 icon      : "fa-calendar"
+            ],
+            pagos: [
+                controller: "pago",
+                action    : "index",
+                label     : message(code: 'navbar.pagos'),
+                icon      : "fa-money"
             ]
         ]
     }
@@ -149,6 +155,12 @@ class MenuTagLib {
                 action    : "historial",
                 label     : message(code: 'navbar.historial'),
                 icon      : "fa-calendar"
+            ],
+            pagos: [
+                controller: "pago",
+                action    : "index",
+                label     : message(code: 'navbar.pagos'),
+                icon      : "fa-money"
             ]
         ]
     }

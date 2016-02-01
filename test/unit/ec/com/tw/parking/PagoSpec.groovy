@@ -45,4 +45,12 @@ class PagoSpec extends Specification {
         pago.hasErrors()
         pago.errors['monto']?.code == "min.notmet"
     }
+
+    void "Debe toString devolver el nombre del edificio y el numero"() {
+        setup:
+        def pago = PagoBuilder.nuevo().crear()
+
+        expect:
+        pago.toString() == pago.mes.toString() + " " + pago.anio + ": \$" + pago.monto + " (" + pago.fechaPago.format("dd-MM-yyy") + ")"
+    }
 }

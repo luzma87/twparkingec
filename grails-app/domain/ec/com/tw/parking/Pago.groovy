@@ -32,4 +32,8 @@ class Pago {
         anio nullable: false
         monto nullable: false, min: 0D
     }
+
+    String toString() {
+        return "${this.mes} ${this.anio}: \$${this.monto} (${this.fechaPago.format('dd-MM-yyyy')})"
+    }
 }
