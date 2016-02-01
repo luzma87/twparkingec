@@ -14,7 +14,7 @@ class Pago {
         cache usage: 'read-write', include: 'lazy'
         version false
         id generator: 'identity'
-        sort fechaPago: "asc"
+        sort usuario: "asc"
         columns {
             id column: 'id'
             usuario column: 'usuario_id'

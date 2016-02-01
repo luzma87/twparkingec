@@ -1,5 +1,8 @@
 package ec.com.tw.parking
 
+import ec.com.tw.parking.enums.Mes
+import ec.com.tw.parking.enums.Tamanio
+
 /**
  * Created by lmunda on 1/21/16 09:31.
  */
@@ -507,6 +510,291 @@ class DatosIniciales {
             asignacion.puesto = asg.puesto
             if (!asignacion.save(flush: true)) {
                 println "error al guardar asignacion de ${asg.usuario.toString()} a ${asg.puesto.toString()}"
+            }
+        }
+    }
+
+    static crearPagos() {
+        def pagos = []
+        pagos += [usuario: Usuario.findByEmail("coquendo@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("mmurillo@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("ftorre@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '29-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("dalcocer@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '29-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '28-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("fureta@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("geguez@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("gcortez@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '26-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("pjimenez@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '23-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("ipazmino@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("rvallejo@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '29-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '28-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("mescudero@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '21-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("vperez@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '28-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("fcoronel@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '27-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("lmunda@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '26-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("njumbo@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ],
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-01-2016'),
+                          monto    : 12.38
+                      ],
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("fcastane@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.ENERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '22-12-2015'),
+                          monto    : 13.16
+                      ]
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("rcastill@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '26-12-2015'),
+                          monto    : 12.38
+                      ]
+                  ]
+        ]
+        pagos += [usuario: Usuario.findByEmail("iecheve@thoughtworks.com"),
+                  pagos  : [
+                      [
+                          mes      : Mes.FEBRERO,
+                          anio     : 2016,
+                          fechaPago: new Date().parse('dd-MM-yyyy', '25-12-2015'),
+                          monto    : 12.38
+                      ]
+                  ]
+        ]
+
+        pagos.each { datosPagos ->
+
+            datosPagos.pagos.each { datosPago ->
+                def pago = new Pago(datosPago)
+                pago.usuario = datosPagos.usuario
+                if (!pago.save(flush: true)) {
+                    println "error al guardar pago de ${pago.usuario.toString()} de ${datosPago.mes}"
+                }
             }
         }
     }

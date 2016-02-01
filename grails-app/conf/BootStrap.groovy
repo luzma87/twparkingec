@@ -1,5 +1,6 @@
 import ec.com.tw.parking.AsignacionPuesto
 import ec.com.tw.parking.DatosIniciales
+import ec.com.tw.parking.Pago
 import ec.com.tw.parking.enums.Tamanio
 import grails.util.Environment
 
@@ -37,6 +38,10 @@ class BootStrap {
 
             if (AsignacionPuesto.count() == 0) {
                 DatosIniciales.crearAsignaciones()
+            }
+
+            if (Pago.count() == 0) {
+                DatosIniciales.crearPagos()
             }
         }
     }
