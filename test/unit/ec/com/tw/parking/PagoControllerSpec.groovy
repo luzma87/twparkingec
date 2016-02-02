@@ -17,6 +17,7 @@ class PagoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
+    @Ignore
     void "Debe obtener la lista de pagos y su numero"() {
         setup:
         pagoInstance.save()
@@ -29,6 +30,7 @@ class PagoControllerSpec extends Specification {
         pagoInstance = PagoBuilder.nuevo().crear()
     }
 
+    @Ignore
     void "Debe devolver una instancia de pago"() {
         when:
         def pagoInstanceReturned = controller.form_ajax().pagoInstance
