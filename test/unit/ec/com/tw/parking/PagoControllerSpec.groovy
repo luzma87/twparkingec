@@ -1,10 +1,11 @@
 package ec.com.tw.parking
 
 
-
 import ec.com.tw.parking.builders.PagoBuilder
 import grails.test.mixin.*
 import spock.lang.*
+
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 
 @TestFor(PagoController)
 @Mock([Pago, MensajesBuilderTagLib])
@@ -17,17 +18,31 @@ class PagoControllerSpec extends Specification {
         controller.crudHelperService = crudHelperServiceMock
     }
 
-    @Ignore
     void "Debe obtener la lista de pagos y su numero"() {
         setup:
+        def pagoInstance = PagoBuilder.nuevo().crear()
+        CalculadorCuotaService calculadorCuotaServiceMock = Mock(CalculadorCuotaService)
+        controller.calculadorCuotaService = calculadorCuotaServiceMock
+        def hoy = new Date()
+        def anio = hoy.format("yyyy").toInteger()
+        def mesActual = hoy.format("MM").toInteger()
+        def cuota = getRandomDouble(1, 100)
+        def anios = []
+        for (int i = anio; i >= 2016; i--) {
+            anios += i
+        }
+
+        when:
         pagoInstance.save()
+        def listReturns = controller.list()
 
-        expect:
-        controller.list() == [pagoInstanceList: [pagoInstance],
-                              pagoInstanceCount: 1]
-
-        where:
-        pagoInstance = PagoBuilder.nuevo().crear()
+        then:
+        1 * calculadorCuotaServiceMock.calcularCuota() >> cuota
+        listReturns.anio == anio
+        listReturns.pagos == [:]
+        listReturns.anios == anios
+        listReturns.mesActual == mesActual
+        listReturns.cuota.toString() == cuota.toString()
     }
 
     @Ignore
