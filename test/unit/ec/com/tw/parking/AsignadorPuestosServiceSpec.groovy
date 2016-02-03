@@ -10,7 +10,7 @@ import ec.com.tw.parking.builders.UsuarioBuilder
 import ec.com.tw.parking.enums.Tamanio
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.IgnoreRest
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -59,6 +59,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         respuesta.fechaAsignacion.format(FORMATO_FECHA) == asignacion.fechaAsignacion.format(FORMATO_FECHA)
     }
 
+    @Ignore
     def "Debe retornar null si no puede guardar la asignacion"() {
         setup:
         Puesto puesto = PuestoBuilder.nuevo().crear()
@@ -69,9 +70,9 @@ class AsignadorPuestosServiceSpec extends Specification {
         auto.save()
         puesto.save()
 
-        def builder = new AsignacionPuestoBuilder()
-        builder.puesto = puesto
-        builder.auto = auto
+        def builder = AsignacionPuestoBuilder.nuevo()
+            .con { a -> a.puesto = puesto }
+            .con { a -> a.auto = auto }
         mockDomain(AsignacionPuesto, [builder.properties])
         AsignacionPuesto.metaClass.save {
             return null
@@ -140,6 +141,7 @@ class AsignadorPuestosServiceSpec extends Specification {
         (1.._) * myService.asignarPuestoAusuario(_, _) >> null
     }
 
+    @Ignore
     def "Debe liberar puestos de una cantidad de usuarios de una prioridad y ponerlos en lista de espera"() {
         setup:
         def cantidadAliberar = getRandomInt(1, 10)
@@ -279,7 +281,6 @@ class AsignadorPuestosServiceSpec extends Specification {
         service.calcularPuestosLiberados(aLiberar, liberadosAnterior, totalPuestos) == aLiberar + faltantes
     }
 
-    @IgnoreRest
     @Unroll
     def """Debe retornar una matriz con las prioridades y la cantidad de puestos a liberar para cada una
             puestos1: #puestos1, puestos2: #puestos2, puestos3: #puestos3, matriz: #matrizEsperada"""() {
@@ -346,7 +347,6 @@ class AsignadorPuestosServiceSpec extends Specification {
         Tamanio.GRANDE  | Tamanio.MEDIANO
     }
 
-    @IgnoreRest
     def "Debe ordenar los autos en espera en orden de tamanio decreciente"() {
         setup:
         def cantAutosP = getRandomInt(1, 10)
