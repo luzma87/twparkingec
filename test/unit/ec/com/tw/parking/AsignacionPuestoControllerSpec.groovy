@@ -18,28 +18,13 @@ class AsignacionPuestoControllerSpec extends Specification {
 
     void "Debe obtener la lista de asignacionPuestos, su numero, autos sin asignacion y puestos sin asignacion"() {
         setup:
-        asignacionPuestoInstance.save()
+        def asignacionPuestoInstance = AsignacionPuestoBuilder.nuevo().guardar()
 
         expect:
         controller.list() == [puestosSinAsignacion         : Puesto.obtenerSinAsignacion(),
                               autosSinAsignacion           : Auto.obtenerSinAsignacion(),
                               asignacionPuestoInstanceList : [asignacionPuestoInstance],
                               asignacionPuestoInstanceCount: 1]
-
-        where:
-        asignacionPuestoInstance = AsignacionPuestoBuilder.nuevo().crear()
-    }
-
-    void "Debe devolver una instancia de asignacionPuesto"() {
-        when:
-        def asignacionPuestoInstanceReturned = controller.form_ajax().asignacionPuestoInstance
-
-        then:
-        1 * crudHelperServiceMock.obtenerObjeto(AsignacionPuesto, _) >> asignacionPuestoInstance
-        asignacionPuestoInstanceReturned.properties == asignacionPuestoInstance.properties
-
-        where:
-        asignacionPuestoInstance << [new AsignacionPuesto(), AsignacionPuestoBuilder.nuevo().crear()]
     }
 
     void "Debe guardar un asignacionPuesto valido"() {
@@ -118,5 +103,17 @@ class AsignacionPuestoControllerSpec extends Specification {
 
         where:
         asignacionPuestoInstance << [null, new AsignacionPuesto()]
+    }
+
+    void "Debe devolver una instancia de asignacionPuesto"() {
+        when:
+        def asignacionPuestoInstanceReturned = controller.form_ajax().asignacionPuestoInstance
+
+        then:
+        1 * crudHelperServiceMock.obtenerObjeto(AsignacionPuesto, _) >> asignacionPuestoInstance
+        asignacionPuestoInstanceReturned.properties == asignacionPuestoInstance.properties
+
+        where:
+        asignacionPuestoInstance << [new AsignacionPuesto(), AsignacionPuestoBuilder.nuevo().crear()]
     }
 }
