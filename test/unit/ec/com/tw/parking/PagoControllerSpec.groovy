@@ -12,17 +12,19 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 class PagoControllerSpec extends Specification {
 
     CrudHelperService crudHelperServiceMock
+    CalculadorCuotaService calculadorCuotaServiceMock
 
     def setup() {
         crudHelperServiceMock = Mock(CrudHelperService)
         controller.crudHelperService = crudHelperServiceMock
+
+        calculadorCuotaServiceMock = Mock(CalculadorCuotaService)
+        controller.calculadorCuotaService = calculadorCuotaServiceMock
     }
 
     void "Debe obtener la lista de pagos y su numero"() {
         setup:
         def pagoInstance = PagoBuilder.nuevo().crear()
-        CalculadorCuotaService calculadorCuotaServiceMock = Mock(CalculadorCuotaService)
-        controller.calculadorCuotaService = calculadorCuotaServiceMock
         def hoy = new Date()
         def anio = hoy.format("yyyy").toInteger()
         def mesActual = hoy.format("MM").toInteger()
@@ -45,14 +47,18 @@ class PagoControllerSpec extends Specification {
         listReturns.cuota.toString() == cuota.toString()
     }
 
-    @Ignore
     void "Debe devolver una instancia de pago"() {
+        setup:
+        def cuota = getRandomDouble(1, 100)
+
         when:
-        def pagoInstanceReturned = controller.form_ajax().pagoInstance
+        def pagoInstanceReturned = controller.form_ajax()
 
         then:
         1 * crudHelperServiceMock.obtenerObjeto(Pago, _) >> pagoInstance
-        pagoInstanceReturned.properties == pagoInstance.properties
+        1 * calculadorCuotaServiceMock.calcularCuota() >> cuota
+        pagoInstanceReturned.pagoInstance == pagoInstance
+        pagoInstanceReturned.cuota == cuota
 
         where:
         pagoInstance << [new Pago(), PagoBuilder.nuevo().crear()]
