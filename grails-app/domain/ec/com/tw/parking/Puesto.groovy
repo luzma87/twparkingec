@@ -7,6 +7,7 @@ class Puesto {
     Tamanio tamanio
     String numero
     Double precio = 0.0
+    Boolean estaActivo = true
 
     static belongsTo = [edificio: Edificio]
 
@@ -22,6 +23,7 @@ class Puesto {
             numero column: 'numero'
             edificio column: 'edificio_id'
             precio column: 'precio'
+            estaActivo column: 'esta_activo'
         }
     }
 
@@ -29,6 +31,7 @@ class Puesto {
         tamanio nullable: false, blank: false
         numero nullable: false, blank: false, minSize: 1, maxSize: 6
         precio nullable: false, min: 0d
+        estaActivo nullable: false
     }
 
     static ArrayList<Puesto> obtenerLibresPorTamanio(Tamanio tamanio) {

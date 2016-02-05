@@ -451,6 +451,7 @@ class DatosIniciales {
         edificios.each { datosEdificio ->
             def edificio = new Edificio(datosEdificio.edificio)
             datosEdificio.puestos.each { datosPuesto ->
+                datosPuesto.estaActivo = true
                 edificio.addToPuestos(datosPuesto)
             }
             if (!edificio.save(flush: true)) {

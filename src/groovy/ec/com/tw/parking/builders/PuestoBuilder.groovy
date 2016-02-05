@@ -7,6 +7,7 @@ import ec.com.tw.parking.enums.Tamanio
 
 import java.util.function.Consumer
 
+import static ec.com.tw.parking.RandomUtilsHelpers.getRandomBoolean
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomDouble
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomFromArray
 import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
@@ -20,16 +21,18 @@ class PuestoBuilder {
     String numero = getRandomInt(100)
     Edificio edificio = EdificioBuilder.nuevo().crear()
     Double precio = getRandomDouble(1, 100)
+    Boolean estaActivo = getRandomBoolean()
 
     private PuestoBuilder() {
     }
 
     def getParams() {
         return [
-            tamanio : this.tamanio,
-            numero  : this.numero,
-            edificio: this.edificio,
-            precio  : this.precio
+            tamanio   : this.tamanio,
+            numero    : this.numero,
+            edificio  : this.edificio,
+            precio    : this.precio,
+            estaActivo: this.estaActivo
         ]
     }
 

@@ -31,7 +31,7 @@ class PuestoSpec extends Specification {
         puesto.errors[campo]?.code == 'nullable'
 
         where:
-        campo << ["tamanio", "numero", "edificio", "precio"]
+        campo << ["tamanio", "numero", "edificio", "precio", "estaActivo"]
     }
 
     @Unroll
