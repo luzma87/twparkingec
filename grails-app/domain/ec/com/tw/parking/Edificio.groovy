@@ -42,7 +42,9 @@ class Edificio {
     def getPuestosLibres() {
         if (this.puestos && this.puestos.size() > 0) {
             def asignaciones = AsignacionPuesto.findAllByPuestoInList(this.puestos)
-            return asignaciones.findAll { it.fechaLiberacion <= new Date() || it.fechaLiberacion == null }.puesto
+            return asignaciones.findAll {
+                it.puesto.estaActivo && (it.fechaLiberacion <= new Date() || it.fechaLiberacion == null)
+            }.puesto
         }
         return []
     }

@@ -35,6 +35,7 @@ class DistanciaEdificio {
         def asg = AsignacionPuesto.withCriteria {
             and {
                 puesto {
+                    eq("estaActivo", true)
                     edificio {
                         eq("distancia", this)
                     }

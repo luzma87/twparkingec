@@ -21,7 +21,9 @@ class DistanciaEdificioIntegrationSpec extends IntegrationSpec {
             def asignacionBuilder = AsignacionPuestoBuilder.nuevo().con { a -> a.puesto = puesto }
             if (index < 5) {
                 asignacionBuilder.con { a -> a.fechaLiberacion = new Date() - getRandomInt(10) }
-                puestosEsperados += puesto
+                if (puesto.estaActivo) {
+                    puestosEsperados += puesto
+                }
             }
             asignacionBuilder.guardar()
         }
