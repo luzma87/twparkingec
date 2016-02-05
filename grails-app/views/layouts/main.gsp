@@ -28,5 +28,12 @@
     <div class="container">
         <g:layoutBody/>
     </div>
+
+    <script type="text/javascript">
+        $(function() {
+            $.fn.bootstrapSwitch.defaults.onText = '${g.message(code: "default.boolean.yes")}';
+            $.fn.bootstrapSwitch.defaults.offText = '${g.message(code: "default.boolean.no")}';
+        });
+    </script>
 </body>
 </html>

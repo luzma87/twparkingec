@@ -28,4 +28,10 @@ $(function () {
         closeButton : false,
         show        : true
     });
+
+    $("[type='checkbox']").bootstrapSwitch({
+        size     : "small",
+        onColor  : "success",
+        offColor : "danger"
+    });
 });
