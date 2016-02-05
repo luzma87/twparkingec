@@ -85,7 +85,7 @@
                                 <ul class="fa-ul noMargin">
                                     <g:each in="${edificioInstance.puestos}" var="puesto">
                                         <li data-id="${puesto.id}">
-                                            <i class="fa fa-toggle-${puesto.estaActivo ? 'on' : 'off'}"></i>
+                                            <i class="fa fa-toggle-${puesto.estaActivo ? 'on text-success' : 'off text-danger'}"></i>
                                             <a href="#" class="btnEditarPuesto"
                                                title="${message(code: 'default.button.edit.label')}">
                                                 ${puesto.numero}
