@@ -11,9 +11,9 @@
  */
 function log(msg, type, title, hide) {
     type = type.toLowerCase();
-    if (hide === undefined) {
-        hide = type != "error";
-    }
+    //if (hide === undefined) {
+    //    hide = type != "error";
+    //}
     //if (!title) {
     //    title = type == 'error' ? "Ha ocurrido un error" : "Transacción exitosa";
     //}
@@ -26,17 +26,11 @@ function log(msg, type, title, hide) {
         icon    : icon,
         buttons : {
             closer_hover  : false,
-            sticker_hover : false,
-            classes       : {
-                closer   : 'fa fa-bomb',
-                pin_up   : 'fa fa-anchor',
-                pin_down : 'fa fa-hourglass'
-            }
+            sticker_hover : false
         },
         styling : 'fontawesome',
         text    : msg,
-        type    : type,
-        hide    : hide
+        type    : type
     });
 }
 
