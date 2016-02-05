@@ -44,7 +44,7 @@ class PagoControllerSpec extends Specification {
         listReturns.pagos == [:]
         listReturns.anios == anios
         listReturns.mesActual == mesActual
-        listReturns.cuota.toString() == cuota.toString()
+        listReturns.cuota.toDouble() == cuota.toDouble()
     }
 
     void "Debe devolver una instancia de pago"() {
