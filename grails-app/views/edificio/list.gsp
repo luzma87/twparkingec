@@ -7,6 +7,13 @@
         <title>
             <g:message code="default.list.label" args="[message(code: 'edificio.label')]"/>
         </title>
+
+
+        <style type="text/css">
+        .noMargin {
+            margin: 0;
+        }
+        </style>
     </head>
 
     <body>
@@ -75,10 +82,10 @@
                             </td>
 
                             <td>
-                                <ul class="fa-ul">
+                                <ul class="fa-ul noMargin">
                                     <g:each in="${edificioInstance.puestos}" var="puesto">
                                         <li data-id="${puesto.id}">
-                                            <i class="fa fa-cube"></i>
+                                            <i class="fa fa-toggle-${puesto.estaActivo ? 'on' : 'off'}"></i>
                                             <a href="#" class="btnEditarPuesto"
                                                title="${message(code: 'default.button.edit.label')}">
                                                 ${puesto.numero}
@@ -87,12 +94,15 @@
                                                     [<g:formatNumber number="${puesto.precio}" type="currency" currencySymbol="\$"/>]
                                                 </g:if>
                                             </a>
-                                            <g:if test="${AsignacionPuesto.countByPuesto(puesto) == 0}">
-                                                <a href="#" class="btn btn-danger btn-xs btnEliminarPuesto"
-                                                   title="${message(code: 'default.button.delete.label')}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </g:if>
+
+                                            <div class="btn-group btn-group-xs marginLeft" role="group">
+                                                <g:if test="${AsignacionPuesto.countByPuesto(puesto) == 0}">
+                                                    <a href="#" class="btn btn-danger btnEliminarPuesto"
+                                                       title="${message(code: 'default.button.delete.label')}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </g:if>
+                                            </div>
                                         </li>
                                     </g:each>
                                 </ul>

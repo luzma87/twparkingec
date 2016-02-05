@@ -10,7 +10,7 @@ class PuestoController extends Shield {
 
     def form_ajax() {
         Puesto puestoInstance = crudHelperService.obtenerObjeto(Puesto, params.id)
-        if (params.edificio != 'null') {
+        if (params.edificio && params.edificio != 'null') {
             puestoInstance.edificio = Edificio.get(params.edificio)
         }
         return [puestoInstance: puestoInstance]

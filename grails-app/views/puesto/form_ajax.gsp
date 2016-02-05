@@ -73,6 +73,20 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: puestoInstance, field: 'estaActivo', 'error')} ">
+                    <label for="estaActivo" class="col-md-4 control-label">
+                        <g:message code="puesto.estaActivo.label"/>
+
+                    </label>
+
+                    <div class="col-md-8">
+                        <g:checkBox name="estaActivo" value="${puestoInstance?.estaActivo}"/>
+
+                    </div>
+                </div>
+            </div>
+
         </g:form>
     </div>
 
