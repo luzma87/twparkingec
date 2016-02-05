@@ -10,6 +10,8 @@ class GeneradorNotificacionesService {
     static final MENSAJE_ALERTA_PUESTOS_FALTANTES = "ALERTA: puestos faltantes"
     static final MENSAJE_EXITO = "Nueva organización de parqueaderos"
 
+    final PREFERENCIA_NO_SALE="N"
+
     def generarNotificacion() {
         def totalPuestos = Puesto.count()
         def totalUsuariosActivos = Usuario.countByEstaActivo(true)
@@ -17,7 +19,7 @@ class GeneradorNotificacionesService {
         if (totalUsuariosActivos > totalPuestos) {
             return generarNotificacionMasUsuariosQuePuestos(totalUsuariosActivos, totalPuestos)
         } else {
-            def preferenciaNoSale = TipoPreferencia.findByCodigo("N")
+            def preferenciaNoSale = TipoPreferencia.findByCodigo(PREFERENCIA_NO_SALE)
             def usuariosNoSalen = Usuario.findAllByPreferencia(preferenciaNoSale)
             def autosNoSalen = Auto.findAllByUsuarioInList(usuariosNoSalen)
             def asignacionesUsuariosNoSalen = AsignacionPuesto.findAllByAutoInList(autosNoSalen)
