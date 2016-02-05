@@ -10,7 +10,7 @@ class AutoController extends Shield {
 
     def form_ajax() {
         Auto autoInstance = crudHelperService.obtenerObjeto(Auto, params.id)
-        if (params.usuario != 'null') {
+        if (params.usuario && params.usuario != 'null') {
             autoInstance.usuario = Usuario.get(params.usuario)
         }
         return [autoInstance: autoInstance]

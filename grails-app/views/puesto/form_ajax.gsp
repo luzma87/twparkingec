@@ -61,7 +61,7 @@
 
                     <div class="col-md-3">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <g:field type="number" name="precio" class="form-control required"
                                      value="${fieldValue(bean: puestoInstance, field: 'precio')}" required=""/>
                             <span class="input-group-addon">

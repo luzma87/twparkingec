@@ -22,6 +22,20 @@
             </div>
 
             <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'cedula', 'error')} required">
+                    <label for="cedula" class="col-md-4 control-label">
+                        <g:message code="usuario.cedula.label"/>
+                        <span class="required-indicator">*</span>
+                    </label>
+
+                    <div class="col-md-8">
+                        <g:textField name="cedula" maxlength="10" required="" class="form-control  required" value="${usuarioInstance?.cedula}"/>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'email', 'error')} required">
                     <label for="email" class="col-md-4 control-label">
                         <g:message code="usuario.email.label"/>
@@ -76,6 +90,20 @@
             </g:if>
 
             <div class="row">
+                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'preferencia', 'error')} required">
+                    <label for="preferencia" class="col-md-4 control-label">
+                        <g:message code="usuario.preferencia.label"/>
+                        <span class="required-indicator">*</span>
+                    </label>
+
+                    <div class="col-md-8">
+                        <g:select id="preferencia" name="preferencia.id" from="${ec.com.tw.parking.TipoPreferencia.list()}" optionKey="id" required="" value="${usuarioInstance?.preferencia?.id}" class="many-to-one form-control"/>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'esAdmin', 'error')} ">
                     <label for="esAdmin" class="col-md-4 control-label">
                         <g:message code="usuario.esAdmin.label"/>
@@ -89,19 +117,6 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'cedula', 'error')} required">
-                    <label for="cedula" class="col-md-4 control-label">
-                        <g:message code="usuario.cedula.label"/>
-                        <span class="required-indicator">*</span>
-                    </label>
-
-                    <div class="col-md-8">
-                        <g:textField name="cedula" maxlength="10" required="" class="form-control  required" value="${usuarioInstance?.cedula}"/>
-
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'estaActivo', 'error')} ">
@@ -117,40 +132,28 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'preferencia', 'error')} required">
-                    <label for="preferencia" class="col-md-4 control-label">
-                        <g:message code="usuario.preferencia.label"/>
-                        <span class="required-indicator">*</span>
-                    </label>
 
-                    <div class="col-md-8">
-                        <g:select id="preferencia" name="preferencia.id" from="${ec.com.tw.parking.TipoPreferencia.list()}" optionKey="id" required="" value="${usuarioInstance?.preferencia?.id}" class="many-to-one form-control"/>
+            <g:if test="${usuarioInstance?.autos?.size() > 0}">
+                <div class="row">
+                    <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'autos', 'error')} ">
+                        <label class="col-md-4 control-label">
+                            <g:message code="usuario.autos.label"/>
+                        </label>
 
+                        <div class="col-md-8">
+                            <ul class="one-to-many fa-ul">
+                                <g:each in="${usuarioInstance?.autos}" var="auto">
+                                    <li>
+                                        <i class="fa-li fa fa-car"></i>
+                                        ${auto.marca} ${auto.modelo} ${auto.placa}
+                                        (<g:message code="tamanio.${auto.tamanio}"/>)
+                                    </li>
+                                </g:each>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 form-group ${hasErrors(bean: usuarioInstance, field: 'autos', 'error')} ">
-                    <label class="col-md-4 control-label">
-                        <g:message code="usuario.autos.label"/>
-                    </label>
-
-                    <div class="col-md-8">
-                        <ul class="one-to-many fa-ul">
-                            <g:each in="${usuarioInstance?.autos ?}" var="auto">
-                                <li>
-                                    <i class="fa-li fa fa-car"></i>
-                                    ${auto.marca} ${auto.modelo} ${auto.placa}
-                                    (<g:message code="tamanio.${auto.tamanio}"/>)
-                                </li>
-                            </g:each>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
+            </g:if>
         </g:form>
     </div>
 
