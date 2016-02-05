@@ -73,20 +73,25 @@ class GeneradorNotificacionesConUsuariosNoSalenIntegrationSpec extends Integrati
         }
         8.times {
             puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificioMatriz }
-                .con { p -> p.tamanio = Tamanio.PEQUENIO }.guardar()
+                .con { p -> p.tamanio = Tamanio.PEQUENIO }
+                .con { p -> p.estaActivo = true }.guardar()
         }
         3.times {
             puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificioCerca }
-                .con { p -> p.tamanio = Tamanio.MEDIANO }.guardar()
+                .con { p -> p.tamanio = Tamanio.MEDIANO }
+                .con { p -> p.estaActivo = true }.guardar()
         }
         2.times {
             puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificioCerca }
-                .con { p -> p.tamanio = Tamanio.GRANDE }.guardar()
+                .con { p -> p.tamanio = Tamanio.GRANDE }
+                .con { p -> p.estaActivo = true }.guardar()
         }
         puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificioLejos }
-            .con { p -> p.tamanio = Tamanio.MEDIANO }.guardar()
+            .con { p -> p.tamanio = Tamanio.MEDIANO }
+            .con { p -> p.estaActivo = true }.guardar()
         puestos += PuestoBuilder.nuevo().con { p -> p.edificio = edificioLejos }
-            .con { p -> p.tamanio = Tamanio.GRANDE }.guardar()
+            .con { p -> p.tamanio = Tamanio.GRANDE }
+            .con { p -> p.estaActivo = true }.guardar()
         2.times {
             asignaciones += AsignacionPuestoBuilder.nuevo()
                 .con { a -> a.fechaAsignacion = new Date() - getRandomInt(5, 10) }
