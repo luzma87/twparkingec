@@ -7,6 +7,11 @@
         <title>
             <g:message code="default.list.label" args="[message(code: 'pago.label')]"/>
         </title>
+        <style type="text/css">
+        th {
+            vertical-align: middle !important;
+        }
+        </style>
     </head>
 
     <body>
@@ -42,7 +47,9 @@
                     <th class="text-center">TWer</th>
                     <g:each in="${Mes.values()}" var="mes">
                         <th class="text-center">
-                            <g:message code="mes.${mes}"/>
+                            <g:message code="mes.${mes}"/><br/>
+                            <g:formatNumber number="${Pago.findAllByMesAndAnio(mes, anio).sum { it.monto }}"
+                                            type="currency" currencySymbol="\$"/>
                         </th>
                     </g:each>
                 </tr>

@@ -11,7 +11,12 @@
         <meta name="layout" content="main">
         <title>
             <g:message code="pagos.title"/>
-        </title>>
+        </title>
+        <style type="text/css">
+        th {
+            vertical-align: middle !important;
+        }
+        </style>
     </head>
 
     <body>
@@ -29,7 +34,11 @@
                             <tr>
                                 <th>TWer</th>
                                 <g:each in="${Mes.values()}" var="mes">
-                                    <th>${mes}</th>
+                                    <th>
+                                        <g:message code="mes.${mes}"/><br/>
+                                        <g:formatNumber number="${Pago.findAllByMesAndAnio(mes, anio).sum { it.monto }}"
+                                                        type="currency" currencySymbol="\$"/>
+                                    </th>
                                 </g:each>
                             </tr>
                         </thead>
