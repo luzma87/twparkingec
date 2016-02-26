@@ -96,7 +96,18 @@ class GeneradorNotificacionesSinUsuariosNoSalenIntegrationSpec extends Integrati
         def notificacion = generadorNotificacionesService.generarNotificacion()
 
         then:
-        expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada)
+//        expectsIgualUsuariosQuePuestos(notificacion, notificacionEsperada)
+        notificacion.destinatarios.size() == notificacionEsperada.destinatarios.size()
+        notificacion.destinatarios.id.sort() == notificacionEsperada.destinatarios.id.sort()
+        notificacion.asunto == notificacionEsperada.asunto
+        notificacion.mensaje.startsWith(notificacionEsperada.mensaje)
+        AsignacionPuesto.count() == 21
+        AsignacionPuesto.withCriteria {
+            isNull("fechaLiberacion")
+            projections {
+                countDistinct("puesto")
+            }
+        }.first() == 15
     }
 
     private setupIgualUsuariosQuePuestos(mensajeEsperado) {
