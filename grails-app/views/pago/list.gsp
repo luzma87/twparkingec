@@ -44,6 +44,7 @@
         <table class="table table-bordered table-condensed table-striped table-hover">
             <thead>
                 <tr>
+                    <th></th>
                     <th class="text-center">TWer</th>
                     <g:each in="${Mes.values()}" var="mes">
                         <th class="text-center">
@@ -57,6 +58,7 @@
             <tbody>
                 <g:each in="${pagos}" status="i" var="datosPagos">
                     <tr>
+                        <td>${i + 1}</td>
                         <td>${datosPagos.value.usuario}</td>
                         <g:each in="${Mes.values()}" var="mes">
                             <g:set var="pago" value="${datosPagos.value.pagos.find { it.mes == mes }}"/>

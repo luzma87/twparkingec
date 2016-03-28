@@ -37,7 +37,7 @@ class PagoController extends Shield {
             params.anio = anioActual
         }
         def pagos = [:]
-        Usuario.list().each { usuario ->
+        Usuario.findAllByEstaActivo(true).each { usuario ->
             Mes.values().each { mes ->
                 def pagosUsu = Pago.withCriteria {
                     eq("mes", mes)

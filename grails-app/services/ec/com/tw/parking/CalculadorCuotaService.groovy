@@ -4,7 +4,7 @@ class CalculadorCuotaService {
 
     def calcularCuota(puestosFaltantes, precio) {
         def cantidadUsuarios = Usuario.countByEstaActivo(true)
-        def puestos = Puesto.list()
+        def puestos = Puesto.findAllByEstaActivo(true)
         def sumaTotal = puestos.sum { it.precio }
         if (puestosFaltantes > 0) {
             sumaTotal += (puestosFaltantes * precio)

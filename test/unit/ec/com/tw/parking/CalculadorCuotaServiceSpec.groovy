@@ -12,18 +12,20 @@ import static ec.com.tw.parking.RandomUtilsHelpers.getRandomInt
 class CalculadorCuotaServiceSpec extends Specification {
 
     def cantidad
+    def cantidadPuestosInactivos
     def puestos
     def precioTotal
 
     def setup() {
         cantidad = getRandomInt(5, 15)
+        cantidadPuestosInactivos = getRandomInt(5, 15)
         puestos = []
         cantidad.times {
-            puestos += PuestoBuilder.nuevo().crear()
+            puestos += PuestoBuilder.nuevo().con { p -> p.estaActivo = true }.crear()
         }
 
         GroovyMock(Puesto, global: true)
-        Puesto.list() >> puestos
+        Puesto.findAllByEstaActivo(true) >> puestos
         precioTotal = puestos.sum { it.precio }
     }
 
