@@ -68,16 +68,21 @@
                                                   format="${g.message(code: 'default.date.format.no.time')}"/>
                                     <br/>
                                     <g:formatNumber number="${pago.monto}" type="currency" currencySymbol="\$"/>
-                                    <g:if test="${mes.numero == mesActual + 1}">
-                                        <a href="#" class="btn btn-xs btn-danger btnEliminar"
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <a href="#" class="btn btn-info btnEditar"
+                                           data-id="${pago.id}"
+                                           title="${message(code: 'default.button.edit.label')}">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-danger btnEliminar"
                                            data-id="${pago.id}"
                                            title="${message(code: 'default.button.delete.label')}">
                                             <i class="fa fa-trash"></i>
                                         </a>
-                                    </g:if>
+                                    </div>
                                 </g:if>
                                 <g:else>
-                                    <g:if test="${mes.numero == mesActual + 1}">
+                                    <g:if test="${mes.numero == mesActual || mes.numero == mesActual + 1}">
                                         <div class="input-group input-group-sm">
                                             <span class="input-group-addon">
                                                 <i class="fa fa-usd"></i>
@@ -254,6 +259,10 @@
                 });
                 $(".btnCrear").click(function () {
                     crearEditarPago();
+                    return false;
+                });
+                $(".btnEditar").click(function () {
+                    crearEditarPago($(this).data("id"));
                     return false;
                 });
                 $(".btnEliminar").click(function () {

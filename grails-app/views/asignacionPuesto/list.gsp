@@ -54,17 +54,32 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <label class="text-success">
+                    <input type="checkbox" id="chkActivos" autocomplete="off" checked> Mostrar activos
+                </label>
+                <label class="text-danger">
+                    <input type="checkbox" id="chkInactivos" autocomplete="off" checked> Mostrar inactivos
+                </label>
+            </div>
+        </div>
+
         <table class="table table-condensed table-bordered table-striped table-hover margin-top">
             <thead>
                 <tr>
 
-                    <th><g:message code="asignacionPuesto.auto.label"/></th>
+                    <th style="width: 550px;"><g:message code="asignacionPuesto.auto.label"/></th>
 
                     <th><g:message code="asignacionPuesto.puesto.label"/></th>
 
-                    <g:sortableColumn property="fechaAsignacion" title="${message(code: 'asignacionPuesto.fechaAsignacion.label')}"/>
+                    <g:sortableColumn property="fechaAsignacion"
+                                      title="${message(code: 'asignacionPuesto.fechaAsignacion.label')}"
+                                      style="width: 195px;"/>
 
-                    <g:sortableColumn property="fechaLiberacion" title="${message(code: 'asignacionPuesto.fechaLiberacion.label')}"/>
+                    <g:sortableColumn property="fechaLiberacion"
+                                      title="${message(code: 'asignacionPuesto.fechaLiberacion.label')}"
+                                      style="width: 195px;"/>
 
                     <th style="width: 76px"><g:message code="default.button.actions.label"/></th>
                 </tr>
@@ -279,6 +294,22 @@
                 $(".btnLiberar").click(function () {
                     liberarAsignacionPuesto($(this).parents("tr").data("id"));
                     return false;
+                });
+
+                $("#chkActivos").on('switchChange.bootstrapSwitch', function (event, state) {
+                    if (state) {
+                        $("tr.text-success").show();
+                    } else {
+                        $("tr.text-success").hide();
+                    }
+                });
+
+                $("#chkInactivos").on('switchChange.bootstrapSwitch', function (event, state) {
+                    if (state) {
+                        $("tr.text-danger").show();
+                    } else {
+                        $("tr.text-danger").hide();
+                    }
                 });
             });
         </script>

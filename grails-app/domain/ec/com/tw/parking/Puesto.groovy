@@ -53,8 +53,11 @@ class Puesto {
     }
 
     static obtenerSinAsignacion() {
-        def todosPuestos = Puesto.list()
+        def todosPuestos = Puesto.findAllByEstaActivo(true)
         def puestosConAsignacion = AsignacionPuesto.withCriteria {
+            puesto {
+                eq("estaActivo", true)
+            }
             projections {
                 distinct("puesto")
             }
