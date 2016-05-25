@@ -33,9 +33,14 @@ class AsignacionPuestoController extends Shield {
             datosNotificacion.asunto,
             datosNotificacion.mensaje
         )
-        flash.message = "Mail exitosamente"
+        flash.message = "Mail enviado exitosamente"
         flash.tipo = "success"
         redirect(controller: "asignacionPuesto", action: "index")
+    }
+
+    def verMails() {
+        def datosNotificacion = generadorNotificacionesService.generadorNotificacionExito()
+        return [notificacion: datosNotificacion]
     }
 
     def historial() {

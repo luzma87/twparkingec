@@ -115,13 +115,13 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
-grails.mail.default.from="twparkingec@gmail.com"
+grails.mail.default.from="$System.env.FROM"
 grails {
     mail {
-        host = "smtp.gmail.com"
-        port = 465
-        username = "twparkingec@gmail.com"
-        password = "cassette-freedom-elegy-recede-dehorn"
+        host = "$System.env.HOST"
+        port = System.env.PORT
+        username = "$System.env.USER"
+        password = "$System.env.PASSWORD"
         props = ["mail.smtp.auth":"true",
                  "mail.smtp.socketFactory.port":"465",
                  "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
