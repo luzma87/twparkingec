@@ -25,7 +25,7 @@ class MensajeFactoryService {
     }
 
     String construirMensajeExito() {
-        def mensaje = "<table class='table' border='1'>"
+        def mensaje = "<table class='table table-bordered table-striped table-condensed' border='1'>"
         mensaje += "<thead>"
         mensaje += "<tr>"
         mensaje += "<th>Thoughtworker</th>"
