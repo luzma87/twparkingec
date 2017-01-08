@@ -3,7 +3,7 @@
 }
 
 td, th {
-    vertical-align: middle;
+    vertical-align: middle !important;
 }
 
 .table > thead > tr > td.danger-pastel,

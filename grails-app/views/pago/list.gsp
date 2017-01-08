@@ -8,9 +8,15 @@
             <g:message code="default.list.label" args="[message(code: 'pago.label')]"/>
         </title>
         <style type="text/css">
-        th {
+        th, td {
             vertical-align: middle !important;
         }
+
+        tr.inactive, tr.inactive td {
+            background: #ccc;
+            color: #888;
+        }
+
         </style>
     </head>
 
@@ -57,7 +63,7 @@
             </thead>
             <tbody>
                 <g:each in="${pagos}" status="i" var="datosPagos">
-                    <tr>
+                    <tr class="${datosPagos.value.usuario.estaActivo ? '' : 'inactive'}">
                         <td>${i + 1}</td>
                         <td>${datosPagos.value.usuario}</td>
                         <g:each in="${Mes.values()}" var="mes">
@@ -91,7 +97,7 @@
                                             <span class="input-group-btn">
                                                 <a href="#" class="btn btn-success btnRegistrarPago"
                                                    data-usuario="${datosPagos.value.usuario.id}"
-                                                   data-mes="${mes}"
+                                                   data-mes="${mes}" data-anio="${params.anio}"
                                                    title="${g.message(code: 'pago.registrar')}">
                                                     <i class="fa fa-lg fa-money"></i>
                                                 </a>
@@ -222,6 +228,7 @@
                 openLoader("${message(code: 'default.saving', args:[message(code: 'pago.label')])}");
                 var usuarioId = $btn.data("usuario");
                 var numeroMes = $btn.data("mes");
+                var anio = $btn.data("anio");
                 var monto = $btn.parent().prev().val();
                 $.ajax({
                     type    : "POST",
@@ -229,7 +236,7 @@
                     data    : {
                         usuario : usuarioId,
                         mes     : numeroMes,
-                        anio    : "${params.anio}",
+                        anio    : anio,
                         monto   : monto
                     },
                     success : function (msg) {

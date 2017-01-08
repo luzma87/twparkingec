@@ -37,7 +37,8 @@ class PagoController extends Shield {
             params.anio = anioActual
         }
         def pagos = [:]
-        Usuario.findAllByEstaActivo(true).each { usuario ->
+        Usuario.findAll().each { usuario ->
+            pagos[usuario.email] = [usuario: usuario, pagos: []]
             Mes.values().each { mes ->
                 def pagosUsu = Pago.withCriteria {
                     eq("mes", mes)
@@ -45,9 +46,9 @@ class PagoController extends Shield {
                     eq("usuario", usuario)
                 }
                 if (pagosUsu.size() > 0) {
-                    if (!pagos[usuario.email]) {
-                        pagos[usuario.email] = [usuario: usuario, pagos: []]
-                    }
+//                    if (!pagos[usuario.email]) {
+//                        pagos[usuario.email] = [usuario: usuario, pagos: []]
+//                    }
                     pagos[usuario.email].pagos += pagosUsu
                 }
             }

@@ -52,15 +52,16 @@ class ImportsTagLib {
     }
 
     def importCss = {
-        def html = css(href: resource(dir: 'css', file: 'text.css'))
-        html += css(href: resource(dir: 'css', file: 'tablas.css'))
-
+        def html = ""
         html += css(href: resource(dir: 'js/bootstrap-datetimepicker/build/css', file: 'bootstrap-datetimepicker.min.css'))
         html += css(href: resource(dir: 'js/jquery.qtip.custom', file: 'jquery.qtip.min.css'))
         html += css(href: resource(dir: 'js/pnotify/dist', file: 'pnotify.css'))
         html += css(href: resource(dir: 'js/pnotify/dist', file: 'pnotify.brighttheme.css'))
         html += css(href: resource(dir: 'js/bootstrap-datetimepicker/build/css', file: 'bootstrap-datetimepicker.min.css'))
         html += css(href: resource(dir: 'js/bootstrap-switch-master/dist/css/bootstrap3', file: 'bootstrap-switch.min.css'))
+
+        html += css(href: resource(dir: 'css', file: 'text.css'))
+        html += css(href: resource(dir: 'css', file: 'tablas.css'))
         out << html
     }
 
