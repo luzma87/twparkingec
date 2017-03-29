@@ -1,1 +1,2 @@
 language: groovy
+script: ./grailsw test-app unit:
